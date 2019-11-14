@@ -587,6 +587,7 @@ export function fillMap(mapTileEditorData, x, y)
   
   
   // If tile at x, y is empty
+  /*
   if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
   {
     let randomTileHash = getRandomTileHash(tileLookup);
@@ -599,6 +600,7 @@ export function fillMap(mapTileEditorData, x, y)
     fillTileQueue.push({x: x, y: y + 1});
     fillTileQueue.push({x: x - 1, y: y});
   }
+  */
   
   
   
@@ -609,7 +611,7 @@ export function fillMap(mapTileEditorData, x, y)
     {
       if (fillTileQueue.length <= 0)
       {
-        //fillMapSupplement(mapTileEditorData);
+        fillMapSupplement(mapTileEditorData);
         console.log('Stopping interval');
         clearInterval(interval);
         return;
@@ -781,25 +783,30 @@ export function printDebug(mapTileEditorData)
   let cursor = mapTileEditorData.cursor;
   let userActionHistory = mapTileEditorData.userActionHistory;
   
+  console.log('\n\n');
+  console.info("*****DEBUG PRINT START*****");
+  
   console.info('tileLookup:');
   console.log(tileLookup);
-  console.log('');
+  console.log('\n');
   
   console.info('layeredTileHashesDisplay:');
   console.log(layeredTileHashesDisplay);
-  console.log('');
+  console.log('\n');
   
   console.info('cursor:');
   console.log(cursor);
-  console.log('');
+  console.log('\n');
   
   console.info('userActionHistory:');
   console.log(userActionHistory);
-  console.log('');
+  console.log('\n');
   
   console.info('layeredTileHashesDisplay.map[' + cursor.tileY + '][' + cursor.tileX + ']:');
   console.log(layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]);
-  console.log('');
+  console.log('\n');
+  
+  console.log("*****DEBUG PRINT END*****");
 }
 
 
