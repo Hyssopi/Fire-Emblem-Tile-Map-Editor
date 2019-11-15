@@ -180,7 +180,10 @@
       
       
       <div class="flexBoxRow genericControlBlock">
+        <!--
         <button id="exportButtonId" class="material-icons" title="EXPORT" onClick="exportMap();">archive</button>
+        -->
+        <button id="exportButtonId" class="material-icons" title="EXPORT">archive</button>
         <button id="importButtonId" class="material-icons" title="IMPORT">folder_open</button>
         
         <button id="undoButtonId" class="material-icons" title="UNDO">undo</button>
@@ -263,6 +266,7 @@
   <script src="scripts/main.js" type="module"></script>
   
   <script type="text/javascript">
+    /*
     function exportMap()
     {
       let url = document.createElement('a');
@@ -270,18 +274,17 @@
       let canvas1 = document.getElementById('CanvasId1');
       url.href = canvas1.toDataURL();
 
-      /*
-      let tempImage = new Image();
-      tempImage.src = 'tiles/images/CURSOR/a8ebd11f8e75365d496d85d28cde54b7.png';
+      //let tempImage = new Image();
+      //tempImage.src = 'tiles/images/CURSOR/a8ebd11f8e75365d496d85d28cde54b7.png';
 
       //let tempImage = document.getElementById('largeImage');
-      tempImage.style.display = 'block';
-      tempImage.style.width = 200 + 'px';
-      tempImage.style.height = 200 + 'px';
-      let url = tempImage.getAttribute('src');
-      */
+      //tempImage.style.display = 'block';
+      //tempImage.style.width = 200 + 'px';
+      //tempImage.style.height = 200 + 'px';
+      //let url = tempImage.getAttribute('src');
       window.open(url, '_blank', 'width = tempImage.stylewidth, height = tempImage.style.height, resizable = 1');
     }
+    */
     
   </script>
 </html>

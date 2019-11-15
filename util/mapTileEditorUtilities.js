@@ -576,7 +576,7 @@ export function redrawIntersectionPane(mapTileEditorData)
 
 
 
-export function fillMap(mapTileEditorData, x, y)
+export function fillMap(mapTileEditorData, x, y, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -584,34 +584,46 @@ export function fillMap(mapTileEditorData, x, y)
   
   let fillTileQueue = [];
   fillTileQueue.push({x: x, y: y});
+  fillTileQueue.push({x: x, y: y - 1});
+  fillTileQueue.push({x: x + 1, y: y});
+  fillTileQueue.push({x: x, y: y + 1});
+  fillTileQueue.push({x: x - 1, y: y});
   
+  let isEmptyMap = true;
+  for (let y = 0; y < layeredTileHashesDisplay.map.length; y++)
+  {
+    for (let x = 0; x < layeredTileHashesDisplay.map[y].length; x++)
+    {
+      if (layeredTileHashesDisplay.map[y][x] !== EMPTY_TILE_HASH)
+      {
+        isEmptyMap = false;
+        break;
+      }
+    }
+    if (!isEmptyMap)
+    {
+      break;
+    }
+  }
   
-  // If tile at x, y is empty
-  /*
-  if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
+  if (isEmptyMap)
   {
     let randomTileHash = getRandomTileHash(tileLookup);
     setTile(mapTileEditorData, x, y, randomTileHash);
     
     redrawAll(mapTileEditorData);
-    
-    fillTileQueue.push({x: x, y: y - 1});
-    fillTileQueue.push({x: x + 1, y: y});
-    fillTileQueue.push({x: x, y: y + 1});
-    fillTileQueue.push({x: x - 1, y: y});
   }
-  */
   
-  
-  
-  
-  //while (fillTileQueue.length > 0)
-  //{
+  if (isAnimate)
+  {
     let interval = setInterval(function()
     {
       if (fillTileQueue.length <= 0)
       {
-        fillMapSupplement(mapTileEditorData);
+        fillMapSupplement(mapTileEditorData, isAnimate, 4);
+        fillMapSupplement(mapTileEditorData, isAnimate, 3);
+        fillMapSupplement(mapTileEditorData, isAnimate, 2);
+        fillMapSupplement(mapTileEditorData, isAnimate, 1);
         console.log('Stopping interval');
         clearInterval(interval);
         return;
@@ -630,7 +642,6 @@ export function fillMap(mapTileEditorData, x, y)
       {
         return;
       }
-      
       
       cursor.tileX = tileCoordinate.x;
       cursor.tileY = tileCoordinate.y;
@@ -673,10 +684,80 @@ export function fillMap(mapTileEditorData, x, y)
         fillTileQueue.push({x: tileCoordinate.x - 1, y: tileCoordinate.y});
       }
     }, 100);
-  //}
+  }
+  else
+  {
+    // TODO: Fix true
+    while (true)
+    {
+      if (fillTileQueue.length <= 0)
+      {
+        fillMapSupplement(mapTileEditorData, isAnimate, 4);
+        fillMapSupplement(mapTileEditorData, isAnimate, 3);
+        fillMapSupplement(mapTileEditorData, isAnimate, 2);
+        fillMapSupplement(mapTileEditorData, isAnimate, 1);
+        console.log('Stopping loop');
+        clearHoverTile(mapTileEditorData);
+        redrawNeighborPanes(mapTileEditorData);
+        redrawAll(mapTileEditorData);
+        break;
+      }
+      
+      let tileCoordinate = fillTileQueue.shift();
+      
+      console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
+      
+      if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      {
+        continue;
+      }
+      
+      if (!isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      {
+        continue;
+      }
+      
+      cursor.tileX = tileCoordinate.x;
+      cursor.tileY = tileCoordinate.y;
+      
+      //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
+      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
+      setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
+      
+      if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      {
+        continue;
+      }
+      
+      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+        && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+      )
+      {
+        fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y - 1});
+      }
+      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+        && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+      )
+      {
+        fillTileQueue.push({x: tileCoordinate.x + 1, y: tileCoordinate.y});
+      }
+      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+        && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+      )
+      {
+        fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y + 1});
+      }
+      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+        && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+      )
+      {
+        fillTileQueue.push({x: tileCoordinate.x - 1, y: tileCoordinate.y});
+      }
+    }
+  }
 }
 
-export function fillMapSupplement(mapTileEditorData)
+export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -695,11 +776,8 @@ export function fillMapSupplement(mapTileEditorData)
     }
   }
   
-  
-  
-  
-  //while (fillTileQueue.length > 0)
-  //{
+  if (isAnimate)
+  {
     let interval = setInterval(function()
     {
       if (fillTileQueue.length <= 0)
@@ -711,7 +789,7 @@ export function fillMapSupplement(mapTileEditorData)
       
       let tileCoordinate = fillTileQueue.shift();
       
-      console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
+      console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
       if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
       {
@@ -723,12 +801,11 @@ export function fillMapSupplement(mapTileEditorData)
         return;
       }
       
-      
       cursor.tileX = tileCoordinate.x;
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 3);
+      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       clearHoverTile(mapTileEditorData);
@@ -739,9 +816,49 @@ export function fillMapSupplement(mapTileEditorData)
       {
         return;
       }
-      
     }, 100);
-  //}
+  }
+  else
+  {
+    // TODO: Fix true
+    while (true)
+    {
+      if (fillTileQueue.length <= 0)
+      {
+        console.log('Stopping loop');
+        clearHoverTile(mapTileEditorData);
+        redrawNeighborPanes(mapTileEditorData);
+        redrawAll(mapTileEditorData);
+        break;
+      }
+      
+      let tileCoordinate = fillTileQueue.shift();
+      
+      console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
+      
+      if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      {
+        continue;
+      }
+      
+      if (!isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      {
+        continue;
+      }
+      
+      cursor.tileX = tileCoordinate.x;
+      cursor.tileY = tileCoordinate.y;
+      
+      //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
+      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
+      setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
+      
+      if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      {
+        continue;
+      }
+    }
+  }
 }
 
 

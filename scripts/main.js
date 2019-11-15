@@ -293,6 +293,28 @@ function resizeAndReset(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+function exportMap(tileLookup, layeredTileHashesDisplay)
+{
+  let newCanvas = document.createElement('canvas');
+  let newContext = newCanvas.getContext('2d');
+  
+  newCanvas.width = layeredTileHashesDisplay.map[0].length * TILE_WIDTH;
+  newCanvas.height = layeredTileHashesDisplay.map.length * TILE_HEIGHT;
+  
+  for (let y = 0; y < layeredTileHashesDisplay.map.length; y++)
+  {
+    for (let x = 0; x < layeredTileHashesDisplay.map[y].length; x++)
+    {
+      newContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    }
+  }
+  
+  let url = document.createElement('a');
+  url.href = newCanvas.toDataURL();
+  
+  window.open(url, '_blank', 'width = ' + newCanvas.width + ', height = ' + newCanvas.height + ', resizable = 1');
+}
+
 function setupMouseEventListeners(mapTileEditorData)
 {
   let canvas = mapTileEditorData.canvas;
@@ -453,7 +475,9 @@ function fillTileResponse(mapTileEditorData)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY);
+  let strictness = document.getElementById(Ids.tileControlBlock.strictnessCombobox).value;
+  
+  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
   mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, fillTileHash);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
@@ -463,7 +487,7 @@ function generateMapResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
   
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY);
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, false);
 }
 
 function printDebugResponse(mapTileEditorData)
@@ -568,6 +592,7 @@ function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.genericControlBlock.exportButton).addEventListener('click',
     function()
     {
+      exportMap(mapTileEditorData.tileLookup, mapTileEditorData.layeredTileHashesDisplay);
     });
   
   document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
