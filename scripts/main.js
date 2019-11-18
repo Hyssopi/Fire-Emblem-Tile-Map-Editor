@@ -186,7 +186,7 @@ function setup(tileLookup)
     userActionHistory: null
   };
   
-  resizeAndReset(mapTileEditorData);
+  resetMap(mapTileEditorData);
   
   
   
@@ -200,7 +200,7 @@ function setup(tileLookup)
   setupUIEventListeners(mapTileEditorData);
 }
 
-function resizeAndReset(mapTileEditorData)
+function resetMap(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   
@@ -246,6 +246,58 @@ function resizeAndReset(mapTileEditorData)
   mapTileEditorData.layeredTileHashesDisplay = layeredTileHashesDisplay;
   mapTileEditorData.cursor = cursor;
   mapTileEditorData.userActionHistory = userActionHistory;
+  
+  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+}
+
+function resizeMap(mapTileEditorData)
+{
+  let tileLookup = mapTileEditorData.tileLookup;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+  let mapWidth = document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value;
+  let mapHeight = document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value;
+  
+  mapWidth = mapWidth ? mapWidth : 1;
+  mapHeight = mapHeight ? mapHeight : 1;
+  
+  // Adding new empty rows/columns if needed
+  for (let y = 0; y < mapHeight; y++)
+  {
+    if (layeredTileHashesDisplay.map[y])
+    {
+      layeredTileHashesDisplay.map.push([]);
+    }
+    if (layeredTileHashesDisplay.hover[y])
+    {
+      layeredTileHashesDisplay.hover.push([]);
+    }
+    for (let x = 0; x < mapWidth; x++)
+    {
+      if (!layeredTileHashesDisplay.map[y][x])
+      {
+        layeredTileHashesDisplay.map[y].push(EMPTY_TILE_HASH);
+      }
+      if (!layeredTileHashesDisplay.hover[y][x])
+      {
+        layeredTileHashesDisplay.hover[y].push(null);
+      }
+    }
+  }
+  
+  // Repositioning the cursor
+  if (cursor.tileX >= mapWidth)
+  {
+    cursor.tileX = mapWidth - 1;
+  }
+  if (cursor.tileY >= mapHeight)
+  {
+    cursor.tileY = mapHeight - 1;
+  }
+
+  mapTileEditorData.mapWidth = mapWidth;
+  mapTileEditorData.mapHeight = mapHeight;
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
@@ -542,10 +594,22 @@ function setupUIEventListeners(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   
+  document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).addEventListener('change',
+    function()
+    {
+      resizeMap(mapTileEditorData);
+    });
+  
+    document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).addEventListener('change',
+    function()
+    {
+      resizeMap(mapTileEditorData);
+    });
+  
   document.getElementById(Ids.informationDisplayMapBlock.newButton).addEventListener('click',
     function()
     {
-      resizeAndReset(mapTileEditorData);
+      resetMap(mapTileEditorData);
     });
   
   document.getElementById(Ids.genericControlBlock.exportButton).addEventListener('click',
