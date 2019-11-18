@@ -9,6 +9,7 @@ const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
 const IMAGES_OUTPUT_FOLDER_NAME = 'images';
 const UNDEFINED_OUTPUT_FOLDER_NAME = 'UNDEFINED';
 const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
+const HELP_FILE_PATH = 'help/index.html';
 
 const CURSOR_TILE_HASH = 'a8ebd11f8e75365d496d85d28cde54b7';
 export const EMPTY_TILE_HASH = '73ad52b71d47ee4d45315c6f0da022ac';
@@ -506,6 +507,11 @@ function printDebugResponse(mapTileEditorData)
   mapTileEditorUtilities.printDebug(mapTileEditorData);
 }
 
+function helpResponse()
+{
+  window.open(HELP_FILE_PATH, '_blank', 'menubar = 0, toolbar = 0');
+}
+
 function preventNonNumericalResponse(event)
 {
   // Between 0 and 9
@@ -668,6 +674,7 @@ function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.otherControlBlock.helpButton).addEventListener('click',
     function()
     {
+      helpResponse();
     });
 }
 
