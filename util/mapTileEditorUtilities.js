@@ -15,7 +15,7 @@ import {TILE_WIDTH, TILE_HEIGHT, EMPTY_TILE_HASH, Direction, Ids} from '../scrip
 
 
 
-export function isValidTileCoordinate(mapTileHashesDisplay, x, y, direction = null)
+export function isValidTileCoordinate(mapWidth, mapHeight, x, y, direction = null)
 {
   let modifiedX = x;
   let modifiedY = y;
@@ -37,8 +37,8 @@ export function isValidTileCoordinate(mapTileHashesDisplay, x, y, direction = nu
     modifiedX = x - 1;
   }
   
-  return modifiedY >= 0 && modifiedY < mapTileHashesDisplay.length
-    && modifiedX >= 0 && modifiedX < mapTileHashesDisplay[0].length;
+  return modifiedY >= 0 && modifiedY < mapHeight
+    && modifiedX >= 0 && modifiedX < mapWidth;
 }
 
 export function isEmptyTile(mapTileHashesDisplay, x, y, direction = null)
@@ -90,12 +90,12 @@ export function getLayeredTopTileHash(layeredTileHashesDisplay, x, y)
 
 
 
-export function getFillTileHash(tileLookup, mapTileHashesDisplay, x, y, strictness = 4)
+export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, strictness = 4)
 {
-  let northTileHash = (y - 1 >= 0) ? mapTileHashesDisplay[y - 1][x] : null;
-  let eastTileHash = (x + 1 < mapTileHashesDisplay[0].length) ? mapTileHashesDisplay[y][x + 1] : null;
-  let southTileHash = (y + 1 < mapTileHashesDisplay.length) ? mapTileHashesDisplay[y + 1][x] : null;
-  let westTileHash = (x - 1 >= 0) ? mapTileHashesDisplay[y][x - 1] : null;
+  let northTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.NORTH) ? mapTileHashesDisplay[y - 1][x] : null;
+  let eastTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.EAST) ? mapTileHashesDisplay[y][x + 1] : null;
+  let southTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.SOUTH) ? mapTileHashesDisplay[y + 1][x] : null;
+  let westTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.WEST) ? mapTileHashesDisplay[y][x - 1] : null;
   
   let northNeighborList = !northTileHash || northTileHash === EMPTY_TILE_HASH ? null : tileLookup[northTileHash][Direction.SOUTH];
   let eastNeighborList = !eastTileHash || eastTileHash === EMPTY_TILE_HASH ? null : tileLookup[eastTileHash][Direction.WEST];
@@ -335,7 +335,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
     modifiedX = x - 1;
   }
   
-  if (isValidTileCoordinate(layeredTileHashesDisplay.map, modifiedX, modifiedY))
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, modifiedX, modifiedY))
   {
     if (isLog)
     {
@@ -345,7 +345,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   }
   else
   {
-    console.error('Cannot setTile(...), out of bounds: x = ' + x + ', y = ' + y + ', Direction = ' + direction);
+    console.error('Cannot setTile(...), out of bounds: x = ' + modifiedX + ', y = ' + modifiedY + ', Direction = ' + direction);
   }
   
   //redrawMap(mapTileEditorData);
@@ -375,22 +375,20 @@ export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null
     modifiedX = x - 1;
   }
   
-  if (isValidTileCoordinate(layeredTileHashesDisplay.map, modifiedX, modifiedY))
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, modifiedX, modifiedY))
   {
     layeredTileHashesDisplay.hover[modifiedY][modifiedX] = tileHash;
   }
   else
   {
-    console.warn('Cannot setHoverTile(...), out of bounds: x = ' + x + ', y = ' + y + ', Direction = ' + direction);
+    console.warn('Cannot setHoverTile(...), out of bounds: x = ' + modifiedX + ', y = ' + modifiedY + ', Direction = ' + direction);
   }
   
   //redrawMap(mapTileEditorData);
 }
 
-export function clearHoverTile(mapTileEditorData)
+export function clearHoverTile(layeredTileHashesDisplay)
 {
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  
   for (let y = 0; y < layeredTileHashesDisplay.hover.length; y++)
   {
     for (let x = 0; x < layeredTileHashesDisplay.hover[y].length; x++)
@@ -422,8 +420,8 @@ export function redrawAll(mapTileEditorData)
 
 export function redrawMap(mapTileEditorData)
 {
-  let canvas = mapTileEditorData.canvas;
   let tileLookup = mapTileEditorData.tileLookup;
+  let canvas = mapTileEditorData.canvas;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -439,9 +437,9 @@ export function redrawMap(mapTileEditorData)
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.restore();
   
-  for (let y = 0; y < layeredTileHashesDisplay.map.length; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < layeredTileHashesDisplay.map[y].length; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       let layeredTopTileHash = getLayeredTopTileHash(layeredTileHashesDisplay, x, y);
       context.drawImage(tileLookup[layeredTopTileHash].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
@@ -490,7 +488,7 @@ export function redrawNeighborPane(mapTileEditorData, direction)
     neighborTileImage.addEventListener('mouseout',
       function()
       {
-        clearHoverTile(mapTileEditorData);
+        clearHoverTile(layeredTileHashesDisplay);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -512,10 +510,10 @@ export function redrawIntersectionPane(mapTileEditorData)
   let y = cursor.tileY;
   let x = cursor.tileX;
   
-  let northTileHash = (y - 1 >= 0) ? layeredTileHashesDisplay.map[y - 1][x] : null;
-  let eastTileHash = (x + 1 < layeredTileHashesDisplay.map[0].length) ? layeredTileHashesDisplay.map[y][x + 1] : null;
-  let southTileHash = (y + 1 < layeredTileHashesDisplay.map.length) ? layeredTileHashesDisplay.map[y + 1][x] : null;
-  let westTileHash = (x - 1 >= 0) ? layeredTileHashesDisplay.map[y][x - 1] : null;
+  let northTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.NORTH) ? layeredTileHashesDisplay.map[y - 1][x] : null;
+  let eastTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.EAST) ? layeredTileHashesDisplay.map[y][x + 1] : null;
+  let southTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.SOUTH) ? layeredTileHashesDisplay.map[y + 1][x] : null;
+  let westTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.WEST) ? layeredTileHashesDisplay.map[y][x - 1] : null;
   
   let northNeighborList = !northTileHash || northTileHash === EMPTY_TILE_HASH ? null : tileLookup[northTileHash][Direction.SOUTH];
   let eastNeighborList = !eastTileHash || eastTileHash === EMPTY_TILE_HASH ? null : tileLookup[eastTileHash][Direction.WEST];
@@ -545,7 +543,7 @@ export function redrawIntersectionPane(mapTileEditorData)
     intersectedTileImage.addEventListener('mouseout',
       function()
       {
-        clearHoverTile(mapTileEditorData);
+        clearHoverTile(layeredTileHashesDisplay);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -590,9 +588,9 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
   fillTileQueue.push({x: x - 1, y: y});
   
   let isEmptyMap = true;
-  for (let y = 0; y < layeredTileHashesDisplay.map.length; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < layeredTileHashesDisplay.map[y].length; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] !== EMPTY_TILE_HASH)
       {
@@ -633,7 +631,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       
       console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         return;
       }
@@ -647,10 +645,10 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
+      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
-      clearHoverTile(mapTileEditorData);
+      clearHoverTile(layeredTileHashesDisplay);
       //redrawNeighborPanes(mapTileEditorData);
       redrawAll(mapTileEditorData);
       
@@ -659,25 +657,25 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
         return;
       }
       
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y - 1});
       }
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x + 1, y: tileCoordinate.y});
       }
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y + 1});
       }
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
       )
       {
@@ -697,7 +695,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
         fillMapSupplement(mapTileEditorData, isAnimate, 2);
         fillMapSupplement(mapTileEditorData, isAnimate, 1);
         console.log('Stopping loop');
-        clearHoverTile(mapTileEditorData);
+        clearHoverTile(layeredTileHashesDisplay);
         redrawNeighborPanes(mapTileEditorData);
         redrawAll(mapTileEditorData);
         break;
@@ -707,7 +705,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       
       console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         continue;
       }
@@ -721,7 +719,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
+      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
@@ -729,25 +727,25 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
         continue;
       }
       
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y - 1});
       }
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x + 1, y: tileCoordinate.y});
       }
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y + 1});
       }
-      if (isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
       )
       {
@@ -765,9 +763,9 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
   
   let fillTileQueue = [];
   
-  for (let y = 0; y < layeredTileHashesDisplay.map.length; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < layeredTileHashesDisplay.map[y].length; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
@@ -791,7 +789,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       
       console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         return;
       }
@@ -805,10 +803,10 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
+      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
-      clearHoverTile(mapTileEditorData);
+      clearHoverTile(layeredTileHashesDisplay);
       //redrawNeighborPanes(mapTileEditorData);
       redrawAll(mapTileEditorData);
       
@@ -826,7 +824,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       if (fillTileQueue.length <= 0)
       {
         console.log('Stopping loop');
-        clearHoverTile(mapTileEditorData);
+        clearHoverTile(layeredTileHashesDisplay);
         redrawNeighborPanes(mapTileEditorData);
         redrawAll(mapTileEditorData);
         break;
@@ -836,7 +834,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       
       console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         continue;
       }
@@ -850,7 +848,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
+      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
@@ -915,12 +913,12 @@ export function printDebug(mapTileEditorData)
   console.log(cursor);
   console.log('\n');
   
-  console.info('userActionHistory:');
-  console.log(userActionHistory);
-  console.log('\n');
-  
   console.info('layeredTileHashesDisplay.map[' + cursor.tileY + '][' + cursor.tileX + ']:');
   console.log(layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]);
+  console.log('\n');
+  
+  console.info('userActionHistory:');
+  console.log(userActionHistory);
   console.log('\n');
   
   console.log("*****DEBUG PRINT END*****");

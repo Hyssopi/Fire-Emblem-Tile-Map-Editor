@@ -175,57 +175,12 @@ function setup(tileLookup)
   
   setupTrackTransforms(context);
   
-  /*
-  let cursor =
-  {
-    image: new Image(),
-    tileX: 0,
-    tileY: 0
-  };
-  
-  let userActionHistory =
-  {
-    logs: [],
-    counter: -1
-  };
-  
-  cursor.image = tileLookup[CURSOR_TILE_HASH].image;
-  
-  let layeredTileHashesDisplay = {};
-  layeredTileHashesDisplay.map = [];
-  layeredTileHashesDisplay.hover = [];
-  for (let y = 0; y < 9; y++)
-  {
-    let mapTileHashesDisplayRow = [];
-    let hoverTileHashesDisplayRow = [];
-    for (let x = 0; x < 16; x++)
-    {
-      mapTileHashesDisplayRow.push(EMPTY_TILE_HASH);
-      hoverTileHashesDisplayRow.push(null);
-    }
-    layeredTileHashesDisplay.map.push(mapTileHashesDisplayRow);
-    layeredTileHashesDisplay.hover.push(hoverTileHashesDisplayRow);
-  }
-  
   let mapTileEditorData =
   {
-    canvas: canvas,
     tileLookup: tileLookup,
-    layeredTileHashesDisplay: layeredTileHashesDisplay,
-    cursor: cursor,
-    userActionHistory: userActionHistory
-  };
-  
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
-  */
-  
-  
-  
-  
-  let mapTileEditorData =
-  {
     canvas: canvas,
-    tileLookup: tileLookup,
+    mapWidth: 1,
+    mapHeight: 1,
     layeredTileHashesDisplay: null,
     cursor: null,
     userActionHistory: null
@@ -286,6 +241,8 @@ function resizeAndReset(mapTileEditorData)
     layeredTileHashesDisplay.hover.push(hoverTileHashesDisplayRow);
   }
   
+  mapTileEditorData.mapWidth = mapWidth;
+  mapTileEditorData.mapHeight = mapHeight;
   mapTileEditorData.layeredTileHashesDisplay = layeredTileHashesDisplay;
   mapTileEditorData.cursor = cursor;
   mapTileEditorData.userActionHistory = userActionHistory;
@@ -293,17 +250,17 @@ function resizeAndReset(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
-function exportMap(tileLookup, layeredTileHashesDisplay)
+function exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
 {
   let newCanvas = document.createElement('canvas');
   let newContext = newCanvas.getContext('2d');
   
-  newCanvas.width = layeredTileHashesDisplay.map[0].length * TILE_WIDTH;
-  newCanvas.height = layeredTileHashesDisplay.map.length * TILE_HEIGHT;
+  newCanvas.width = mapWidth * TILE_WIDTH;
+  newCanvas.height = mapHeight * TILE_HEIGHT;
   
-  for (let y = 0; y < layeredTileHashesDisplay.map.length; y++)
+  for (let y = 0; y < mapHeight; y++)
   {
-    for (let x = 0; x < layeredTileHashesDisplay.map[y].length; x++)
+    for (let x = 0; x < mapWidth; x++)
     {
       newContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
     }
@@ -391,46 +348,48 @@ function setupMouseEventListeners(mapTileEditorData)
 
 function cursorMoveUpResponse(mapTileEditorData)
 {
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   cursor.tileY = (cursor.tileY - 1 >= 0) ? (cursor.tileY - 1) : 0;
   
-  mapTileEditorUtilities.clearHoverTile(mapTileEditorData);
+  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
 function cursorMoveDownResponse(mapTileEditorData)
 {
-  let cursor = mapTileEditorData.cursor;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+
+  cursor.tileY = (cursor.tileY + 1 < mapTileEditorData.mapHeight) ? (cursor.tileY + 1) : (mapTileEditorData.mapHeight - 1);
   
-  cursor.tileY = (cursor.tileY + 1 < layeredTileHashesDisplay.map.length) ? (cursor.tileY + 1) : (layeredTileHashesDisplay.map.length - 1);
-  
-  mapTileEditorUtilities.clearHoverTile(mapTileEditorData);
+  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
 function cursorMoveLeftResponse(mapTileEditorData)
 {
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   cursor.tileX = (cursor.tileX - 1 >= 0) ? (cursor.tileX - 1) : 0;
   
-  mapTileEditorUtilities.clearHoverTile(mapTileEditorData);
+  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
 function cursorMoveRightResponse(mapTileEditorData)
 {
-  let cursor = mapTileEditorData.cursor;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
   
-  cursor.tileX = (cursor.tileX + 1 < layeredTileHashesDisplay.map[0].length) ? (cursor.tileX + 1) : (layeredTileHashesDisplay.map[0].length - 1);
+  cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
   
-  mapTileEditorUtilities.clearHoverTile(mapTileEditorData);
+  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
@@ -477,7 +436,7 @@ function fillTileResponse(mapTileEditorData)
   
   let strictness = document.getElementById(Ids.tileControlBlock.strictnessCombobox).value;
   
-  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
+  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
   mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, fillTileHash);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
@@ -592,7 +551,7 @@ function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.genericControlBlock.exportButton).addEventListener('click',
     function()
     {
-      exportMap(mapTileEditorData.tileLookup, mapTileEditorData.layeredTileHashesDisplay);
+      exportMap(mapTileEditorData.tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, mapTileEditorData.layeredTileHashesDisplay);
     });
   
   document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
