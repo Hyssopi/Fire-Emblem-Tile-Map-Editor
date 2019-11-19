@@ -552,14 +552,18 @@ export function redrawIntersectionPane(mapTileEditorData)
   }
 }
 
-// TODO: Move this to where?
 export function updateInformationDisplayTile(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let canvas = mapTileEditorData.canvas;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
+  let tileHash = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX];
+  
+  document.getElementById('tileTypeId').textContent = tileLookup[tileHash].group;
+  document.getElementById('cursorPositionXId').textContent = cursor.tileX + 1;
+  document.getElementById('cursorPositionYId').textContent = cursor.tileY + 1;
+  document.getElementById('tileDescriptionId').textContent = tileLookup[tileHash].description;
 }
 
 

@@ -146,6 +146,10 @@ fetch(tileReferencesJsonFilePath)
         tileLookup[tileReferencesJson[i].tileHash] = {};
       }
       
+      tileLookup[tileReferencesJson[i].tileHash].group = tileReferencesJson[i].group;
+      
+      tileLookup[tileReferencesJson[i].tileHash].description = tileReferencesJson[i].tileHash;
+      
       tileLookup[tileReferencesJson[i].tileHash][Direction.NORTH] = tileReferencesJson[i][Direction.NORTH];
       tileLookup[tileReferencesJson[i].tileHash][Direction.EAST] = tileReferencesJson[i][Direction.EAST];
       tileLookup[tileReferencesJson[i].tileHash][Direction.SOUTH] = tileReferencesJson[i][Direction.SOUTH];
@@ -533,21 +537,29 @@ function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 'w' or arrow up button pressed
       cursorMoveUpResponse(mapTileEditorData);
+
+      mapTileEditorUtilities.updateInformationDisplayTile(mapTileEditorData);
     }
     if (event.key === 's' || event.key === 'ArrowDown')
     {
       // 's' or arrow down button pressed
       cursorMoveDownResponse(mapTileEditorData);
+      
+      mapTileEditorUtilities.updateInformationDisplayTile(mapTileEditorData);
     }
     if (event.key === 'a' || event.key === 'ArrowLeft')
     {
       // 'a' or arrow left button pressed
       cursorMoveLeftResponse(mapTileEditorData);
+      
+      mapTileEditorUtilities.updateInformationDisplayTile(mapTileEditorData);
     }
     if (event.key === 'd' || event.key === 'ArrowRight')
     {
       // 'd' or arrow right button pressed
       cursorMoveRightResponse(mapTileEditorData);
+      
+      mapTileEditorUtilities.updateInformationDisplayTile(mapTileEditorData);
     }
     
     if (event.key === 'u')
