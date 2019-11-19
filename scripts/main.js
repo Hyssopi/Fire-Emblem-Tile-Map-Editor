@@ -550,6 +550,12 @@ function setupKeyboardEventListeners(mapTileEditorData)
       cursorMoveRightResponse(mapTileEditorData);
     }
     
+    if (event.key === 'u')
+    {
+      // 'u' button pressed
+      mapTileEditorUtilities.redrawAll(mapTileEditorData);
+    }
+    
     if (event.key === 'z')
     {
       // 'z' button pressed

@@ -552,9 +552,15 @@ export function redrawIntersectionPane(mapTileEditorData)
   }
 }
 
-
-
-
+// TODO: Move this to where?
+export function updateInformationDisplayTile(mapTileEditorData)
+{
+  let tileLookup = mapTileEditorData.tileLookup;
+  let canvas = mapTileEditorData.canvas;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+}
 
 
 
