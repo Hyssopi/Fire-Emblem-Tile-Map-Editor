@@ -84,23 +84,34 @@ export function getLayeredTopTileHash(layeredTileHashesDisplay, x, y)
   }
 }
 
-
-
-
-
-
-
-export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, strictness = 4)
+export function getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, direction)
 {
-  let northTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.NORTH) ? mapTileHashesDisplay[y - 1][x] : null;
-  let eastTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.EAST) ? mapTileHashesDisplay[y][x + 1] : null;
-  let southTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.SOUTH) ? mapTileHashesDisplay[y + 1][x] : null;
-  let westTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.WEST) ? mapTileHashesDisplay[y][x - 1] : null;
+  if (direction === Direction.NORTH)
+  {
+    let northTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.NORTH) ? mapTileHashesDisplay[y - 1][x] : null;
+    let northNeighborList = !northTileHash || northTileHash === EMPTY_TILE_HASH ? null : tileLookup[northTileHash][Direction.SOUTH];
+    return northNeighborList;
+  }
+  else if (direction === Direction.EAST)
+  {
+    let eastTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.EAST) ? mapTileHashesDisplay[y][x + 1] : null;
+    let eastNeighborList = !eastTileHash || eastTileHash === EMPTY_TILE_HASH ? null : tileLookup[eastTileHash][Direction.WEST];
+    return eastNeighborList;
+  }
+  else if (direction === Direction.SOUTH)
+  {
+    let southTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.SOUTH) ? mapTileHashesDisplay[y + 1][x] : null;
+    let southNeighborList = !southTileHash || southTileHash === EMPTY_TILE_HASH ? null : tileLookup[southTileHash][Direction.NORTH];
+    return southNeighborList;
+  }
+  else if (direction === Direction.WEST)
+  {
+    let westTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.WEST) ? mapTileHashesDisplay[y][x - 1] : null;
+    let westNeighborList = !westTileHash || westTileHash === EMPTY_TILE_HASH ? null : tileLookup[westTileHash][Direction.EAST];
+    return westNeighborList;
+  }
   
-  let northNeighborList = !northTileHash || northTileHash === EMPTY_TILE_HASH ? null : tileLookup[northTileHash][Direction.SOUTH];
-  let eastNeighborList = !eastTileHash || eastTileHash === EMPTY_TILE_HASH ? null : tileLookup[eastTileHash][Direction.WEST];
-  let southNeighborList = !southTileHash || southTileHash === EMPTY_TILE_HASH ? null : tileLookup[southTileHash][Direction.NORTH];
-  let westNeighborList = !westTileHash || westTileHash === EMPTY_TILE_HASH ? null : tileLookup[westTileHash][Direction.EAST];
+  
   
   /*
   console.log('northNeighborList');
@@ -113,6 +124,18 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   console.log(westNeighborList);
   console.log('\n\n');
   */
+}
+
+
+
+
+
+export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, strictness = 4)
+{
+  let northNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.NORTH);
+  let eastNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.EAST);
+  let southNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.SOUTH);
+  let westNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.WEST);
   
   let fillTileHashes = getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness);
   
@@ -200,14 +223,14 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
     ++invalidNeighborListCount;
   }
   
-  let fillTileHashes4 = [];
+  let fillTileHashes = [];
   
   for (let key in allUniqueNeighborTileHashes)
   {
     //console.log(allUniqueNeighborTileHashes[key]);
     if (allUniqueNeighborTileHashes[key] >= strictness - invalidNeighborListCount)
     {
-      fillTileHashes4.push(key);
+      fillTileHashes.push(key);
     }
   }
   
@@ -217,10 +240,7 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
   //console.log('fillTileHashes:');
   //console.log(fillTileHashes[4]);
   
-  
-  return fillTileHashes4;
-  
-  
+  return fillTileHashes;
 }
 
 
@@ -312,6 +332,8 @@ export function redo(mapTileEditorData)
 
 export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isLog = true)
 {
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let userActionHistory = mapTileEditorData.userActionHistory;
   
@@ -335,7 +357,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
     modifiedX = x - 1;
   }
   
-  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, modifiedX, modifiedY))
+  if (isValidTileCoordinate(mapWidth, mapHeight, modifiedX, modifiedY))
   {
     if (isLog)
     {
@@ -345,7 +367,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   }
   else
   {
-    console.error('Cannot setTile(...), out of bounds: x = ' + modifiedX + ', y = ' + modifiedY + ', Direction = ' + direction);
+    console.error('Cannot setTile(...), out of bounds: x = ' + x + ', y = ' + y + ', Direction = ' + direction);
   }
   
   //redrawMap(mapTileEditorData);
@@ -353,6 +375,8 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
 
 export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null)
 {
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   
   let modifiedX = x;
@@ -375,13 +399,13 @@ export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null
     modifiedX = x - 1;
   }
   
-  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, modifiedX, modifiedY))
+  if (isValidTileCoordinate(mapWidth, mapHeight, modifiedX, modifiedY))
   {
     layeredTileHashesDisplay.hover[modifiedY][modifiedX] = tileHash;
   }
   else
   {
-    console.warn('Cannot setHoverTile(...), out of bounds: x = ' + modifiedX + ', y = ' + modifiedY + ', Direction = ' + direction);
+    console.warn('Cannot setHoverTile(...), out of bounds: x = ' + x + ', y = ' + y + ', Direction = ' + direction);
   }
   
   //redrawMap(mapTileEditorData);
@@ -412,7 +436,7 @@ export function redrawAll(mapTileEditorData)
 {
   redrawMap(mapTileEditorData);
   redrawNeighborPanes(mapTileEditorData);
-  redrawIntersectionPane(mapTileEditorData);
+  redrawIntersectionPanes(mapTileEditorData);
 }
 
 
@@ -422,6 +446,8 @@ export function redrawMap(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let canvas = mapTileEditorData.canvas;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -437,9 +463,9 @@ export function redrawMap(mapTileEditorData)
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.restore();
   
-  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
+  for (let y = 0; y < mapHeight; y++)
   {
-    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
+    for (let x = 0; x < mapWidth; x++)
     {
       let layeredTopTileHash = getLayeredTopTileHash(layeredTileHashesDisplay, x, y);
       context.drawImage(tileLookup[layeredTopTileHash].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
@@ -465,23 +491,23 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   
   document.getElementById(Ids.neighborPane[direction]).innerHTML = '';
   
-  let neighborData = tileLookup[layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]];
+  let cursorTileData = tileLookup[layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]];
   
-  for (let i = 0; neighborData[direction] && i < neighborData[direction].length; i++)
+  for (let i = 0; cursorTileData[direction] && i < cursorTileData[direction].length; i++)
   {
     let neighborTileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
-    neighborTileImage.src = tileLookup[neighborData[direction][i]].image.src;
+    neighborTileImage.src = tileLookup[cursorTileData[direction][i]].image.src;
     neighborTileImage.addEventListener('click',
       function()
       {
-        setTile(mapTileEditorData, cursor.tileX, cursor.tileY, neighborData[direction][i], direction);
+        setTile(mapTileEditorData, cursor.tileX, cursor.tileY, cursorTileData[direction][i], direction);
         
         redrawAll(mapTileEditorData);
       }, false);
     neighborTileImage.addEventListener('mouseenter',
       function()
       {
-        setHoverTile(mapTileEditorData, cursor.tileX, cursor.tileY, neighborData[direction][i], direction);
+        setHoverTile(mapTileEditorData, cursor.tileX, cursor.tileY, cursorTileData[direction][i], direction);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -497,30 +523,33 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   }
 }
 
-// TODO: Fix up
-// TODO: Is not recalled after doing 'g'
-export function redrawIntersectionPane(mapTileEditorData)
+export function redrawIntersectionPanes(mapTileEditorData)
+{
+  redrawIntersectionPane(mapTileEditorData, 4);
+  redrawIntersectionPane(mapTileEditorData, 3);
+  redrawIntersectionPane(mapTileEditorData, 2);
+  redrawIntersectionPane(mapTileEditorData, 1);
+}
+
+export function redrawIntersectionPane(mapTileEditorData, strictness)
 {
   let tileLookup = mapTileEditorData.tileLookup;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  document.getElementById('intersectionPaneStrictId4').innerHTML = '';
+  document.getElementById(Ids.intersectionPane[strictness]).innerHTML = '';
   
   let y = cursor.tileY;
   let x = cursor.tileX;
   
-  let northTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.NORTH) ? layeredTileHashesDisplay.map[y - 1][x] : null;
-  let eastTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.EAST) ? layeredTileHashesDisplay.map[y][x + 1] : null;
-  let southTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.SOUTH) ? layeredTileHashesDisplay.map[y + 1][x] : null;
-  let westTileHash = isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.WEST) ? layeredTileHashesDisplay.map[y][x - 1] : null;
+  let northNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.NORTH);
+  let eastNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.EAST);
+  let southNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.SOUTH);
+  let westNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.WEST);
   
-  let northNeighborList = !northTileHash || northTileHash === EMPTY_TILE_HASH ? null : tileLookup[northTileHash][Direction.SOUTH];
-  let eastNeighborList = !eastTileHash || eastTileHash === EMPTY_TILE_HASH ? null : tileLookup[eastTileHash][Direction.WEST];
-  let southNeighborList = !southTileHash || southTileHash === EMPTY_TILE_HASH ? null : tileLookup[southTileHash][Direction.NORTH];
-  let westNeighborList = !westTileHash || westTileHash === EMPTY_TILE_HASH ? null : tileLookup[westTileHash][Direction.EAST];
-  
-  let fillTileHashes = getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
+  let fillTileHashes = getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness);
   
   for (let i = 0; fillTileHashes && i < fillTileHashes.length; i++)
   {
@@ -548,7 +577,7 @@ export function redrawIntersectionPane(mapTileEditorData)
         redrawMap(mapTileEditorData);
       }, false);
     
-    document.getElementById('intersectionPaneStrictId4').appendChild(intersectedTileImage);
+    document.getElementById(Ids.intersectionPane[strictness]).appendChild(intersectedTileImage);
   }
 }
 
@@ -560,10 +589,10 @@ export function updateInformationDisplayTile(mapTileEditorData)
   
   let tileHash = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX];
   
-  document.getElementById('tileTypeId').textContent = tileLookup[tileHash].group;
-  document.getElementById('cursorPositionXId').textContent = cursor.tileX + 1;
-  document.getElementById('cursorPositionYId').textContent = cursor.tileY + 1;
-  document.getElementById('tileDescriptionId').textContent = tileLookup[tileHash].description;
+  document.getElementById(Ids.informationDisplayTileBlock.tileType).textContent = tileLookup[tileHash].group;
+  document.getElementById(Ids.informationDisplayTileBlock.cursorPositionX).textContent = cursor.tileX + 1;
+  document.getElementById(Ids.informationDisplayTileBlock.cursorPositionY).textContent = cursor.tileY + 1;
+  document.getElementById(Ids.informationDisplayTileBlock.tileDescription).textContent = tileLookup[tileHash].description;
 }
 
 
@@ -587,6 +616,8 @@ export function updateInformationDisplayTile(mapTileEditorData)
 export function fillMap(mapTileEditorData, x, y, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -598,9 +629,9 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
   fillTileQueue.push({x: x - 1, y: y});
   
   let isEmptyMap = true;
-  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
+  for (let y = 0; y < mapHeight; y++)
   {
-    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
+    for (let x = 0; x < mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] !== EMPTY_TILE_HASH)
       {
@@ -619,7 +650,10 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
     let randomTileHash = getRandomTileHash(tileLookup);
     setTile(mapTileEditorData, x, y, randomTileHash);
     
-    redrawAll(mapTileEditorData);
+    if (isAnimate)
+    {
+      redrawAll(mapTileEditorData);
+    }
   }
   
   if (isAnimate)
@@ -641,7 +675,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       
       console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         return;
       }
@@ -655,7 +689,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
+      let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       clearHoverTile(layeredTileHashesDisplay);
@@ -667,25 +701,25 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
         return;
       }
       
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y - 1});
       }
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x + 1, y: tileCoordinate.y});
       }
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y + 1});
       }
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
       )
       {
@@ -715,7 +749,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       
       console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         continue;
       }
@@ -729,7 +763,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
+      let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
@@ -737,25 +771,25 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
         continue;
       }
       
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y - 1});
       }
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x + 1, y: tileCoordinate.y});
       }
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
       )
       {
         fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y + 1});
       }
-      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+      if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
         && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
       )
       {
@@ -768,14 +802,16 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
 export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
 {
   let tileLookup = mapTileEditorData.tileLookup;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   let fillTileQueue = [];
   
-  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
+  for (let y = 0; y < mapHeight; y++)
   {
-    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
+    for (let x = 0; x < mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
@@ -799,7 +835,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       
       console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         return;
       }
@@ -813,7 +849,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
+      let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       clearHoverTile(layeredTileHashesDisplay);
@@ -844,7 +880,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       
       console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
       
-      if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
+      if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
       {
         continue;
       }
@@ -858,7 +894,7 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
       cursor.tileY = tileCoordinate.y;
       
       //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
-      let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
+      let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
       setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
       
       if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))

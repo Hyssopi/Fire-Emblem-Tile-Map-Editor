@@ -47,7 +47,7 @@ export const Ids =
   },
   tileControlBlock:
   {
-    strictnessCombobox: 'strictnessComboboxId',
+    strictnessComboBox: 'strictnessComboBoxId',
     randomTileButton: 'randomTileButtonId',
     clearTileButton: 'clearTileButtonId',
     fillTileButton: 'fillTileButtonId',
@@ -309,24 +309,24 @@ function resizeMap(mapTileEditorData)
 
 function exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
 {
-  let newCanvas = document.createElement('canvas');
-  let newContext = newCanvas.getContext('2d');
+  let exportCanvas = document.createElement('canvas');
+  let exportContext = exportCanvas.getContext('2d');
   
-  newCanvas.width = mapWidth * TILE_WIDTH;
-  newCanvas.height = mapHeight * TILE_HEIGHT;
+  exportCanvas.width = mapWidth * TILE_WIDTH;
+  exportCanvas.height = mapHeight * TILE_HEIGHT;
   
   for (let y = 0; y < mapHeight; y++)
   {
     for (let x = 0; x < mapWidth; x++)
     {
-      newContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+      exportContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
     }
   }
   
   let url = document.createElement('a');
-  url.href = newCanvas.toDataURL();
+  url.href = exportCanvas.toDataURL();
   
-  window.open(url, '_blank', 'width = ' + newCanvas.width + ', height = ' + newCanvas.height + ', resizable = 1');
+  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
 }
 
 function setupMouseEventListeners(mapTileEditorData)
@@ -417,10 +417,11 @@ function cursorMoveUpResponse(mapTileEditorData)
 
 function cursorMoveDownResponse(mapTileEditorData)
 {
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
 
-  cursor.tileY = (cursor.tileY + 1 < mapTileEditorData.mapHeight) ? (cursor.tileY + 1) : (mapTileEditorData.mapHeight - 1);
+  cursor.tileY = (cursor.tileY + 1 < mapHeight) ? (cursor.tileY + 1) : (mapHeight - 1);
   
   mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   
@@ -441,10 +442,11 @@ function cursorMoveLeftResponse(mapTileEditorData)
 
 function cursorMoveRightResponse(mapTileEditorData)
 {
+  let mapWidth = mapTileEditorData.mapWidth;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
+  cursor.tileX = (cursor.tileX + 1 < mapWidth) ? (cursor.tileX + 1) : (mapWidth - 1);
   
   mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   
@@ -488,12 +490,14 @@ function randomTileResponse(mapTileEditorData)
 function fillTileResponse(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  let strictness = document.getElementById(Ids.tileControlBlock.strictnessCombobox).value;
+  let strictness = document.getElementById(Ids.tileControlBlock.strictnessComboBox).value;
   
-  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
+  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
   mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, fillTileHash);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
@@ -617,6 +621,9 @@ function setupKeyboardEventListeners(mapTileEditorData)
 function setupUIEventListeners(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   
   document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).addEventListener('change',
     function()
@@ -639,7 +646,7 @@ function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.genericControlBlock.exportButton).addEventListener('click',
     function()
     {
-      exportMap(mapTileEditorData.tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, mapTileEditorData.layeredTileHashesDisplay);
+      exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay);
     });
   
   document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
