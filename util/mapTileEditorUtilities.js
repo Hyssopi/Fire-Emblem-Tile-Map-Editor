@@ -1,7 +1,7 @@
 
 import * as utilities from './utilities.js';
 
-import {TILE_WIDTH, TILE_HEIGHT, EMPTY_TILE_HASH, Direction, Ids} from '../scripts/main.js';
+import {TILE_WIDTH, TILE_HEIGHT, CURSOR_TILE_HASH, EMPTY_TILE_HASH, Direction, Ids} from '../scripts/main.js';
 
 
 
@@ -125,6 +125,185 @@ export function getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   console.log('\n\n');
   */
 }
+
+
+
+
+
+export function resetMap(mapTileEditorData)
+{
+  let tileLookup = mapTileEditorData.tileLookup;
+  
+  let cursor =
+  {
+    image: new Image(),
+    tileX: 0,
+    tileY: 0
+  };
+  
+  let userActionHistory =
+  {
+    logs: [],
+    counter: -1
+  };
+  
+  cursor.image = tileLookup[CURSOR_TILE_HASH].image;
+  
+  let mapWidth = document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value;
+  let mapHeight = document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value;
+  
+  mapWidth = mapWidth ? mapWidth : 1;
+  mapHeight = mapHeight ? mapHeight : 1;
+  
+  let layeredTileHashesDisplay = {};
+  layeredTileHashesDisplay.map = [];
+  layeredTileHashesDisplay.hover = [];
+  for (let y = 0; y < mapHeight; y++)
+  {
+    let mapTileHashesDisplayRow = [];
+    let hoverTileHashesDisplayRow = [];
+    for (let x = 0; x < mapWidth; x++)
+    {
+      mapTileHashesDisplayRow.push(EMPTY_TILE_HASH);
+      hoverTileHashesDisplayRow.push(null);
+    }
+    layeredTileHashesDisplay.map.push(mapTileHashesDisplayRow);
+    layeredTileHashesDisplay.hover.push(hoverTileHashesDisplayRow);
+  }
+  
+  mapTileEditorData.mapWidth = mapWidth;
+  mapTileEditorData.mapHeight = mapHeight;
+  mapTileEditorData.layeredTileHashesDisplay = layeredTileHashesDisplay;
+  mapTileEditorData.cursor = cursor;
+  mapTileEditorData.userActionHistory = userActionHistory;
+  
+  redrawAll(mapTileEditorData);
+}
+
+export function resizeMap(mapTileEditorData)
+{
+  let tileLookup = mapTileEditorData.tileLookup;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+  let mapWidth = document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value;
+  let mapHeight = document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value;
+  
+  mapWidth = mapWidth ? mapWidth : 1;
+  mapHeight = mapHeight ? mapHeight : 1;
+  
+  // Adding new empty rows/columns if needed
+  for (let y = 0; y < mapHeight; y++)
+  {
+    if (layeredTileHashesDisplay.map[y])
+    {
+      layeredTileHashesDisplay.map.push([]);
+    }
+    if (layeredTileHashesDisplay.hover[y])
+    {
+      layeredTileHashesDisplay.hover.push([]);
+    }
+    for (let x = 0; x < mapWidth; x++)
+    {
+      if (!layeredTileHashesDisplay.map[y][x])
+      {
+        layeredTileHashesDisplay.map[y].push(EMPTY_TILE_HASH);
+      }
+      if (!layeredTileHashesDisplay.hover[y][x])
+      {
+        layeredTileHashesDisplay.hover[y].push(null);
+      }
+    }
+  }
+  
+  // Repositioning the cursor
+  if (cursor.tileX >= mapWidth)
+  {
+    cursor.tileX = mapWidth - 1;
+  }
+  if (cursor.tileY >= mapHeight)
+  {
+    cursor.tileY = mapHeight - 1;
+  }
+
+  mapTileEditorData.mapWidth = mapWidth;
+  mapTileEditorData.mapHeight = mapHeight;
+  
+  redrawAll(mapTileEditorData);
+}
+
+export function exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
+{
+  exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay);
+  exportMapAsTileHashes(mapWidth, mapHeight, layeredTileHashesDisplay.map);
+}
+
+export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
+{
+  let exportCanvas = document.createElement('canvas');
+  let exportContext = exportCanvas.getContext('2d');
+  
+  exportCanvas.width = mapWidth * TILE_WIDTH;
+  exportCanvas.height = mapHeight * TILE_HEIGHT;
+  
+  for (let y = 0; y < mapHeight; y++)
+  {
+    for (let x = 0; x < mapWidth; x++)
+    {
+      exportContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    }
+  }
+  
+  let url = document.createElement('a');
+  url.href = exportCanvas.toDataURL();
+  
+  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
+}
+
+export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
+{
+  let tileHashesOutput = [];
+  for (let y = 0; y < mapHeight; y++)
+  {
+    let tileHashesOutputRow = [];
+    for (let x = 0; x < mapWidth; x++)
+    {
+      tileHashesOutputRow.push(mapTileHashesDisplay[y][x]);
+    }
+    tileHashesOutput.push(tileHashesOutputRow);
+  }
+  
+  
+  console.log(JSON.stringify(tileHashesOutput));
+  
+  
+  //let something = window.open("data:text/json," + JSON.stringify(tileHashesOutput));
+  
+  /*
+  var data = "<p>This is 'myWindow'</p>";
+  let myWindow = window.open("data:text/html," + encodeURIComponent(data), "_blank", "width=200,height=100");
+  myWindow.focus();
+  */
+  
+  /*
+  let url = document.createElement('a');
+  
+  window.open('', 'MsgWindow', 'width = 200, height = 100, resizable = 1');
+  window.document.write("<p>This is 'MsgWindow'. I am 200px wide and 100px tall!</p>"); 
+  */
+  /*
+  let url = document.createElement('a');
+  url.href = exportCanvas.toDataURL();
+  
+  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
+  */
+}
+
+
+
+
+
+
 
 
 
@@ -369,8 +548,6 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   {
     console.error('Cannot setTile(...), out of bounds: x = ' + x + ', y = ' + y + ', Direction = ' + direction);
   }
-  
-  //redrawMap(mapTileEditorData);
 }
 
 export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null)
@@ -407,8 +584,6 @@ export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null
   {
     console.warn('Cannot setHoverTile(...), out of bounds: x = ' + x + ', y = ' + y + ', Direction = ' + direction);
   }
-  
-  //redrawMap(mapTileEditorData);
 }
 
 export function clearHoverTile(layeredTileHashesDisplay)
@@ -420,8 +595,6 @@ export function clearHoverTile(layeredTileHashesDisplay)
       layeredTileHashesDisplay.hover[y][x] = null;
     }
   }
-  
-  //redrawMap(mapTileEditorData);
 }
 
 
@@ -437,6 +610,7 @@ export function redrawAll(mapTileEditorData)
   redrawMap(mapTileEditorData);
   redrawNeighborPanes(mapTileEditorData);
   redrawIntersectionPanes(mapTileEditorData);
+  updateInformationDisplayTile(mapTileEditorData);
 }
 
 
@@ -940,6 +1114,8 @@ export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
 export function printDebug(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -949,6 +1125,14 @@ export function printDebug(mapTileEditorData)
   
   console.info('tileLookup:');
   console.log(tileLookup);
+  console.log('\n');
+  
+  console.info('mapWidth:');
+  console.log(mapWidth);
+  console.log('\n');
+  
+  console.info('mapHeight:');
+  console.log(mapHeight);
   console.log('\n');
   
   console.info('layeredTileHashesDisplay:');
