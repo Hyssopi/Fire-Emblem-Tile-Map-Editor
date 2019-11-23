@@ -91,11 +91,10 @@ function cursorMoveUpResponse(mapTileEditorData)
 
 function cursorMoveDownResponse(mapTileEditorData)
 {
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
 
-  cursor.tileY = (cursor.tileY + 1 < mapHeight) ? (cursor.tileY + 1) : (mapHeight - 1);
+  cursor.tileY = (cursor.tileY + 1 < mapTileEditorData.mapHeight) ? (cursor.tileY + 1) : (mapTileEditorData.mapHeight - 1);
   
   mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
@@ -114,11 +113,10 @@ function cursorMoveLeftResponse(mapTileEditorData)
 
 function cursorMoveRightResponse(mapTileEditorData)
 {
-  let mapWidth = mapTileEditorData.mapWidth;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  cursor.tileX = (cursor.tileX + 1 < mapWidth) ? (cursor.tileX + 1) : (mapWidth - 1);
+  cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
   
   mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
@@ -161,14 +159,12 @@ function randomTileResponse(mapTileEditorData)
 function fillTileResponse(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   let strictness = document.getElementById(Ids.tileControlBlock.strictnessComboBox).value;
   
-  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
+  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
   mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, fillTileHash);
   
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
@@ -302,7 +298,10 @@ export function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.genericControlBlock.exportButton).addEventListener('click',
     function()
     {
-      mapTileEditorUtilities.exportMap(mapTileEditorData.tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, mapTileEditorData.layeredTileHashesDisplay);
+      let tileLookup = mapTileEditorData.tileLookup;
+      let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+      
+      mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
     });
   
   document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
