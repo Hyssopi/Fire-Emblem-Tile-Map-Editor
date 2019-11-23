@@ -54,7 +54,7 @@ export const Ids =
     clearTileButton: 'clearTileButtonId',
     fillTileButton: 'fillTileButtonId',
     generateMapButton: 'generateMapButtonId',
-    isGenerateAnimationCheckbox: 'isGenerateAnimationCheckboxId'
+    isAnimateGeneration: 'isAnimateGenerationId'
   },
   otherControlBlock:
   {

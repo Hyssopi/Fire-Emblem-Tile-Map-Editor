@@ -78,48 +78,80 @@ export function setupMouseEventListeners(mapTileEditorData)
   }, false);
 }
 
-function cursorMoveUpResponse(mapTileEditorData)
+function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   cursor.tileY = (cursor.tileY - 1 >= 0) ? (cursor.tileY - 1) : 0;
-  
-  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
-function cursorMoveDownResponse(mapTileEditorData)
+function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
-
-  cursor.tileY = (cursor.tileY + 1 < mapTileEditorData.mapHeight) ? (cursor.tileY + 1) : (mapTileEditorData.mapHeight - 1);
   
-  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  if (isCtrlKeyDown)
+  {
+    
+    let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
+    let isNextEmpty = null;
+    if (cursor.tileY + 1 < mapTileEditorData.mapHeight)
+    {
+      isNextEmpty = layeredTileHashesDisplay.map[cursor.tileY + 1][cursor.tileX] === EMPTY_TILE_HASH;
+    }
+    
+    while (cursor.tileY + 1 < mapTileEditorData.mapHeight)
+    {
+      let nextTile = layeredTileHashesDisplay.map[cursor.tileY + 1][cursor.tileX];
+      if (isStartEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        ++cursor.tileY;
+      }
+      else if (isStartEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        ++cursor.tileY;
+        break;
+      }
+      if (!isStartEmpty && !isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        ++cursor.tileY;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        break;
+      }
+      if (!isStartEmpty && isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        ++cursor.tileY;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        ++cursor.tileY;
+        break;
+      }
+    }
+  }
+  else
+  {
+    cursor.tileY = (cursor.tileY + 1 < mapTileEditorData.mapHeight) ? (cursor.tileY + 1) : (mapTileEditorData.mapHeight - 1);
+  }
 }
 
-function cursorMoveLeftResponse(mapTileEditorData)
+function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   cursor.tileX = (cursor.tileX - 1 >= 0) ? (cursor.tileX - 1) : 0;
-  
-  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
-function cursorMoveRightResponse(mapTileEditorData)
+function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
-  
-  mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
 function undoResponse(mapTileEditorData)
@@ -174,7 +206,7 @@ function generateMapResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
   
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, false);
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, document.getElementById(Ids.tileControlBlock.isAnimateGeneration).checked);
 }
 
 function printDebugResponse(mapTileEditorData)
@@ -198,30 +230,87 @@ function preventNonNumericalResponse(event)
 
 export function setupKeyboardEventListeners(mapTileEditorData)
 {
-  function keydownResponse(event)
+  /*
+  TODO: Temporarily comment out while developing
+  // Prevent Ctrl + W from closing the window/tab
+  window.onbeforeunload = function(event)
   {
-    console.log('event.key: ' + event.key + ', event.code: ' + event.code + ', event.which: ' + event.which);
+    event.preventDefault();
+  };
+  */
+  
+  let eventKeyMap = {};
+  let isPreviouslyMoved =
+  {
+    up: false,
+    down: false,
+    left: false,
+    right: false
+  };
+  
+  onkeydown = onkeyup = function(event)
+  {
+    let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
     
-    if (event.key === 'w' || event.key === 'ArrowUp')
+    eventKeyMap[event.key] = event.type == 'keydown';
+    console.log(eventKeyMap);
+    
+    if (event.ctrlKey)
+    {
+      event.preventDefault();
+    }
+    
+    if (!isPreviouslyMoved.up && (eventKeyMap['w'] || eventKeyMap['ArrowUp']))
     {
       // 'w' or arrow up button pressed
-      cursorMoveUpResponse(mapTileEditorData);
+      cursorMoveUpResponse(mapTileEditorData, event.ctrlKey);
+      console.log("MOVED UP");
+      isPreviouslyMoved.up = true;
     }
-    if (event.key === 's' || event.key === 'ArrowDown')
+    else
+    {
+      isPreviouslyMoved.up = false;
+    }
+    if (!isPreviouslyMoved.down && (eventKeyMap['s'] || eventKeyMap['ArrowDown']))
     {
       // 's' or arrow down button pressed
-      cursorMoveDownResponse(mapTileEditorData);
+      cursorMoveDownResponse(mapTileEditorData, event.ctrlKey);
+      console.log("MOVED DOWN");
+      isPreviouslyMoved.down = true;
     }
-    if (event.key === 'a' || event.key === 'ArrowLeft')
+    else
+    {
+      isPreviouslyMoved.down = false;
+    }
+    if (!isPreviouslyMoved.left && (eventKeyMap['a'] || eventKeyMap['ArrowLeft']))
     {
       // 'a' or arrow left button pressed
-      cursorMoveLeftResponse(mapTileEditorData);
+      cursorMoveLeftResponse(mapTileEditorData, event.ctrlKey);
+      console.log("MOVED LEFT");
+      isPreviouslyMoved.left = true;
     }
-    if (event.key === 'd' || event.key === 'ArrowRight')
+    else
+    {
+      isPreviouslyMoved.left = false;
+    }
+    if (!isPreviouslyMoved.right && (eventKeyMap['d'] || eventKeyMap['ArrowRight']))
     {
       // 'd' or arrow right button pressed
-      cursorMoveRightResponse(mapTileEditorData);
+      cursorMoveRightResponse(mapTileEditorData, event.ctrlKey);
+      console.log("MOVED RIGHT");
+      isPreviouslyMoved.right = true;
     }
+    else
+    {
+      isPreviouslyMoved.right = false;
+    }
+    mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
+    mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  }
+  
+  function keydownResponse(event)
+  {
+    console.log('event.key: ' + event.key + ', event.code: ' + event.code + ', event.which: ' + event.which + ', event.shiftKey: ' + event.shiftKey + ', event.ctrlKey: ' + event.ctrlKey);
     
     if (event.key === 'u')
     {
