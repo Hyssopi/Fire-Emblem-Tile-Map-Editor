@@ -83,7 +83,50 @@ function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  cursor.tileY = (cursor.tileY - 1 >= 0) ? (cursor.tileY - 1) : 0;
+  if (isCtrlKeyDown)
+  {
+    let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
+    let isNextEmpty = null;
+    if (cursor.tileY - 1 >= 0)
+    {
+      isNextEmpty = layeredTileHashesDisplay.map[cursor.tileY - 1][cursor.tileX] === EMPTY_TILE_HASH;
+    }
+    
+    while (cursor.tileY - 1 >= 0)
+    {
+      let nextTile = layeredTileHashesDisplay.map[cursor.tileY - 1][cursor.tileX];
+      if (isStartEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        --cursor.tileY;
+      }
+      else if (isStartEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        --cursor.tileY;
+        break;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        --cursor.tileY;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        break;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        --cursor.tileY;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        --cursor.tileY;
+        break;
+      }
+    }
+  }
+  else
+  {
+    cursor.tileY = (cursor.tileY - 1 >= 0) ? (cursor.tileY - 1) : 0;
+  }
 }
 
 function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
@@ -112,7 +155,7 @@ function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
         ++cursor.tileY;
         break;
       }
-      if (!isStartEmpty && !isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      else if (!isStartEmpty && !isNextEmpty && nextTile !== EMPTY_TILE_HASH)
       {
         ++cursor.tileY;
       }
@@ -120,7 +163,7 @@ function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
       {
         break;
       }
-      if (!isStartEmpty && isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      else if (!isStartEmpty && isNextEmpty && nextTile === EMPTY_TILE_HASH)
       {
         ++cursor.tileY;
       }
@@ -142,7 +185,50 @@ function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  cursor.tileX = (cursor.tileX - 1 >= 0) ? (cursor.tileX - 1) : 0;
+  if (isCtrlKeyDown)
+  {
+    let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
+    let isNextEmpty = null;
+    if (cursor.tileX - 1 >= 0)
+    {
+      isNextEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX - 1] === EMPTY_TILE_HASH;
+    }
+    
+    while (cursor.tileX - 1 >= 0)
+    {
+      let nextTile = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX - 1];
+      if (isStartEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        --cursor.tileX;
+      }
+      else if (isStartEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        --cursor.tileX;
+        break;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        --cursor.tileX;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        break;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        --cursor.tileX;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        --cursor.tileX;
+        break;
+      }
+    }
+  }
+  else
+  {
+    cursor.tileX = (cursor.tileX - 1 >= 0) ? (cursor.tileX - 1) : 0;
+  }
 }
 
 function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
@@ -150,7 +236,50 @@ function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
+  if (isCtrlKeyDown)
+  {
+    let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
+    let isNextEmpty = null;
+    if (cursor.tileX + 1 < mapTileEditorData.mapWidth)
+    {
+      isNextEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX + 1] === EMPTY_TILE_HASH;
+    }
+    
+    while (cursor.tileX + 1 < mapTileEditorData.mapWidth)
+    {
+      let nextTile = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX + 1];
+      if (isStartEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        ++cursor.tileX;
+      }
+      else if (isStartEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        ++cursor.tileX;
+        break;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        ++cursor.tileX;
+      }
+      else if (!isStartEmpty && !isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        break;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile === EMPTY_TILE_HASH)
+      {
+        ++cursor.tileX;
+      }
+      else if (!isStartEmpty && isNextEmpty && nextTile !== EMPTY_TILE_HASH)
+      {
+        ++cursor.tileX;
+        break;
+      }
+    }
+  }
+  else
+  {
+    cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
+  }
 }
 
 function undoResponse(mapTileEditorData)

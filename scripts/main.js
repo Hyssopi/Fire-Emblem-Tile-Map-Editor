@@ -94,8 +94,6 @@ Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 
 /* TODO:
 
-8) Ctrl + Arrow
-
 7) Do not pass mapTileEditorData, pass individual parameters
 
 12)
@@ -105,10 +103,6 @@ for 2 possible, only 1 vlaid tile counts as 3
 
 
 
-3) Fix up Export as Tile Hashes
-
-4) Add Import
-https://stackoverflow.com/questions/16215771/how-open-select-file-dialog-via-js
 
 10) Weighted neighbors calculations
 
@@ -117,6 +111,8 @@ https://stackoverflow.com/questions/16215771/how-open-select-file-dialog-via-js
 
 
 11) Fix panes styling
+
+3) Improve Export/Import
 
 5) Fix isGenerationAnimation button
 
