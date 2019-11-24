@@ -11,7 +11,7 @@ const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
 const IMAGES_OUTPUT_FOLDER_NAME = 'images';
 const UNDEFINED_OUTPUT_FOLDER_NAME = 'UNDEFINED';
 const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
-const HELP_FILE_PATH = 'help/index.html';
+export const HELP_FILE_PATH = 'help/index.html';
 
 export const CURSOR_TILE_HASH = 'a8ebd11f8e75365d496d85d28cde54b7';
 export const EMPTY_TILE_HASH = '73ad52b71d47ee4d45315c6f0da022ac';
@@ -44,6 +44,7 @@ export const Ids =
   {
     exportButton: 'exportButtonId',
     importButton: 'importButtonId',
+    importFileInput: 'importFileInputId',
     undoButton: 'undoButtonId',
     redoButton: 'redoButtonId'
   },
@@ -92,25 +93,46 @@ Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 
 
 /* TODO:
-1) Fix Help
-2) Fix Print Debug
+
+8) Ctrl + Arrow
+
+7) Do not pass mapTileEditorData, pass individual parameters
+
+12)
+fix insectionpane, don't use getfilltiles, cause
+for 3 possible, only 1 valid tile counts as 2
+for 2 possible, only 1 vlaid tile counts as 3
+
+
 
 3) Fix up Export as Tile Hashes
+
 4) Add Import
+https://stackoverflow.com/questions/16215771/how-open-select-file-dialog-via-js
+
+10) Weighted neighbors calculations
+
+13) Fix undo/redo for resize
+
+
+
+11) Fix panes styling
 
 5) Fix isGenerationAnimation button
 
 6) Reorder functions
 
-7) Do not pass mapTileEditorData, pass individual parameters
+2) Fix Print Debug
 
-8) Ctrl + Arrow
+1) Fix Help
 
-9) Optimize WASD movement and redraw
 
-10) Weighted neighbors calculations
 
-11) Fix panes styling
+
+
+
+
+
 
 ?) Multi-select
 ?) Add zoom boundaries

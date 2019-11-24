@@ -301,7 +301,24 @@ export function isUrlExists(url)
 
 
 
-
+export function copyTextToClipboard(text)
+{
+  let textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.textContent = text;
+  document.body.appendChild(textArea);
+  
+  let selection = document.getSelection();
+  let range = document.createRange();
+  range.selectNode(textArea);
+  selection.removeAllRanges();
+  selection.addRange(range);
+  
+  document.execCommand('copy');
+  
+  selection.removeAllRanges();
+  document.body.removeChild(textArea);
+}
 
 
 

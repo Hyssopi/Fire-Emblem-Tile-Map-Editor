@@ -273,8 +273,12 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
     tileHashesOutput.push(tileHashesOutputRow);
   }
   
+  let mapJsonOutput = JSON.stringify(tileHashesOutput);
+  console.log(mapJsonOutput);
   
-  console.log(JSON.stringify(tileHashesOutput));
+  utilities.copyTextToClipboard(mapJsonOutput);
+  
+  
   
   
   //let something = window.open("data:text/json," + JSON.stringify(tileHashesOutput));
@@ -299,7 +303,41 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   */
 }
 
-
+export function loadMapJson(mapTileEditorData, mapJson)
+{
+  resetMap(mapTileEditorData);
+  
+  let mapWidth = mapJson[0].length;
+  let mapHeight = mapJson.length;
+  
+  //mapWidth = mapWidth ? mapWidth : 1;
+  //mapHeight = mapHeight ? mapHeight : 1;
+  
+  document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value = mapWidth;
+  document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value = mapHeight;
+  
+  let layeredTileHashesDisplay = {};
+  layeredTileHashesDisplay.map = [];
+  layeredTileHashesDisplay.hover = [];
+  for (let y = 0; y < mapHeight; y++)
+  {
+    let mapTileHashesDisplayRow = [];
+    let hoverTileHashesDisplayRow = [];
+    for (let x = 0; x < mapWidth; x++)
+    {
+      mapTileHashesDisplayRow.push(mapJson[y][x]);
+      hoverTileHashesDisplayRow.push(null);
+    }
+    layeredTileHashesDisplay.map.push(mapTileHashesDisplayRow);
+    layeredTileHashesDisplay.hover.push(hoverTileHashesDisplayRow);
+  }
+  
+  mapTileEditorData.mapWidth = mapWidth;
+  mapTileEditorData.mapHeight = mapHeight;
+  mapTileEditorData.layeredTileHashesDisplay = layeredTileHashesDisplay;
+  
+  redrawAll(mapTileEditorData);
+}
 
 
 

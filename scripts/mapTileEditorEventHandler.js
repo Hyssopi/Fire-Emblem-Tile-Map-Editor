@@ -1,7 +1,7 @@
 
 import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
 
-import {SCALE_FACTOR, EMPTY_TILE_HASH, Ids} from './main.js';
+import {SCALE_FACTOR, HELP_FILE_PATH, EMPTY_TILE_HASH, Ids} from './main.js';
 
 
 export function setupMouseEventListeners(mapTileEditorData)
@@ -93,7 +93,6 @@ function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
   
   if (isCtrlKeyDown)
   {
-    
     let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
     let isNextEmpty = null;
     if (cursor.tileY + 1 < mapTileEditorData.mapHeight)
@@ -396,7 +395,24 @@ export function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
     function()
     {
+      let input = document.getElementById(Ids.genericControlBlock.importFileInput);
+      input.click();
     });
+  
+  document.getElementById(Ids.genericControlBlock.importFileInput).onchange = event =>
+  {
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+    
+    reader.onload = readerEvent =>
+    {
+      let fileContent = readerEvent.target.result;
+      let mapJson = JSON.parse(fileContent);
+      console.log(mapJson);
+      mapTileEditorUtilities.loadMapJson(mapTileEditorData, mapJson);
+    }
+  }
   
   document.getElementById(Ids.genericControlBlock.undoButton).addEventListener('click',
     function()
