@@ -334,7 +334,11 @@ function generateMapResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
   
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, document.getElementById(Ids.tileControlBlock.isAnimateGeneration).checked);
+  let minimumStrictness = document.getElementById(Ids.tileControlBlock.strictnessComboBox).value;
+  
+  let isAnimate = document.getElementById(Ids.tileControlBlock.isAnimateGeneration).checked;
+  
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
 }
 
 function printDebugResponse(mapTileEditorData)

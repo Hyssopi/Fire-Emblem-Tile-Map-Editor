@@ -84,7 +84,7 @@ export function getLayeredTopTileHash(layeredTileHashesDisplay, x, y)
   }
 }
 
-export function getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, direction)
+export function getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, direction)
 {
   if (direction === Direction.NORTH)
   {
@@ -279,8 +279,6 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   utilities.copyTextToClipboard(mapJsonOutput);
   
   
-  
-  
   //let something = window.open("data:text/json," + JSON.stringify(tileHashesOutput));
   
   /*
@@ -349,10 +347,10 @@ export function loadMapJson(mapTileEditorData, mapJson)
 
 export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, strictness = 4)
 {
-  let northNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.NORTH);
-  let eastNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.EAST);
-  let southNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.SOUTH);
-  let westNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.WEST);
+  let northNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.NORTH);
+  let eastNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.EAST);
+  let southNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.SOUTH);
+  let westNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, Direction.WEST);
   
   let fillTileHashes = getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness);
   
@@ -366,6 +364,20 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   {
     return EMPTY_TILE_HASH;
   }
+  
+  /*
+  // TODO: Figure out getTileNeighborSum()
+  let returnTileHash = fillTileHashes[0];
+  for (let i = 1; i < fillTileHashes.length; i++)
+  {
+    if (getTileNeighborSum(fillTileHashes[i]) > getTileNeighborSum(returnTileHash))
+    {
+      returnTileHash = fillTileHashes[i];
+    }
+  }
+  return returnTileHash;
+  */
+  
   
   return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
 }
@@ -462,6 +474,22 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
 
 
 
+
+
+export function getTileNeighborList(tileLookup, tileHash, direction)
+{
+  return !tileHash || tileHash === EMPTY_TILE_HASH ? [] : tileLookup[tileHash][direction];
+}
+
+export function getTileNeighborSum(tileLookup, tileHash)
+{
+  let northNeighborList = getTileNeighborList(tileLookup, tileHash, Direction.NORTH);
+  let eastNeighborList = getTileNeighborList(tileLookup, tileHash, Direction.EAST);
+  let southNeighborList = getTileNeighborList(tileLookup, tileHash, Direction.SOUTH);
+  let westNeighborList = getTileNeighborList(tileLookup, tileHash, Direction.WEST);
+  
+  return northNeighborList.length + eastNeighborList.length + southNeighborList.length + westNeighborList.length;
+}
 
 
 
@@ -756,10 +784,10 @@ export function redrawIntersectionPane(mapTileEditorData, strictness)
   let y = cursor.tileY;
   let x = cursor.tileX;
   
-  let northNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.NORTH);
-  let eastNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.EAST);
-  let southNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.SOUTH);
-  let westNeighborList = getNeighborList(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.WEST);
+  let northNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.NORTH);
+  let eastNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.EAST);
+  let southNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.SOUTH);
+  let westNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.WEST);
   
   let fillTileHashes = getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness);
   
@@ -825,7 +853,7 @@ export function updateInformationDisplayTile(mapTileEditorData)
 
 
 
-export function fillMap(mapTileEditorData, x, y, isAnimate)
+export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -874,10 +902,10 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
     {
       if (fillTileQueue.length <= 0)
       {
-        fillMapSupplement(mapTileEditorData, isAnimate, 4);
-        fillMapSupplement(mapTileEditorData, isAnimate, 3);
-        fillMapSupplement(mapTileEditorData, isAnimate, 2);
-        fillMapSupplement(mapTileEditorData, isAnimate, 1);
+        for (let i = 4; i >= minimumStrictness; i--)
+        {
+          fillMapSupplement(mapTileEditorData, i, isAnimate);
+        }
         console.log('Stopping interval');
         clearInterval(interval);
         return;
@@ -946,10 +974,10 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
     {
       if (fillTileQueue.length <= 0)
       {
-        fillMapSupplement(mapTileEditorData, isAnimate, 4);
-        fillMapSupplement(mapTileEditorData, isAnimate, 3);
-        fillMapSupplement(mapTileEditorData, isAnimate, 2);
-        fillMapSupplement(mapTileEditorData, isAnimate, 1);
+        for (let i = 4; i >= minimumStrictness; i--)
+        {
+          fillMapSupplement(mapTileEditorData, i, isAnimate);
+        }
         console.log('Stopping loop');
         clearHoverTile(layeredTileHashesDisplay);
         redrawNeighborPanes(mapTileEditorData);
@@ -1011,7 +1039,7 @@ export function fillMap(mapTileEditorData, x, y, isAnimate)
   }
 }
 
-export function fillMapSupplement(mapTileEditorData, isAnimate, strictness = 4)
+export function fillMapSupplement(mapTileEditorData, strictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -1183,6 +1211,10 @@ export function printDebug(mapTileEditorData)
   
   console.info('layeredTileHashesDisplay.map[' + cursor.tileY + '][' + cursor.tileX + ']:');
   console.log(layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]);
+  console.log('\n');
+  
+  console.info('getTileNeighborSum:');
+  console.log(getTileNeighborSum(tileLookup, layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]));
   console.log('\n');
   
   console.info('userActionHistory:');
