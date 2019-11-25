@@ -476,6 +476,132 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
 
 
 
+
+
+
+
+export function getFillTileHashesSplit(northNeighborList, eastNeighborList, southNeighborList, westNeighborList)
+{
+  let allUniqueNeighborTileHashes = {};
+  
+  for (let i = 0; northNeighborList && i < northNeighborList.length; i++)
+  {
+    if (allUniqueNeighborTileHashes[northNeighborList[i]])
+    {
+      ++allUniqueNeighborTileHashes[northNeighborList[i]];
+    }
+    else
+    {
+      allUniqueNeighborTileHashes[northNeighborList[i]] = 1;
+    }
+  }
+  
+  for (let i = 0; eastNeighborList && i < eastNeighborList.length; i++)
+  {
+    if (allUniqueNeighborTileHashes[eastNeighborList[i]])
+    {
+      ++allUniqueNeighborTileHashes[eastNeighborList[i]];
+    }
+    else
+    {
+      allUniqueNeighborTileHashes[eastNeighborList[i]] = 1;
+    }
+  }
+  
+  for (let i = 0; southNeighborList && i < southNeighborList.length; i++)
+  {
+    if (allUniqueNeighborTileHashes[southNeighborList[i]])
+    {
+      ++allUniqueNeighborTileHashes[southNeighborList[i]];
+    }
+    else
+    {
+      allUniqueNeighborTileHashes[southNeighborList[i]] = 1;
+    }
+  }
+  
+  for (let i = 0; westNeighborList && i < westNeighborList.length; i++)
+  {
+    if (allUniqueNeighborTileHashes[westNeighborList[i]])
+    {
+      ++allUniqueNeighborTileHashes[westNeighborList[i]];
+    }
+    else
+    {
+      allUniqueNeighborTileHashes[westNeighborList[i]] = 1;
+    }
+  }
+  
+  let invalidNeighborListCount = 0;
+  if (!northNeighborList)
+  {
+    ++invalidNeighborListCount;
+  }
+  if (!eastNeighborList)
+  {
+    ++invalidNeighborListCount;
+  }
+  if (!southNeighborList)
+  {
+    ++invalidNeighborListCount;
+  }
+  if (!westNeighborList)
+  {
+    ++invalidNeighborListCount;
+  }
+  
+  let fillTileHashes = [];
+  
+  for (let key in allUniqueNeighborTileHashes)
+  {
+    //console.log(allUniqueNeighborTileHashes[key]);
+    if (allUniqueNeighborTileHashes[key] >= strictness - invalidNeighborListCount)
+    {
+      fillTileHashes.push(key);
+    }
+  }
+  
+  //console.log('allUniqueNeighborTileHashes:');
+  //console.log(allUniqueNeighborTileHashes);
+  
+  //console.log('fillTileHashes:');
+  //console.log(fillTileHashes[4]);
+  
+  return fillTileHashes;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export function getTileNeighborList(tileLookup, tileHash, direction)
 {
   return !tileHash || tileHash === EMPTY_TILE_HASH ? [] : tileLookup[tileHash][direction];
