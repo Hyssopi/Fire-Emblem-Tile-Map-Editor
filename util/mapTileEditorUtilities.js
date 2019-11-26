@@ -911,6 +911,7 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
     
     document.getElementById(Ids.intersectionPane[strictness]).appendChild(intersectedTileImage);
   }
+  document.getElementById(Ids.intersectionPane[strictness]).parentElement.style.backgroundColor = fillTileHashes && fillTileHashes.length <= 0 ? 'red' : 'white';
 }
 
 export function updateInformationDisplayTile(mapTileEditorData)
