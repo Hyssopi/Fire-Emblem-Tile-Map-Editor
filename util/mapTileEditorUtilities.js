@@ -391,7 +391,27 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   */
   
   
+  
+ let returnTileHash = fillTileHashes[0];
+ for (let i = 1; i < fillTileHashes.length; i++)
+ {
+   if (getTileNeighborSum(fillTileHashes[i]) > getTileNeighborSum(returnTileHash))
+   {
+     returnTileHash = fillTileHashes[i];
+   }
+ }
+ if (utilities.isRandomSuccess(10))
+ {
+  return returnTileHash;
+ }
+ else
+ {
   return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
+ }
+  
+  /*
+  return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
+  */
 }
 
 export function getAllUniqueNeighborTileHashes(neighborList1, neighborList2 = null, neighborList3 = null, neighborList4 = null)
