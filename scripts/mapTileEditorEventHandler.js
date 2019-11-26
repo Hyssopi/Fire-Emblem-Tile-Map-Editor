@@ -516,13 +516,23 @@ export function setupUIEventListeners(mapTileEditorData)
       mapTileEditorUtilities.resetMap(mapTileEditorData);
     });
   
-  document.getElementById(Ids.genericControlBlock.exportButton).addEventListener('click',
+  document.getElementById(Ids.genericControlBlock.exportAsImageButton).addEventListener('click',
     function()
     {
       let tileLookup = mapTileEditorData.tileLookup;
       let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
       
-      mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+      //mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+      mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+    });
+  
+  document.getElementById(Ids.genericControlBlock.exportAsTileHashesButton).addEventListener('click',
+    function()
+    {
+      let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+      
+      //mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+      mapTileEditorUtilities.exportMapAsTileHashes(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map);
     });
   
   document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',

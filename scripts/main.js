@@ -42,7 +42,8 @@ export const Ids =
   },
   genericControlBlock:
   {
-    exportButton: 'exportButtonId',
+    exportAsImageButton: 'exportAsImageButtonId',
+    exportAsTileHashesButton: 'exportAsTileHashesButtonId',
     importButton: 'importButtonId',
     importFileInput: 'importFileInputId',
     undoButton: 'undoButtonId',

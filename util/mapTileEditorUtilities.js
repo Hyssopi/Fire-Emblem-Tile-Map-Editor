@@ -232,11 +232,13 @@ export function resizeMap(mapTileEditorData)
   redrawAll(mapTileEditorData);
 }
 
+/*
 export function exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
 {
   exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay);
   exportMapAsTileHashes(mapWidth, mapHeight, layeredTileHashesDisplay.map);
 }
+*/
 
 export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
 {
@@ -278,6 +280,16 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   
   utilities.copyTextToClipboard(mapJsonOutput);
   
+  // TODO: Save as a text file
+  let mapJsonOutputWindow = window.open('', '_blank', 'resizable = 1');
+  mapJsonOutputWindow.document.body.innerHTML = JSON.stringify(tileHashesOutput);
+  
+  
+  
+  /*
+  window.open('data:text/html,' + JSON.stringify(mapJsonOutput), 'width = 200, height = 200, resizable = 1');
+  */
+  //window.open("data:text/html," + JSON.stringify(mapJsonOutput));
   
   //let something = window.open("data:text/json," + JSON.stringify(tileHashesOutput));
   
@@ -382,57 +394,64 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
 }
 
-export function getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness = 4)
+export function getAllUniqueNeighborTileHashes(neighborList1, neighborList2 = null, neighborList3 = null, neighborList4 = null)
 {
   let allUniqueNeighborTileHashes = {};
   
-  for (let i = 0; northNeighborList && i < northNeighborList.length; i++)
+  for (let i = 0; neighborList1 && i < neighborList1.length; i++)
   {
-    if (allUniqueNeighborTileHashes[northNeighborList[i]])
+    if (allUniqueNeighborTileHashes[neighborList1[i]])
     {
-      ++allUniqueNeighborTileHashes[northNeighborList[i]];
+      ++allUniqueNeighborTileHashes[neighborList1[i]];
     }
     else
     {
-      allUniqueNeighborTileHashes[northNeighborList[i]] = 1;
+      allUniqueNeighborTileHashes[neighborList1[i]] = 1;
     }
   }
   
-  for (let i = 0; eastNeighborList && i < eastNeighborList.length; i++)
+  for (let i = 0; neighborList2 && i < neighborList2.length; i++)
   {
-    if (allUniqueNeighborTileHashes[eastNeighborList[i]])
+    if (allUniqueNeighborTileHashes[neighborList2[i]])
     {
-      ++allUniqueNeighborTileHashes[eastNeighborList[i]];
+      ++allUniqueNeighborTileHashes[neighborList2[i]];
     }
     else
     {
-      allUniqueNeighborTileHashes[eastNeighborList[i]] = 1;
+      allUniqueNeighborTileHashes[neighborList2[i]] = 1;
     }
   }
   
-  for (let i = 0; southNeighborList && i < southNeighborList.length; i++)
+  for (let i = 0; neighborList3 && i < neighborList3.length; i++)
   {
-    if (allUniqueNeighborTileHashes[southNeighborList[i]])
+    if (allUniqueNeighborTileHashes[neighborList3[i]])
     {
-      ++allUniqueNeighborTileHashes[southNeighborList[i]];
+      ++allUniqueNeighborTileHashes[neighborList3[i]];
     }
     else
     {
-      allUniqueNeighborTileHashes[southNeighborList[i]] = 1;
+      allUniqueNeighborTileHashes[neighborList3[i]] = 1;
     }
   }
   
-  for (let i = 0; westNeighborList && i < westNeighborList.length; i++)
+  for (let i = 0; neighborList4 && i < neighborList4.length; i++)
   {
-    if (allUniqueNeighborTileHashes[westNeighborList[i]])
+    if (allUniqueNeighborTileHashes[neighborList4[i]])
     {
-      ++allUniqueNeighborTileHashes[westNeighborList[i]];
+      ++allUniqueNeighborTileHashes[neighborList4[i]];
     }
     else
     {
-      allUniqueNeighborTileHashes[westNeighborList[i]] = 1;
+      allUniqueNeighborTileHashes[neighborList4[i]] = 1;
     }
   }
+  
+  return allUniqueNeighborTileHashes;
+}
+
+export function getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness = 4)
+{
+  let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
   
   let invalidNeighborListCount = 0;
   if (!northNeighborList)
@@ -454,20 +473,14 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
   
   let fillTileHashes = [];
   
-  for (let key in allUniqueNeighborTileHashes)
+  for (let tileHash in allUniqueNeighborTileHashes)
   {
-    //console.log(allUniqueNeighborTileHashes[key]);
-    if (allUniqueNeighborTileHashes[key] >= strictness - invalidNeighborListCount)
+    //console.log(allUniqueNeighborTileHashes[tileHash]);
+    if (allUniqueNeighborTileHashes[tileHash] >= strictness - invalidNeighborListCount)
     {
-      fillTileHashes.push(key);
+      fillTileHashes.push(tileHash);
     }
   }
-  
-  //console.log('allUniqueNeighborTileHashes:');
-  //console.log(allUniqueNeighborTileHashes);
-  
-  //console.log('fillTileHashes:');
-  //console.log(fillTileHashes[4]);
   
   return fillTileHashes;
 }
@@ -482,90 +495,19 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
 
 export function getFillTileHashesSplit(northNeighborList, eastNeighborList, southNeighborList, westNeighborList)
 {
-  let allUniqueNeighborTileHashes = {};
-  
-  for (let i = 0; northNeighborList && i < northNeighborList.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[northNeighborList[i]])
-    {
-      ++allUniqueNeighborTileHashes[northNeighborList[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[northNeighborList[i]] = 1;
-    }
-  }
-  
-  for (let i = 0; eastNeighborList && i < eastNeighborList.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[eastNeighborList[i]])
-    {
-      ++allUniqueNeighborTileHashes[eastNeighborList[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[eastNeighborList[i]] = 1;
-    }
-  }
-  
-  for (let i = 0; southNeighborList && i < southNeighborList.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[southNeighborList[i]])
-    {
-      ++allUniqueNeighborTileHashes[southNeighborList[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[southNeighborList[i]] = 1;
-    }
-  }
-  
-  for (let i = 0; westNeighborList && i < westNeighborList.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[westNeighborList[i]])
-    {
-      ++allUniqueNeighborTileHashes[westNeighborList[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[westNeighborList[i]] = 1;
-    }
-  }
-  
-  let invalidNeighborListCount = 0;
-  if (!northNeighborList)
-  {
-    ++invalidNeighborListCount;
-  }
-  if (!eastNeighborList)
-  {
-    ++invalidNeighborListCount;
-  }
-  if (!southNeighborList)
-  {
-    ++invalidNeighborListCount;
-  }
-  if (!westNeighborList)
-  {
-    ++invalidNeighborListCount;
-  }
+  let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
   
   let fillTileHashes = [];
+  fillTileHashes[4] = [];
+  fillTileHashes[3] = [];
+  fillTileHashes[2] = [];
+  fillTileHashes[1] = [];
   
-  for (let key in allUniqueNeighborTileHashes)
+  for (let tileHash in allUniqueNeighborTileHashes)
   {
-    //console.log(allUniqueNeighborTileHashes[key]);
-    if (allUniqueNeighborTileHashes[key] >= strictness - invalidNeighborListCount)
-    {
-      fillTileHashes.push(key);
-    }
+    let strictness = allUniqueNeighborTileHashes[tileHash];
+    fillTileHashes[strictness].push(tileHash);
   }
-  
-  //console.log('allUniqueNeighborTileHashes:');
-  //console.log(allUniqueNeighborTileHashes);
-  
-  //console.log('fillTileHashes:');
-  //console.log(fillTileHashes[4]);
   
   return fillTileHashes;
 }
@@ -891,21 +833,11 @@ export function redrawNeighborPane(mapTileEditorData, direction)
 
 export function redrawIntersectionPanes(mapTileEditorData)
 {
-  redrawIntersectionPane(mapTileEditorData, 4);
-  redrawIntersectionPane(mapTileEditorData, 3);
-  redrawIntersectionPane(mapTileEditorData, 2);
-  redrawIntersectionPane(mapTileEditorData, 1);
-}
-
-export function redrawIntersectionPane(mapTileEditorData, strictness)
-{
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
   let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
-  
-  document.getElementById(Ids.intersectionPane[strictness]).innerHTML = '';
   
   let y = cursor.tileY;
   let x = cursor.tileX;
@@ -915,7 +847,21 @@ export function redrawIntersectionPane(mapTileEditorData, strictness)
   let southNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.SOUTH);
   let westNeighborList = getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.WEST);
   
-  let fillTileHashes = getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness);
+  let fillTileHashesSplit = getFillTileHashesSplit(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
+  
+  redrawIntersectionPane(mapTileEditorData, fillTileHashesSplit[4], 4);
+  redrawIntersectionPane(mapTileEditorData, fillTileHashesSplit[3], 3);
+  redrawIntersectionPane(mapTileEditorData, fillTileHashesSplit[2], 2);
+  redrawIntersectionPane(mapTileEditorData, fillTileHashesSplit[1], 1);
+}
+
+export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strictness)
+{
+  let tileLookup = mapTileEditorData.tileLookup;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+  document.getElementById(Ids.intersectionPane[strictness]).innerHTML = '';
   
   for (let i = 0; fillTileHashes && i < fillTileHashes.length; i++)
   {
