@@ -516,15 +516,27 @@ export function setupUIEventListeners(mapTileEditorData)
       mapTileEditorUtilities.resetMap(mapTileEditorData);
     });
   
-  document.getElementById(Ids.genericControlBlock.exportAsImageButton).addEventListener('click',
+  document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
     function()
     {
-      let tileLookup = mapTileEditorData.tileLookup;
-      let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-      
-      //mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
-      mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+      let input = document.getElementById(Ids.genericControlBlock.importFileInput);
+      input.click();
     });
+  
+  document.getElementById(Ids.genericControlBlock.importFileInput).onchange = event =>
+    {
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.readAsText(file, 'UTF-8');
+      
+      reader.onload = readerEvent =>
+      {
+        let fileContent = readerEvent.target.result;
+        let mapJson = JSON.parse(fileContent);
+        console.log(mapJson);
+        mapTileEditorUtilities.loadMapJson(mapTileEditorData, mapJson);
+      }
+    }
   
   document.getElementById(Ids.genericControlBlock.exportAsTileHashesButton).addEventListener('click',
     function()
@@ -535,27 +547,15 @@ export function setupUIEventListeners(mapTileEditorData)
       mapTileEditorUtilities.exportMapAsTileHashes(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map);
     });
   
-  document.getElementById(Ids.genericControlBlock.importButton).addEventListener('click',
+  document.getElementById(Ids.genericControlBlock.exportAsImageButton).addEventListener('click',
     function()
     {
-      let input = document.getElementById(Ids.genericControlBlock.importFileInput);
-      input.click();
+      let tileLookup = mapTileEditorData.tileLookup;
+      let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+      
+      //mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+      mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
     });
-  
-  document.getElementById(Ids.genericControlBlock.importFileInput).onchange = event =>
-  {
-    let file = event.target.files[0];
-    let reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-    
-    reader.onload = readerEvent =>
-    {
-      let fileContent = readerEvent.target.result;
-      let mapJson = JSON.parse(fileContent);
-      console.log(mapJson);
-      mapTileEditorUtilities.loadMapJson(mapTileEditorData, mapJson);
-    }
-  }
   
   document.getElementById(Ids.genericControlBlock.undoButton).addEventListener('click',
     function()

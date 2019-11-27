@@ -240,49 +240,6 @@ export function exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisp
 }
 */
 
-export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
-{
-  let exportCanvas = document.createElement('canvas');
-  let exportContext = exportCanvas.getContext('2d');
-  
-  exportCanvas.width = mapWidth * TILE_WIDTH;
-  exportCanvas.height = mapHeight * TILE_HEIGHT;
-  
-  for (let y = 0; y < mapHeight; y++)
-  {
-    for (let x = 0; x < mapWidth; x++)
-    {
-      exportContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
-    }
-  }
-  
-  let url = document.createElement('a');
-  url.href = exportCanvas.toDataURL();
-  
-  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
-}
-
-export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
-{
-  let tileHashesOutput = [];
-  for (let y = 0; y < mapHeight; y++)
-  {
-    let tileHashesOutputRow = [];
-    for (let x = 0; x < mapWidth; x++)
-    {
-      tileHashesOutputRow.push(mapTileHashesDisplay[y][x]);
-    }
-    tileHashesOutput.push(tileHashesOutputRow);
-  }
-  
-  let mapJsonOutput = JSON.stringify(tileHashesOutput);
-  console.log(mapJsonOutput);
-  
-  utilities.copyTextToClipboard(mapJsonOutput);
-  
-  window.open('data:application/json,' + encodeURIComponent(mapJsonOutput), '_blank', 'width = 800, height = 600, resizable = 1');
-}
-
 export function loadMapJson(mapTileEditorData, mapJson)
 {
   resetMap(mapTileEditorData);
@@ -317,6 +274,49 @@ export function loadMapJson(mapTileEditorData, mapJson)
   mapTileEditorData.layeredTileHashesDisplay = layeredTileHashesDisplay;
   
   redrawAll(mapTileEditorData);
+}
+
+export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
+{
+  let tileHashesOutput = [];
+  for (let y = 0; y < mapHeight; y++)
+  {
+    let tileHashesOutputRow = [];
+    for (let x = 0; x < mapWidth; x++)
+    {
+      tileHashesOutputRow.push(mapTileHashesDisplay[y][x]);
+    }
+    tileHashesOutput.push(tileHashesOutputRow);
+  }
+  
+  let mapJsonOutput = JSON.stringify(tileHashesOutput);
+  console.log(mapJsonOutput);
+  
+  utilities.copyTextToClipboard(mapJsonOutput);
+  
+  window.open('data:application/json,' + encodeURIComponent(mapJsonOutput), '_blank', 'width = 800, height = 600, resizable = 1');
+}
+
+export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
+{
+  let exportCanvas = document.createElement('canvas');
+  let exportContext = exportCanvas.getContext('2d');
+  
+  exportCanvas.width = mapWidth * TILE_WIDTH;
+  exportCanvas.height = mapHeight * TILE_HEIGHT;
+  
+  for (let y = 0; y < mapHeight; y++)
+  {
+    for (let x = 0; x < mapWidth; x++)
+    {
+      exportContext.drawImage(tileLookup[layeredTileHashesDisplay.map[y][x]].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    }
+  }
+  
+  let url = document.createElement('a');
+  url.href = exportCanvas.toDataURL();
+  
+  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
 }
 
 
