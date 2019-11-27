@@ -280,37 +280,7 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   
   utilities.copyTextToClipboard(mapJsonOutput);
   
-  // TODO: Save as a text file
-  let mapJsonOutputWindow = window.open('', '_blank', 'resizable = 1');
-  mapJsonOutputWindow.document.body.innerHTML = JSON.stringify(tileHashesOutput);
-  
-  
-  
-  /*
-  window.open('data:text/html,' + JSON.stringify(mapJsonOutput), 'width = 200, height = 200, resizable = 1');
-  */
-  //window.open("data:text/html," + JSON.stringify(mapJsonOutput));
-  
-  //let something = window.open("data:text/json," + JSON.stringify(tileHashesOutput));
-  
-  /*
-  var data = "<p>This is 'myWindow'</p>";
-  let myWindow = window.open("data:text/html," + encodeURIComponent(data), "_blank", "width=200,height=100");
-  myWindow.focus();
-  */
-  
-  /*
-  let url = document.createElement('a');
-  
-  window.open('', 'MsgWindow', 'width = 200, height = 100, resizable = 1');
-  window.document.write("<p>This is 'MsgWindow'. I am 200px wide and 100px tall!</p>"); 
-  */
-  /*
-  let url = document.createElement('a');
-  url.href = exportCanvas.toDataURL();
-  
-  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
-  */
+  window.open('data:application/json,' + encodeURIComponent(mapJsonOutput), '_blank', 'width = 800, height = 600, resizable = 1');
 }
 
 export function loadMapJson(mapTileEditorData, mapJson)
