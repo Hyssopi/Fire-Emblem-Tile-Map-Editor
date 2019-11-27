@@ -97,11 +97,6 @@ Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 
 7) Do not pass mapTileEditorData, pass individual parameters
 
-12)
-fix insectionpane, don't use getfilltiles, cause
-for 3 possible, only 1 valid tile counts as 2
-for 2 possible, only 1 vlaid tile counts as 3
-
 
 
 
@@ -112,10 +107,12 @@ for 2 possible, only 1 vlaid tile counts as 3
 
 
 11) Fix panes styling
+Move control pane to side?
 
 3) Improve Export/Import
 
 5) Fix isGenerationAnimation button
+Use FontAwesome?
 
 6) Reorder functions
 
@@ -123,7 +120,9 @@ for 2 possible, only 1 vlaid tile counts as 3
 
 1) Fix Help
 
+25) Given a,b,c,d, find x (center) with given strictness 4,3,2,1
 
+26) After initial fillMap, use #25 function to patch up holes
 
 
 
