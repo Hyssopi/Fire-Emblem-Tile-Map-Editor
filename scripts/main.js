@@ -95,32 +95,29 @@ Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 
 /* TODO:
 
-7) Do not pass mapTileEditorData, pass individual parameters
-
-
-
-
-10) Weighted neighbors calculations
-
-13) Fix undo/redo for resize
-
-
 
 11) Fix panes styling
 Move control pane to side?
 
 
-6) Reorder functions
 
-2) Fix Print Debug
-
-1) Fix Help
+10) Weighted neighbors calculations
 
 25) Given a,b,c,d, find x (center) with given strictness 4,3,2,1
 
 26) After initial fillMap, use #25 function to patch up holes
 
 
+
+7) Do not pass mapTileEditorData, pass individual parameters
+
+6) Reorder functions
+
+
+
+2) Fix Print Debug
+
+1) Fix Help
 
 
 

@@ -180,7 +180,7 @@ export function resetMap(mapTileEditorData)
   redrawAll(mapTileEditorData);
 }
 
-export function resizeMap(mapTileEditorData)
+export function resizeMap(mapTileEditorData, isLog = true)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -225,7 +225,12 @@ export function resizeMap(mapTileEditorData)
   {
     cursor.tileY = mapHeight - 1;
   }
-
+  
+  if (isLog)
+  {
+    logUserActionResize(mapTileEditorData, mapWidth, mapHeight);
+  }
+  
   mapTileEditorData.mapWidth = mapWidth;
   mapTileEditorData.mapHeight = mapHeight;
   
@@ -557,10 +562,36 @@ export function getTileNeighborSum(tileLookup, tileHash)
 
 
 
+export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight)
+{
+  let userActionHistory = mapTileEditorData.userActionHistory;
+  
+  ++userActionHistory.counter;
+  
+  userActionHistory.logs[userActionHistory.counter] =
+  {
+    oldMapWidth: mapTileEditorData.mapWidth,
+    oldMapHeight: mapTileEditorData.mapHeight,
+    newMapWidth: newMapWidth,
+    newMapHeight: newMapHeight
+  };
+  
+  // Clear user action entries after the most recent user action
+  while (userActionHistory.counter + 1 < userActionHistory.logs.length)
+  {
+    //console.log((userActionHistory.counter + 1) + ' < ' + userActionHistory.logs.length);
+    userActionHistory.logs.pop();
+  }
+  
+  /*
+  //console.log(userActionHistory);
+  //userActionHistory = userActionHistory.splice(0, userActionHistory.counter);
+  */
+}
 
 
 
-export function logUserAction(userActionHistory, layeredTileHashesDisplay, x, y, tileHash)
+export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x, y, tileHash)
 {
   ++userActionHistory.counter;
   
@@ -597,8 +628,19 @@ export function undo(mapTileEditorData)
   }
   
   let userAction = userActionHistory.logs[userActionHistory.counter];
-  // TODO: Check if newTileHash matches correctly
-  setTile(mapTileEditorData, userAction.x, userAction.y, userAction.oldTileHash, null, false);
+  if (userAction.oldTileHash)
+  {
+    // TODO: Check if newTileHash matches correctly
+    setTile(mapTileEditorData, userAction.x, userAction.y, userAction.oldTileHash, null, false);
+  }
+  else if (userAction.oldMapWidth && userAction.oldMapHeight)
+  {
+    // TODO: Check if newMapWidth/newMapHeight
+    document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value = userAction.oldMapWidth;
+    document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value = userAction.oldMapHeight;
+    
+    resizeMap(mapTileEditorData, false);
+  }
   
   --userActionHistory.counter;
 }
@@ -615,8 +657,19 @@ export function redo(mapTileEditorData)
   }
   
   let userAction = userActionHistory.logs[userActionHistory.counter + 1];
-  // TODO: Check if newTileHash matches correctly
-  setTile(mapTileEditorData, userAction.x, userAction.y, userAction.newTileHash, null, false);
+  if (userAction.newTileHash)
+  {
+    // TODO: Check if oldTileHash matches correctly
+    setTile(mapTileEditorData, userAction.x, userAction.y, userAction.newTileHash, null, false);
+  }
+  else if (userAction.newMapWidth && userAction.newMapHeight)
+  {
+    // TODO: Check if oldMapWidth/oldMapHeight
+    document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value = userAction.newMapWidth;
+    document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value = userAction.newMapHeight;
+    
+    resizeMap(mapTileEditorData, false);
+  }
   
   ++userActionHistory.counter;
 }
@@ -664,7 +717,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   {
     if (isLog)
     {
-      logUserAction(userActionHistory, layeredTileHashesDisplay, modifiedX, modifiedY, tileHash);
+      logUserActionTile(userActionHistory, layeredTileHashesDisplay, modifiedX, modifiedY, tileHash);
     }
     layeredTileHashesDisplay.map[modifiedY][modifiedX] = tileHash;
   }
