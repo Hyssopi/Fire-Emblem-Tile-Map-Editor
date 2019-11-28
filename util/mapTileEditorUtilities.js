@@ -492,19 +492,19 @@ export function getFillTileHashesSplit(northNeighborList, eastNeighborList, sout
 {
   let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
   
-  let fillTileHashes = [];
-  fillTileHashes[4] = [];
-  fillTileHashes[3] = [];
-  fillTileHashes[2] = [];
-  fillTileHashes[1] = [];
+  let fillTileHashesSplit = [];
+  fillTileHashesSplit[4] = [];
+  fillTileHashesSplit[3] = [];
+  fillTileHashesSplit[2] = [];
+  fillTileHashesSplit[1] = [];
   
   for (let tileHash in allUniqueNeighborTileHashes)
   {
     let strictness = allUniqueNeighborTileHashes[tileHash];
-    fillTileHashes[strictness].push(tileHash);
+    fillTileHashesSplit[strictness].push(tileHash);
   }
   
-  return fillTileHashes;
+  return fillTileHashesSplit;
 }
 
 
