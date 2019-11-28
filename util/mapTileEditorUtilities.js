@@ -316,7 +316,7 @@ export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHas
   let url = document.createElement('a');
   url.href = exportCanvas.toDataURL();
   
-  window.open(url, '_blank', 'width = ' + exportCanvas.width + ', height = ' + exportCanvas.height + ', resizable = 1');
+  window.open(url, '_blank', 'width = ' + exportCanvas.width * 2 + ', height = ' + exportCanvas.height * 2 + ', resizable = 1');
 }
 
 

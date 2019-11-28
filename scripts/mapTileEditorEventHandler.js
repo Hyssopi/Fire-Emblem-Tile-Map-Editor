@@ -336,7 +336,7 @@ function generateMapResponse(mapTileEditorData)
   
   let minimumStrictness = document.getElementById(Ids.tileControlBlock.strictnessComboBox).value;
   
-  let isAnimate = document.getElementById(Ids.tileControlBlock.isAnimateGeneration).checked;
+  let isAnimate = document.getElementById(Ids.tileControlBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
   mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
 }
@@ -591,6 +591,22 @@ export function setupUIEventListeners(mapTileEditorData)
     function()
     {
       generateMapResponse(mapTileEditorData);
+    });
+  
+  document.getElementById(Ids.tileControlBlock.isAnimateGeneration).addEventListener('click',
+    function()
+    {
+      let isAnimateGeneration = document.getElementById(Ids.tileControlBlock.isAnimateGeneration);
+      if (isAnimateGeneration.classList.contains('fa-toggle-off'))
+      {
+        isAnimateGeneration.classList.remove('fa-toggle-off');
+        isAnimateGeneration.classList.add('fa-toggle-on');
+      }
+      else
+      {
+        isAnimateGeneration.classList.remove('fa-toggle-on');
+        isAnimateGeneration.classList.add('fa-toggle-off');
+      }
     });
   
   document.getElementById(Ids.otherControlBlock.printLogButton).addEventListener('click',

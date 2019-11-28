@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html>
-  <link href="styles/iconfont/material-icons.css" rel="stylesheet"/>
+  <link href="styles/fontawesome-free-5.11.2-web/css/all.css" rel="stylesheet">
   <link href="styles/styles.css" rel="stylesheet"/>
   
   <style>
@@ -143,7 +143,9 @@
           </div>
         </div>
         
-        <button id="newButtonId" class="material-icons" title="NEW">insert_drive_file</button>
+        <button id="newButtonId" class="font-awesome-icons" title="NEW">
+          <i class="fa fa-file"></i>
+        </button>
       </div>
       
       <div class="flexBoxRow informationDisplayTileBlock">
@@ -180,12 +182,22 @@
       
       
       <div class="flexBoxRow genericControlBlock">
-        <button id="importButtonId" class="material-icons" title="IMPORT">folder_open</button>
+        <button id="importButtonId" class="font-awesome-icons" title="IMPORT">
+          <i class="fa fa-folder-open"></i>
+        </button>
         <input id="importFileInputId" type="file" style="display: none;"/>
-        <button id="exportAsTileHashesButtonId" class="material-icons" title="EXPORT TILE HASH">format_align_justify</button>
-        <button id="exportAsImageButtonId" class="material-icons" title="EXPORT IMAGE">archive</button>
-        <button id="undoButtonId" class="material-icons" title="UNDO">undo</button>
-        <button id="redoButtonId" class="material-icons" title="REDO">redo</button>
+        <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="EXPORT TILE HASH">
+          <i class="fa fa-file-download"></i>
+        </button>
+        <button id="exportAsImageButtonId" class="font-awesome-icons" title="EXPORT IMAGE">
+          <i class="fa fa-file-image"></i>
+        </button>
+        <button id="undoButtonId" class="font-awesome-icons" title="UNDO">
+          <i class="fa fa-undo-alt"></i>
+        </button>
+        <button id="redoButtonId" class="font-awesome-icons" title="REDO">
+          <i class="fa fa-redo-alt"></i>
+        </button>
       </div>
       
       
@@ -204,26 +216,46 @@
           </select>
         </div>
         
-        <button id="randomTileButtonId" class="material-icons" title="RANDOM TILE">gesture</button>
+        <button id="randomTileButtonId" class="font-awesome-icons" title="RANDOM TILE">
+          <!--
+          <i class="fa fa-signature"></i>
+          -->
+          <i class="fa fa-puzzle-piece"></i>
+        </button>
         
-        <button id="clearTileButtonId" class="material-icons" title="CLEAR TILE">clear</button>
+        <button id="clearTileButtonId" class="font-awesome-icons" title="CLEAR TILE">
+          <!--
+          <i class="fa fa-eraser"></i>
+          -->
+          <i class="fa fa-window-close"></i>
+        </button>
         
-        <!--
-        <button id="fillTileButtonId" class="material-icons" title="FILL TILE">texture</button>
-        -->
-        <button id="fillTileButtonId" class="material-icons" title="FILL TILE">gradient</button>
+        <button id="fillTileButtonId" class="font-awesome-icons" title="FILL TILE">
+          <i class="fa fa-fill-drip"></i>
+        </button>
         
-        <button id="generateMapButtonId" class="material-icons" title="GENERATE MAP">select_all</button>
+        <button id="generateMapButtonId" class="font-awesome-icons" title="GENERATE MAP">
+          <!--
+          <i class="fa fa-image"></i>
+          -->
+          <i class="fa fa-th"></i>
+        </button>
         
-        <input id="isAnimateGenerationId" type="checkbox" class="material-icons" title="Animate Generation?"></input>
+        <div class="font-awesome-icons">
+          <i id="isAnimateGenerationId" class="fa fa-toggle-off" title="Animate Generation?"></i>
+        </div>
       </div>
       
       <div style="width: 50px;"></div>
       
       
       <div class="flexBoxRow otherControlBlock">
-        <button id="printLogButtonId" class="material-icons" title="PRINT LOG">receipt</button>
-        <button id="helpButtonId" class="material-icons" title="HELP">help_outline</button>
+        <button id="printLogButtonId" class="font-awesome-icons" title="PRINT LOG">
+          <i class="fa fa-receipt"></i>
+        </button>
+        <button id="helpButtonId" class="font-awesome-icons" title="HELP">
+          <i class="fa fa-question-circle"></i>
+        </button>
       </div>
       
       
