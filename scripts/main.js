@@ -109,10 +109,6 @@ Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 11) Fix panes styling
 Move control pane to side?
 
-3) Improve Export/Import
-
-5) Fix isGenerationAnimation button
-Use FontAwesome?
 
 6) Reorder functions
 
