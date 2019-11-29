@@ -86,44 +86,27 @@ export function getLayeredTopTileHash(layeredTileHashesDisplay, x, y)
 
 export function getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, direction)
 {
+  let oppositeDirection = null;
   if (direction === Direction.NORTH)
   {
-    let northTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.NORTH) ? mapTileHashesDisplay[y - 1][x] : null;
-    let northNeighborList = !northTileHash || northTileHash === EMPTY_TILE_HASH ? null : tileLookup[northTileHash][Direction.SOUTH];
-    return northNeighborList;
+    oppositeDirection = Direction.SOUTH;
   }
   else if (direction === Direction.EAST)
   {
-    let eastTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.EAST) ? mapTileHashesDisplay[y][x + 1] : null;
-    let eastNeighborList = !eastTileHash || eastTileHash === EMPTY_TILE_HASH ? null : tileLookup[eastTileHash][Direction.WEST];
-    return eastNeighborList;
+    oppositeDirection = Direction.WEST;
   }
   else if (direction === Direction.SOUTH)
   {
-    let southTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.SOUTH) ? mapTileHashesDisplay[y + 1][x] : null;
-    let southNeighborList = !southTileHash || southTileHash === EMPTY_TILE_HASH ? null : tileLookup[southTileHash][Direction.NORTH];
-    return southNeighborList;
+    oppositeDirection = Direction.NORTH;
   }
   else if (direction === Direction.WEST)
   {
-    let westTileHash = isValidTileCoordinate(mapWidth, mapHeight, x, y, Direction.WEST) ? mapTileHashesDisplay[y][x - 1] : null;
-    let westNeighborList = !westTileHash || westTileHash === EMPTY_TILE_HASH ? null : tileLookup[westTileHash][Direction.EAST];
-    return westNeighborList;
+    oppositeDirection = Direction.EAST;
   }
   
-  
-  
-  /*
-  console.log('northNeighborList');
-  console.log(northNeighborList);
-  console.log('eastNeighborList');
-  console.log(eastNeighborList);
-  console.log('southNeighborList');
-  console.log(southNeighborList);
-  console.log('westNeighborList');
-  console.log(westNeighborList);
-  console.log('\n\n');
-  */
+  let tileHash = getTileHash(mapTileHashesDisplay, mapWidth, mapHeight, x, y, direction);
+  let neighborList = !tileHash || tileHash === EMPTY_TILE_HASH ? null : tileLookup[tileHash][oppositeDirection];
+  return neighborList;
 }
 
 
@@ -365,28 +348,27 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   return returnTileHash;
   */
   
-  
-  
- let returnTileHash = fillTileHashes[0];
- for (let i = 1; i < fillTileHashes.length; i++)
- {
-   if (getTileNeighborSum(fillTileHashes[i]) > getTileNeighborSum(returnTileHash))
-   {
-     returnTileHash = fillTileHashes[i];
-   }
- }
- if (utilities.isRandomSuccess(10))
- {
-  return returnTileHash;
- }
- else
- {
-  return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
- }
-  
   /*
-  return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
+  // TODO: Temporary test, random
+  let returnTileHash = fillTileHashes[0];
+  for (let i = 1; i < fillTileHashes.length; i++)
+  {
+    if (getTileNeighborSum(fillTileHashes[i]) > getTileNeighborSum(returnTileHash))
+    {
+      returnTileHash = fillTileHashes[i];
+    }
+  }
+  if (utilities.isRandomSuccess(10))
+  {
+    return returnTileHash;
+  }
+  else
+  {
+    return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
+  }
   */
+  
+  return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
 }
 
 export function getAllUniqueNeighborTileHashes(neighborList1, neighborList2 = null, neighborList3 = null, neighborList4 = null)
@@ -512,6 +494,33 @@ export function getFillTileHashesSplit(northNeighborList, eastNeighborList, sout
 
 
 
+
+
+
+
+
+export function getCalibrateFillTileHashes(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, strictness = 4)
+{
+  let currentTileHashes =
+  {
+    north: '',
+    east: '',
+    south: '',
+    west: '',
+    center: ''
+  }
+  let calibratedTileHashes =
+  {
+    north: '',
+    east: '',
+    south: '',
+    west: '',
+    center: ''
+  }
+  
+  
+  
+}
 
 
 
@@ -682,7 +691,36 @@ export function redo(mapTileEditorData)
 
 
 
-
+export function getTileHash(mapTileHashesDisplay, mapWidth, mapHeight, x, y, direction = null)
+{
+  let tileHash = null;
+  
+  if (isValidTileCoordinate(mapWidth, mapHeight, x, y, direction))
+  {
+    if (direction === Direction.NORTH)
+    {
+      tileHash = mapTileHashesDisplay[y - 1][x];
+    }
+    else if (direction === Direction.EAST)
+    {
+      tileHash = mapTileHashesDisplay[y][x + 1];
+    }
+    else if (direction === Direction.SOUTH)
+    {
+      tileHash = mapTileHashesDisplay[y + 1][x];
+    }
+    else if (direction === Direction.WEST)
+    {
+      tileHash = mapTileHashesDisplay[y][x - 1];
+    }
+    else
+    {
+      tileHash = mapTileHashesDisplay[y][x];
+    }
+  }
+  
+  return tileHash;
+}
 
 
 
@@ -1260,15 +1298,6 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate)
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 
