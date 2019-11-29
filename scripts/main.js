@@ -96,6 +96,10 @@ Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 /* TODO:
 
 
+
+
+
+
 11) Fix panes styling
 Move control pane to side?
 

@@ -497,28 +497,34 @@ export function getFillTileHashesSplit(northNeighborList, eastNeighborList, sout
 
 
 
-
-
-export function getCalibrateFillTileHashes(tileLookup, mapWidth, mapHeight, mapTileHashesDisplay, x, y, strictness = 4)
+export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
 {
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  
   let currentTileHashes =
   {
-    north: '',
-    east: '',
-    south: '',
-    west: '',
-    center: ''
+    north: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.NORTH),
+    east: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.EAST),
+    south: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.SOUTH),
+    west: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.WEST),
+    center: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y)
   }
   let calibratedTileHashes =
   {
-    north: '',
-    east: '',
-    south: '',
-    west: '',
-    center: ''
+    north: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
+    east: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
+    south: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
+    west: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
+    center: 'bc24bc25adbc371c0d6a9cbfa8e9f96d'
   }
   
-  
+  setTile(mapTileEditorData, x, y, calibratedTileHashes.north, Direction.NORTH);
+  setTile(mapTileEditorData, x, y, calibratedTileHashes.east, Direction.EAST);
+  setTile(mapTileEditorData, x, y, calibratedTileHashes.south, Direction.SOUTH);
+  setTile(mapTileEditorData, x, y, calibratedTileHashes.west, Direction.WEST);
+  setTile(mapTileEditorData, x, y, calibratedTileHashes.center);
   
 }
 
@@ -575,6 +581,12 @@ export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight
 {
   let userActionHistory = mapTileEditorData.userActionHistory;
   
+  if (mapTileEditorData.mapWidth === newMapWidth && mapTileEditorData.mapHeight === newMapHeight)
+  {
+    console.warn('Will not log user action resize, same old/new map width: ' + newMapWidth + ', height: ' + newMapHeight);
+    return;
+  }
+  
   ++userActionHistory.counter;
   
   userActionHistory.logs[userActionHistory.counter] =
@@ -602,6 +614,12 @@ export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight
 
 export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x, y, tileHash)
 {
+  if (layeredTileHashesDisplay.map[y][x] === tileHash)
+  {
+    console.warn('Will not log user action tile, same old/new tile hash: ' + tileHash);
+    return;
+  }
+  
   ++userActionHistory.counter;
   
   userActionHistory.logs[userActionHistory.counter] =
