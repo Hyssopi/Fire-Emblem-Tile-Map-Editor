@@ -320,7 +320,10 @@ export function copyTextToClipboard(text)
   document.body.removeChild(textArea);
 }
 
-
+export function getFilenameWithoutExtension(filename)
+{
+  return filename.substr(0, filename.lastIndexOf('.')) || filename;
+}
 
 
 

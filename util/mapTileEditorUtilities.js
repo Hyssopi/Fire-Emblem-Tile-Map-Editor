@@ -283,6 +283,8 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   utilities.copyTextToClipboard(mapJsonOutput);
   
   window.open('data:application/json,' + encodeURIComponent(mapJsonOutput), '_blank', 'width = 800, height = 600, resizable = 1');
+  
+  appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Save the opened new window as a JSON file.\nCtrl+S --> Map1.json (example)');
 }
 
 export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
@@ -651,6 +653,7 @@ export function undo(mapTileEditorData)
   {
     console.warn('Cannot undo anymore.');
     console.warn(userActionHistory);
+    appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Cannot undo anymore.');
     return;
   }
   
@@ -680,6 +683,7 @@ export function redo(mapTileEditorData)
   {
     console.warn('Cannot redo anymore.');
     console.warn(userActionHistory);
+    appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Cannot redo anymore.');
     return;
   }
   
@@ -1339,7 +1343,12 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate)
 
 
 
-
+export function appendstatusMessageDisplay(statusMessageDisplayId, text)
+{
+  let statusMessageDisplayTextArea = document.getElementById(statusMessageDisplayId);
+  statusMessageDisplayTextArea.value = text + '\n\n\n' + statusMessageDisplayTextArea.value;
+  statusMessageDisplayTextArea.scrollTop = 0;
+}
 
 
 

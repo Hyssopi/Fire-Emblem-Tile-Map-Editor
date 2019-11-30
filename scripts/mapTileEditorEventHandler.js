@@ -1,4 +1,5 @@
 
+import * as utilities from '../util/utilities.js';
 import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
 
 import {SCALE_FACTOR, HELP_FILE_PATH, EMPTY_TILE_HASH, Ids} from './main.js';
@@ -533,8 +534,10 @@ export function setupUIEventListeners(mapTileEditorData)
       {
         let fileContent = readerEvent.target.result;
         let mapJson = JSON.parse(fileContent);
-        console.log(mapJson);
+        //console.log(mapJson);
         mapTileEditorUtilities.loadMapJson(mapTileEditorData, mapJson);
+        
+        mapTileEditorUtilities.appendstatusMessageDisplay(Ids.statusMessageDisplay, '\"' + utilities.getFilenameWithoutExtension(file.name) + '\" map has been loaded.');
       }
     }
   

@@ -63,6 +63,7 @@ export const Ids =
     printLogButton: 'printLogButtonId',
     helpButton: 'helpButtonId'
   },
+  statusMessageDisplay: 'statusMessageDisplayId',
   neighborPane: {},
   intersectionPane: {}
 };
@@ -100,7 +101,7 @@ export const BackgroundColor =
 /* TODO:
 
 
-
+Position, Type, Description should be table/td
 
 
 
@@ -137,7 +138,6 @@ Move control pane to side?
 ?) Fix map extractor last ','
 
 */
-
 
 
 
@@ -185,6 +185,8 @@ fetch(tileReferencesJsonFilePath)
     }
     
     setup(tileLookup);
+    
+    mapTileEditorUtilities.appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Loaded.');
   })
   .catch (function(error)
   {

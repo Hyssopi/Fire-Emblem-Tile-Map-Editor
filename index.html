@@ -253,6 +253,11 @@
       </div>
       
       
+      <div class="flexBoxRow">
+        <textarea id="statusMessageDisplayId" rows="1" cols="50" disabled readonly style="resize: none;">Now Loading...</textarea>
+      </div>
+      
+      
     </div>
     <div style="padding: 2px;"></div>
     
@@ -273,14 +278,14 @@
           <div class="flexBoxColumn">
             <div class="flexBoxColumn" style="align-items: flex-start;">
               <div>
-                Type: <label id="tileTypeId">TILE_TYPE</label>
+                <b>Position:</b> (<label id="cursorPositionXId">0</label>, <label id="cursorPositionYId">0</label>)
               </div>
               <div>
-                [<label id="cursorPositionXId">0</label>, <label id="cursorPositionYId">0</label>]
+                <b>Type:</b> <label id="tileTypeId">TILE_TYPE</label>
               </div>
             </div>
             <div>
-              Description: <label id="tileDescriptionId">TILE_DESCRIPTION</label>
+              <b>Description:</b> <label id="tileDescriptionId">TILE_DESCRIPTION</label>
             </div>
           </div>
         </div>
