@@ -902,7 +902,7 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   
   for (let i = 0; cursorTileData[direction] && i < cursorTileData[direction].length; i++)
   {
-    let neighborTileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
+    let neighborTileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
     neighborTileImage.src = tileLookup[cursorTileData[direction][i]].image.src;
     neighborTileImage.addEventListener('click',
       function()
@@ -964,7 +964,7 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
   
   for (let i = 0; fillTileHashes && i < fillTileHashes.length; i++)
   {
-    let intersectedTileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
+    let intersectedTileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
     intersectedTileImage.src = tileLookup[fillTileHashes[i]].image.src;
     intersectedTileImage.addEventListener('click',
       function()
