@@ -54,9 +54,9 @@
       /*
       width: 100px;
       */
-      min-width: 60px;
-      max-width: 60px;
-      height: 580px;
+      min-width: 134px;
+      max-width: 134px;
+      height: 540px;
       overflow: auto;
       justify-content: center;
       align-items: center;
@@ -64,9 +64,9 @@
     
     .containerRow
     {
-      min-width: 375px;
-      max-width: 375px;
-      height: 45px;
+      min-width: 530px;
+      max-width: 530px;
+      height: 123px;
       overflow: auto;
       flex-wrap: nowrap;
       justify-content: center;
@@ -74,9 +74,9 @@
     
     .containerDoubleRow
     {
-      min-width: 240px;
-      max-width: 240px;
-      height: 135px;
+      min-width: 250px;
+      max-width: 250px;
+      height: 124px;
       overflow: auto;
       flex-wrap: nowrap;
       justify-content: center;
@@ -89,6 +89,7 @@
     
     .informationDisplayMapBlock
     {
+      background-color: #F0F0F0;
       border: 3px orange solid;
       justify-content: center;
       align-items: center;
@@ -96,6 +97,7 @@
     
     .informationDisplayTileBlock
     {
+      background-color: #F0F0F0;
       border: 3px brown solid;
       justify-content: center;
       align-items: center;
@@ -103,6 +105,7 @@
     
     .genericControlBlock
     {
+      background-color: #F0F0F0;
       border: 3px pink solid;
       justify-content: center;
       align-items: center;
@@ -110,6 +113,7 @@
     
     .tileControlBlock
     {
+      background-color: #F0F0F0;
       border: 3px purple solid;
       justify-content: center;
       align-items: center;
@@ -117,6 +121,7 @@
     
     .otherControlBlock
     {
+      background-color: #F0F0F0;
       border: 3px yellow solid;
       justify-content: center;
       align-items: center;
@@ -255,39 +260,11 @@
     
     
     <div class="flexBoxRow">
-      <div style="flex: none;">
-        <canvas id="CanvasId1" width="1500" height="850"></canvas>
+      <div>
+        <canvas id="CanvasId1" width="1350" height="850"></canvas>
       </div>
       
       <div>
-        <!--
-        <div class="flexBoxRow informationDisplayTileBlock">
-          <div>
-            <div style="transform: translateX(10%) translateY(0%) rotate(-33deg)">
-              <u><b>CURSOR</b></u>
-            </div>
-          </div>
-          
-          <div style="width: 10px;"></div>
-          
-          <div class="flexBoxRow">
-            <div class="flexBoxColumn" style="align-items: flex-start;">
-              <div>
-                Type: <label id="tileTypeId">TILE_TYPE</label>
-              </div>
-              <div>
-                [<label id="cursorPositionXId">0</label>, <label id="cursorPositionYId">0</label>]
-              </div>
-            </div>
-            
-            <div style="width: 10px;"></div>
-            
-            <div>
-              Description: <label id="tileDescriptionId">TILE_DESCRIPTION</label>
-            </div>
-          </div>
-        </div>
-        -->
         <div class="flexBoxColumn informationDisplayTileBlock">
           <div>
             <u><b>CURSOR</b></u>
@@ -342,57 +319,6 @@
         </div>
       </div>
     </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <!--
-    <div class="flexBoxRow containerRow neighborPane">
-      <div id="northNeighborPaneId"></div>
-    </div>
-    <div class="flexBoxRow" style="justify-content: space-between;">
-      <div class="flexBoxColumn containerColumn neighborPane">
-        <div id="westNeighborPaneId"></div>
-      </div>
-      <div style="flex: none;">
-        <canvas id="CanvasId1" width="1600" height="550"></canvas>
-      </div>
-      <div class="flexBoxColumn containerColumn neighborPane">
-        <div id="eastNeighborPaneId"></div>
-      </div>
-    </div>
-    <div class="flexBoxRow containerRow neighborPane">
-      <div id="southNeighborPaneId"></div>
-    </div>
-    <div style="padding: 2px;"></div>
-    <div class="flexBoxRow containerRow intersectionPane">
-      <div id="intersectionPaneStrictId4"></div>
-    </div>
-    <div class="flexBoxRow containerRow intersectionPane">
-      <div id="intersectionPaneStrictId3"></div>
-    </div>
-    <div class="flexBoxRow containerRow intersectionPane">
-      <div id="intersectionPaneStrictId2"></div>
-    </div>
-    <div class="flexBoxRow containerRow intersectionPane">
-      <div id="intersectionPaneStrictId1"></div>
-    </div>
-    -->
   </body>
   
   <script src="scripts/main.js" type="module"></script>

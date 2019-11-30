@@ -1,7 +1,7 @@
 
 import * as utilities from './utilities.js';
 
-import {TILE_WIDTH, TILE_HEIGHT, CURSOR_TILE_HASH, EMPTY_TILE_HASH, Direction, Ids} from '../scripts/main.js';
+import {TILE_WIDTH, TILE_HEIGHT, CURSOR_TILE_HASH, EMPTY_TILE_HASH, Direction, Ids, BackgroundColor} from '../scripts/main.js';
 
 
 
@@ -902,7 +902,7 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   
   for (let i = 0; cursorTileData[direction] && i < cursorTileData[direction].length; i++)
   {
-    let neighborTileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
+    let neighborTileImage = new Image(TILE_WIDTH * 3, TILE_HEIGHT * 3);
     neighborTileImage.src = tileLookup[cursorTileData[direction][i]].image.src;
     neighborTileImage.addEventListener('click',
       function()
@@ -928,6 +928,8 @@ export function redrawNeighborPane(mapTileEditorData, direction)
     
     document.getElementById(Ids.neighborPane[direction]).appendChild(neighborTileImage);
   }
+  
+  document.getElementById(Ids.neighborPane[direction]).parentElement.style.backgroundColor = cursorTileData[direction] && cursorTileData[direction].length <= 0 ? BackgroundColor.invalid : BackgroundColor.valid;
 }
 
 export function redrawIntersectionPanes(mapTileEditorData)
@@ -964,7 +966,7 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
   
   for (let i = 0; fillTileHashes && i < fillTileHashes.length; i++)
   {
-    let intersectedTileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
+    let intersectedTileImage = new Image(TILE_WIDTH * 3, TILE_HEIGHT * 3);
     intersectedTileImage.src = tileLookup[fillTileHashes[i]].image.src;
     intersectedTileImage.addEventListener('click',
       function()
@@ -990,7 +992,8 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
     
     document.getElementById(Ids.intersectionPane[strictness]).appendChild(intersectedTileImage);
   }
-  document.getElementById(Ids.intersectionPane[strictness]).parentElement.style.backgroundColor = fillTileHashes && fillTileHashes.length <= 0 ? 'red' : 'white';
+  
+  document.getElementById(Ids.intersectionPane[strictness]).parentElement.style.backgroundColor = fillTileHashes && fillTileHashes.length <= 0 ? BackgroundColor.invalid : BackgroundColor.valid;
 }
 
 export function updateInformationDisplayTile(mapTileEditorData)

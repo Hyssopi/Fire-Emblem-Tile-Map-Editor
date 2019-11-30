@@ -78,7 +78,11 @@ Ids.intersectionPane[2] = 'intersectionPaneStrictId2';
 Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
 
 
-
+export const BackgroundColor =
+{
+  valid: 'whitesmoke',
+  invalid: 'lightgray'
+}
 
 
 
