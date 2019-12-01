@@ -103,10 +103,9 @@ export const BackgroundColor =
 
 Position, Type, Description should be table/td
 
+Fix font for status message display textarea
 
-
-11) Fix panes styling
-Move control pane to side?
+clean up fillMap(...) function
 
 
 
@@ -128,7 +127,9 @@ Move control pane to side?
 
 1) Fix Help
 
+27) Double check TYPE
 
+28) Move tile images to folders as TYPE
 
 
 
