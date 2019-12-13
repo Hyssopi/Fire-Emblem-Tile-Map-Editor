@@ -105,8 +105,7 @@ export function getNeighborTileHashListForPosition(tileLookup, mapWidth, mapHeig
   }
   
   let tileHash = getTileHash(mapTileHashesDisplay, mapWidth, mapHeight, x, y, direction);
-  let neighborList = !tileHash || tileHash === EMPTY_TILE_HASH ? null : tileLookup[tileHash][oppositeDirection];
-  return neighborList;
+  return getTileNeighborList(tileLookup, tileHash, oppositeDirection);
 }
 
 
@@ -373,55 +372,23 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
   return fillTileHashes[utilities.generateRandomInteger(0, fillTileHashes.length - 1)];
 }
 
-export function getAllUniqueNeighborTileHashes(neighborList1, neighborList2 = null, neighborList3 = null, neighborList4 = null)
+export function getAllUniqueNeighborTileHashes(neighborLists)
 {
   let allUniqueNeighborTileHashes = {};
   
-  for (let i = 0; neighborList1 && i < neighborList1.length; i++)
+  for (let i = 0; i < neighborLists.length; i++)
   {
-    if (allUniqueNeighborTileHashes[neighborList1[i]])
+    let neighborList = neighborLists[i];
+    for (let j = 0; neighborList && j < neighborList.length; j++)
     {
-      ++allUniqueNeighborTileHashes[neighborList1[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[neighborList1[i]] = 1;
-    }
-  }
-  
-  for (let i = 0; neighborList2 && i < neighborList2.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[neighborList2[i]])
-    {
-      ++allUniqueNeighborTileHashes[neighborList2[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[neighborList2[i]] = 1;
-    }
-  }
-  
-  for (let i = 0; neighborList3 && i < neighborList3.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[neighborList3[i]])
-    {
-      ++allUniqueNeighborTileHashes[neighborList3[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[neighborList3[i]] = 1;
-    }
-  }
-  
-  for (let i = 0; neighborList4 && i < neighborList4.length; i++)
-  {
-    if (allUniqueNeighborTileHashes[neighborList4[i]])
-    {
-      ++allUniqueNeighborTileHashes[neighborList4[i]];
-    }
-    else
-    {
-      allUniqueNeighborTileHashes[neighborList4[i]] = 1;
+      if (allUniqueNeighborTileHashes[neighborList[j]])
+      {
+        ++allUniqueNeighborTileHashes[neighborList[j]];
+      }
+      else
+      {
+        allUniqueNeighborTileHashes[neighborList[j]] = 1;
+      }
     }
   }
   
@@ -430,7 +397,7 @@ export function getAllUniqueNeighborTileHashes(neighborList1, neighborList2 = nu
 
 export function getFillTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList, strictness = 4)
 {
-  let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
+  let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes([northNeighborList, eastNeighborList, southNeighborList, westNeighborList]);
   
   let invalidNeighborListCount = 0;
   if (!northNeighborList)
@@ -474,7 +441,7 @@ export function getFillTileHashes(northNeighborList, eastNeighborList, southNeig
 
 export function getFillTileHashesSplit(northNeighborList, eastNeighborList, southNeighborList, westNeighborList)
 {
-  let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes(northNeighborList, eastNeighborList, southNeighborList, westNeighborList);
+  let allUniqueNeighborTileHashes = getAllUniqueNeighborTileHashes([northNeighborList, eastNeighborList, southNeighborList, westNeighborList]);
   
   let fillTileHashesSplit = [];
   fillTileHashesSplit[4] = [];
@@ -513,6 +480,7 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
     west: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.WEST),
     center: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y)
   }
+  /*
   let calibratedTileHashes =
   {
     north: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
@@ -521,13 +489,21 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
     west: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
     center: 'bc24bc25adbc371c0d6a9cbfa8e9f96d'
   }
+  */
+  let calibratedTileHashes =
+  {
+    north: EMPTY_TILE_HASH,
+    east: EMPTY_TILE_HASH,
+    south: EMPTY_TILE_HASH,
+    west: EMPTY_TILE_HASH,
+    center: EMPTY_TILE_HASH
+  }
   
   setTile(mapTileEditorData, x, y, calibratedTileHashes.north, Direction.NORTH);
   setTile(mapTileEditorData, x, y, calibratedTileHashes.east, Direction.EAST);
   setTile(mapTileEditorData, x, y, calibratedTileHashes.south, Direction.SOUTH);
   setTile(mapTileEditorData, x, y, calibratedTileHashes.west, Direction.WEST);
   setTile(mapTileEditorData, x, y, calibratedTileHashes.center);
-  
 }
 
 
@@ -558,7 +534,7 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
 
 export function getTileNeighborList(tileLookup, tileHash, direction)
 {
-  return !tileHash || tileHash === EMPTY_TILE_HASH ? [] : tileLookup[tileHash][direction];
+  return !tileHash || tileHash === EMPTY_TILE_HASH ? null : tileLookup[tileHash][direction];
 }
 
 export function getTileNeighborSum(tileLookup, tileHash)
@@ -568,7 +544,12 @@ export function getTileNeighborSum(tileLookup, tileHash)
   let southNeighborList = getTileNeighborList(tileLookup, tileHash, Direction.SOUTH);
   let westNeighborList = getTileNeighborList(tileLookup, tileHash, Direction.WEST);
   
-  return northNeighborList.length + eastNeighborList.length + southNeighborList.length + westNeighborList.length;
+  let northNeighborListLength = northNeighborList ? northNeighborList.length : 0;
+  let eastNeighborListLength = eastNeighborList ? eastNeighborList.length : 0;
+  let southNeighborListLength = southNeighborList ? southNeighborList.length : 0;
+  let westNeighborListLength = westNeighborList ? westNeighborList.length : 0;
+  
+  return northNeighborListLength + eastNeighborListLength + southNeighborListLength + westNeighborListLength;
 }
 
 
@@ -902,23 +883,23 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   
   document.getElementById(Ids.neighborPane[direction]).innerHTML = '';
   
-  let cursorTileData = tileLookup[layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]];
+  let cursorDirectionNeighborList = getTileNeighborList(tileLookup, layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX], direction);
   
-  for (let i = 0; cursorTileData[direction] && i < cursorTileData[direction].length; i++)
+  for (let i = 0; cursorDirectionNeighborList && i < cursorDirectionNeighborList.length; i++)
   {
     let neighborTileImage = new Image(TILE_WIDTH * 3, TILE_HEIGHT * 3);
-    neighborTileImage.src = tileLookup[cursorTileData[direction][i]].image.src;
+    neighborTileImage.src = tileLookup[cursorDirectionNeighborList[i]].image.src;
     neighborTileImage.addEventListener('click',
       function()
       {
-        setTile(mapTileEditorData, cursor.tileX, cursor.tileY, cursorTileData[direction][i], direction);
+        setTile(mapTileEditorData, cursor.tileX, cursor.tileY, cursorDirectionNeighborList[i], direction);
         
         redrawAll(mapTileEditorData);
       }, false);
     neighborTileImage.addEventListener('mouseenter',
       function()
       {
-        setHoverTile(mapTileEditorData, cursor.tileX, cursor.tileY, cursorTileData[direction][i], direction);
+        setHoverTile(mapTileEditorData, cursor.tileX, cursor.tileY, cursorDirectionNeighborList[i], direction);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -933,7 +914,7 @@ export function redrawNeighborPane(mapTileEditorData, direction)
     document.getElementById(Ids.neighborPane[direction]).appendChild(neighborTileImage);
   }
   
-  document.getElementById(Ids.neighborPane[direction]).parentElement.style.backgroundColor = cursorTileData[direction] && cursorTileData[direction].length <= 0 ? BackgroundColor.invalid : BackgroundColor.valid;
+  document.getElementById(Ids.neighborPane[direction]).parentElement.style.backgroundColor = cursorDirectionNeighborList && cursorDirectionNeighborList.length > 0 ? BackgroundColor.valid : BackgroundColor.invalid;
 }
 
 export function redrawIntersectionPanes(mapTileEditorData)
