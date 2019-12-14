@@ -616,6 +616,15 @@ export function setupUIEventListeners(mapTileEditorData)
     function()
     {
       printDebugResponse(mapTileEditorData);
+      
+      
+      
+      // TEMP
+      mapTileEditorUtilities.getCalibratedFillTileHashes(mapTileEditorData, mapTileEditorData.cursor.tileX, mapTileEditorData.cursor.tileY);
+      mapTileEditorUtilities.redrawAll(mapTileEditorData);
+      
+      
+      
     });
   
   document.getElementById(Ids.otherControlBlock.helpButton).addEventListener('click',

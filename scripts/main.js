@@ -108,6 +108,8 @@ Fix font for status message display textarea
 clean up fillMap(...) function
 
 
+Higher chance for getFileTile if same TYPE
+
 
 10) Weighted neighbors calculations
 
