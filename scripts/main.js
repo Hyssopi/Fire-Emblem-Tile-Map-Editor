@@ -105,7 +105,8 @@ Position, Type, Description should be table/td
 
 Fix font for status message display textarea
 
-clean up fillMap(...) function
+search bar
+
 
 
 Higher chance for getFileTile if same TYPE
