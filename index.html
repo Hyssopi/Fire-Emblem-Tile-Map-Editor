@@ -69,7 +69,9 @@
       height: 123px;
       overflow: auto;
       flex-wrap: nowrap;
+      /*
       justify-content: center;
+      */
     }
     
     .containerDoubleRow
@@ -101,6 +103,12 @@
       border: 3px brown solid;
       justify-content: center;
       align-items: center;
+    }
+    
+    .searchBlock
+    {
+      background-color: #F0F0F0;
+      border: 3px olive solid;
     }
     
     .genericControlBlock
@@ -267,6 +275,9 @@
     <div class="flexBoxRow">
       <div>
         <canvas id="CanvasId1" width="1350" height="850"></canvas>
+        <!--
+        <canvas id="CanvasId1" width="400" height="850"></canvas>
+        -->
       </div>
       
       <div>
@@ -275,24 +286,43 @@
             <u><b>CURSOR</b></u>
           </div>
           
-          <div class="flexBoxColumn">
-            <div class="flexBoxColumn" style="align-items: flex-start;">
-              <div>
-                <b>Position:</b> (<label id="cursorPositionXId">0</label>, <label id="cursorPositionYId">0</label>)
-              </div>
-              <div>
-                <b>Type:</b> <label id="tileTypeId">TILE_TYPE</label>
-              </div>
-            </div>
-            <div>
-              <b>Description:</b> <label id="tileDescriptionId">TILE_DESCRIPTION</label>
-            </div>
-          </div>
+          <table>
+            <tr>
+              <td nowrap style="padding: 2px 10px 2px 0px; text-align: right;">
+                <b>Position<span>:</span></b>
+              </td>
+              <td nowrap style="padding: 2px 0px 2px 0px; text-align: left;">
+                (<label id="cursorPositionXId">0</label>, <label id="cursorPositionYId">0</label>)
+              </td>
+            </tr>
+            <tr>
+              <td nowrap style="padding: 2px 10px 2px 0px; text-align: right;">
+                <b>Type<span>:</span></b>
+              </td>
+              <td nowrap style="padding: 2px 0px 2px 0px; text-align: left;">
+                <label id="tileTypeId">TILE_TYPE</label>
+              </td>
+            </tr>
+            <tr>
+              <td nowrap style="padding: 2px 10px 2px 0px; text-align: right;">
+                <b>Description<span>:</span></b>
+              </td>
+              <td nowrap style="padding: 2px 0px 2px 0px; text-align: left;">
+                <label id="tileDescriptionId">TILE_DESCRIPTION</label>
+              </td>
+            </tr>
+          </table>
         </div>
         
         <!--
         // should add a commonability score? add number of neighbors sum
         -->
+        
+        <div class="flexBoxColumn containerRow searchBlock">
+          <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. hash or type">
+          <ul id="searchTileResultsId">
+          </ul>
+        </div>
         
         <div class="flexBoxRow containerRow neighborPane">
           <div id="northNeighborPaneId"></div>

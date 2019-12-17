@@ -26,3 +26,9 @@ button:disabled, button[disabled]
 {
   background-color: #D3D3D3;
 }
+
+li
+{
+  list-style-type: none;
+  float: left;
+}

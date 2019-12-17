@@ -950,7 +950,11 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   let mapWidth = mapTileEditorData.mapWidth;
   let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
   let userActionHistory = mapTileEditorData.userActionHistory;
+  
+  x = x ? x : cursor.tileX;
+  y = y ? y : cursor.tileY;
   
   let modifiedX = x;
   let modifiedY = y;
@@ -991,6 +995,10 @@ export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null
   let mapWidth = mapTileEditorData.mapWidth;
   let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+  x = x ? x : cursor.tileX;
+  y = y ? y : cursor.tileY;
   
   let modifiedX = x;
   let modifiedY = y;
@@ -1216,17 +1224,48 @@ export function updateInformationDisplayTile(mapTileEditorData)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+export function redrawSearchPane(mapTileEditorData)
+{
+  let tileLookup = mapTileEditorData.tileLookup;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+  let searchTileResultsUnorderedList = document.getElementById(Ids.searchBlock.searchTileResults);
+  searchTileResultsUnorderedList.innerHTML = '';
+  
+  for (let tileHash in tileLookup)
+  {
+    let listItem = document.createElement('li');
+    listItem.title = 'HashID: ' + tileHash + '\nType: ' + tileLookup[tileHash].group;
+    
+    let tileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
+    tileImage.src = tileLookup[tileHash].image.src;
+    tileImage.addEventListener('click',
+      function()
+      {
+        setTile(mapTileEditorData, null, null, tileHash);
+        
+        redrawAll(mapTileEditorData);
+      }, false);
+      tileImage.addEventListener('mouseenter',
+      function()
+      {
+        setHoverTile(mapTileEditorData, null, null, tileHash);
+        
+        redrawMap(mapTileEditorData);
+      }, false);
+      tileImage.addEventListener('mouseout',
+      function()
+      {
+        clearHoverTile(layeredTileHashesDisplay);
+        
+        redrawMap(mapTileEditorData);
+      }, false);
+    listItem.appendChild(tileImage);
+    
+    searchTileResultsUnorderedList.appendChild(listItem);
+  }
+}
 
 
 

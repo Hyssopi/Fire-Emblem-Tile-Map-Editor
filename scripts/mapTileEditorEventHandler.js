@@ -385,6 +385,12 @@ export function setupKeyboardEventListeners(mapTileEditorData)
   {
     let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
     
+    // Focus should be not INPUT, for example BODY or BUTTON
+    if (document.activeElement.tagName === 'INPUT')
+    {
+      return;
+    }
+    
     eventKeyMap[event.key] = event.type == 'keydown';
     console.log(eventKeyMap);
     
@@ -444,6 +450,12 @@ export function setupKeyboardEventListeners(mapTileEditorData)
   function keydownResponse(event)
   {
     console.log('event.key: ' + event.key + ', event.code: ' + event.code + ', event.which: ' + event.which + ', event.shiftKey: ' + event.shiftKey + ', event.ctrlKey: ' + event.ctrlKey);
+    
+    // Focus should be not INPUT, for example BODY or BUTTON
+    if (document.activeElement.tagName === 'INPUT')
+    {
+      return;
+    }
     
     if (event.key === 'u')
     {
@@ -631,5 +643,34 @@ export function setupUIEventListeners(mapTileEditorData)
     function()
     {
       helpResponse();
+    });
+  
+  document.getElementById(Ids.searchBlock.searchTileInput).addEventListener('keyup',
+    function()
+    {
+      // Focus should be in INPUT to continue
+      if (document.activeElement.tagName !== 'INPUT')
+      {
+        return;
+      }
+      
+      let input = document.getElementById(Ids.searchBlock.searchTileInput);
+      let searchTileResultsUnorderedList = document.getElementById(Ids.searchBlock.searchTileResults);
+      let listItems = searchTileResultsUnorderedList.getElementsByTagName('li');
+      let filter = input.value.toUpperCase();
+      
+      // Loop through all list items, and hide those who don't match the search query
+      for (let listItem of listItems)
+      {
+        let textValue = listItem.title.toUpperCase();
+        if (textValue.indexOf(filter) > -1)
+        {
+          listItem.style.display = '';
+        }
+        else
+        {
+          listItem.style.display = 'none';
+        }
+      }
     });
 }

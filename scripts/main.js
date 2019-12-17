@@ -33,13 +33,6 @@ export const Ids =
     mapHeightTextbox: 'mapHeightTextboxId',
     newButton: 'newButtonId'
   },
-  informationDisplayTileBlock:
-  {
-    tileType: 'tileTypeId',
-    cursorPositionX: 'cursorPositionXId',
-    cursorPositionY: 'cursorPositionYId',
-    tileDescription: 'tileDescriptionId'
-  },
   genericControlBlock:
   {
     importButton: 'importButtonId',
@@ -62,6 +55,18 @@ export const Ids =
   {
     printLogButton: 'printLogButtonId',
     helpButton: 'helpButtonId'
+  },
+  informationDisplayTileBlock:
+  {
+    tileType: 'tileTypeId',
+    cursorPositionX: 'cursorPositionXId',
+    cursorPositionY: 'cursorPositionYId',
+    tileDescription: 'tileDescriptionId'
+  },
+  searchBlock:
+  {
+    searchTileInput: 'searchTileInputId',
+    searchTileResults: 'searchTileResultsId'
   },
   statusMessageDisplay: 'statusMessageDisplayId',
   neighborPane: {},
@@ -101,11 +106,9 @@ export const BackgroundColor =
 /* TODO:
 
 
-Position, Type, Description should be table/td
 
 Fix font for status message display textarea
 
-search bar
 
 
 
@@ -228,6 +231,8 @@ function setup(tileLookup)
   mapTileEditorEventHandler.setupKeyboardEventListeners(mapTileEditorData);
   
   mapTileEditorEventHandler.setupUIEventListeners(mapTileEditorData);
+  
+  mapTileEditorUtilities.redrawSearchPane(mapTileEditorData);
 }
 
 // Adds context.getTransform() - returns an SVGMatrix
