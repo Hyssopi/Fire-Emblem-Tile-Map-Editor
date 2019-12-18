@@ -131,8 +131,8 @@ export function resetMap(mapTileEditorData)
   
   cursor.image = tileLookup[CURSOR_TILE_HASH].image;
   
-  let mapWidth = document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value;
-  let mapHeight = document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value;
+  let mapWidth = document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value;
+  let mapHeight = document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value;
   
   mapWidth = mapWidth ? mapWidth : 1;
   mapHeight = mapHeight ? mapHeight : 1;
@@ -168,8 +168,8 @@ export function resizeMap(mapTileEditorData, isLog = true)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  let mapWidth = document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value;
-  let mapHeight = document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value;
+  let mapWidth = document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value;
+  let mapHeight = document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value;
   
   mapWidth = mapWidth ? mapWidth : 1;
   mapHeight = mapHeight ? mapHeight : 1;
@@ -237,8 +237,8 @@ export function loadMapJson(mapTileEditorData, mapJson)
   //mapWidth = mapWidth ? mapWidth : 1;
   //mapHeight = mapHeight ? mapHeight : 1;
   
-  document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value = mapWidth;
-  document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value = mapHeight;
+  document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value = mapWidth;
+  document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value = mapHeight;
   
   let layeredTileHashesDisplay = {};
   layeredTileHashesDisplay.map = [];
@@ -283,7 +283,7 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   
   window.open('data:application/json,' + encodeURIComponent(mapJsonOutput), '_blank', 'width = 800, height = 600, resizable = 1');
   
-  appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Save the opened new window as a JSON file.\nCtrl+S --> Map1.json (example)');
+  console.log('Save the opened new window as a JSON file.\nCtrl+S --> Map1.json (example)');
 }
 
 export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
@@ -511,7 +511,7 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
   possibleFillNeighborTileHashes[Direction.WEST] = [];
   
   //let minimumStrictness = 3;
-  let minimumStrictness = document.getElementById(Ids.tileControlBlock.strictnessComboBox).value;
+  let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
   
   // Fill out possibleFillNeighborTileHashes
   
@@ -852,7 +852,6 @@ export function undo(mapTileEditorData)
   {
     console.warn('Cannot undo anymore.');
     console.warn(userActionHistory);
-    appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Cannot undo anymore.');
     return;
   }
   
@@ -865,8 +864,8 @@ export function undo(mapTileEditorData)
   else if (userAction.oldMapWidth && userAction.oldMapHeight)
   {
     // TODO: Check if newMapWidth/newMapHeight
-    document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value = userAction.oldMapWidth;
-    document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value = userAction.oldMapHeight;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value = userAction.oldMapWidth;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value = userAction.oldMapHeight;
     
     resizeMap(mapTileEditorData, false);
   }
@@ -882,7 +881,6 @@ export function redo(mapTileEditorData)
   {
     console.warn('Cannot redo anymore.');
     console.warn(userActionHistory);
-    appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Cannot redo anymore.');
     return;
   }
   
@@ -895,8 +893,8 @@ export function redo(mapTileEditorData)
   else if (userAction.newMapWidth && userAction.newMapHeight)
   {
     // TODO: Check if oldMapWidth/oldMapHeight
-    document.getElementById(Ids.informationDisplayMapBlock.mapWidthTextbox).value = userAction.newMapWidth;
-    document.getElementById(Ids.informationDisplayMapBlock.mapHeightTextbox).value = userAction.newMapHeight;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value = userAction.newMapWidth;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value = userAction.newMapHeight;
     
     resizeMap(mapTileEditorData, false);
   }
@@ -1107,7 +1105,7 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  document.getElementById(Ids.neighborPane[direction]).innerHTML = '';
+  document.getElementById(Ids.sidebar.neighborPane[direction]).innerHTML = '';
   
   let cursorDirectionNeighborList = getTileNeighborList(tileLookup, layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX], direction);
   
@@ -1137,10 +1135,10 @@ export function redrawNeighborPane(mapTileEditorData, direction)
         redrawMap(mapTileEditorData);
       }, false);
     
-    document.getElementById(Ids.neighborPane[direction]).appendChild(neighborTileImage);
+    document.getElementById(Ids.sidebar.neighborPane[direction]).appendChild(neighborTileImage);
   }
   
-  document.getElementById(Ids.neighborPane[direction]).parentElement.style.backgroundColor = cursorDirectionNeighborList && cursorDirectionNeighborList.length > 0 ? BackgroundColor.valid : BackgroundColor.invalid;
+  document.getElementById(Ids.sidebar.neighborPane[direction]).parentElement.style.backgroundColor = cursorDirectionNeighborList && cursorDirectionNeighborList.length > 0 ? BackgroundColor.valid : BackgroundColor.invalid;
 }
 
 export function redrawIntersectionPanes(mapTileEditorData)
@@ -1174,7 +1172,7 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  document.getElementById(Ids.intersectionPane[strictness]).innerHTML = '';
+  document.getElementById(Ids.sidebar.intersectionPane[strictness]).innerHTML = '';
   
   for (let i = 0; fillTileHashes && i < fillTileHashes.length; i++)
   {
@@ -1202,10 +1200,10 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
         redrawMap(mapTileEditorData);
       }, false);
     
-    document.getElementById(Ids.intersectionPane[strictness]).appendChild(intersectedTileImage);
+    document.getElementById(Ids.sidebar.intersectionPane[strictness]).appendChild(intersectedTileImage);
   }
   
-  document.getElementById(Ids.intersectionPane[strictness]).parentElement.style.backgroundColor = fillTileHashes && fillTileHashes.length <= 0 ? BackgroundColor.invalid : BackgroundColor.valid;
+  document.getElementById(Ids.sidebar.intersectionPane[strictness]).parentElement.style.backgroundColor = fillTileHashes && fillTileHashes.length <= 0 ? BackgroundColor.invalid : BackgroundColor.valid;
 }
 
 export function updateInformationDisplayTile(mapTileEditorData)
@@ -1216,10 +1214,10 @@ export function updateInformationDisplayTile(mapTileEditorData)
   
   let tileHash = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX];
   
-  document.getElementById(Ids.informationDisplayTileBlock.tileType).textContent = tileLookup[tileHash].group;
-  document.getElementById(Ids.informationDisplayTileBlock.cursorPositionX).textContent = cursor.tileX + 1;
-  document.getElementById(Ids.informationDisplayTileBlock.cursorPositionY).textContent = cursor.tileY + 1;
-  document.getElementById(Ids.informationDisplayTileBlock.tileDescription).textContent = tileLookup[tileHash].description;
+  document.getElementById(Ids.toolbar.cursorBlock.tileType).textContent = tileLookup[tileHash].group;
+  document.getElementById(Ids.toolbar.cursorBlock.cursorPositionX).textContent = cursor.tileX + 1;
+  document.getElementById(Ids.toolbar.cursorBlock.cursorPositionY).textContent = cursor.tileY + 1;
+  document.getElementById(Ids.toolbar.cursorBlock.tileDescription).textContent = tileLookup[tileHash].description;
 }
 
 
@@ -1230,7 +1228,7 @@ export function redrawSearchPane(mapTileEditorData)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  let searchTileResultsUnorderedList = document.getElementById(Ids.searchBlock.searchTileResults);
+  let searchTileResultsUnorderedList = document.getElementById(Ids.sidebar.searchBlock.searchTileResults);
   searchTileResultsUnorderedList.innerHTML = '';
   
   for (let tileHash in tileLookup)
@@ -1531,13 +1529,14 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
 
 
 
-
+/*
 export function appendstatusMessageDisplay(statusMessageDisplayId, text)
 {
   let statusMessageDisplayTextArea = document.getElementById(statusMessageDisplayId);
   statusMessageDisplayTextArea.value = text + '\n\n\n' + statusMessageDisplayTextArea.value;
   statusMessageDisplayTextArea.scrollTop = 0;
 }
+*/
 
 
 

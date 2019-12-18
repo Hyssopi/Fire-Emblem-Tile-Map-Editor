@@ -7,6 +7,8 @@ export const TILE_WIDTH = 16;
 export const TILE_HEIGHT = 16;
 export const SCALE_FACTOR = 1.1;
 
+const SHOW_PRINT_LOG_BUTTON = false;
+
 const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
 const IMAGES_OUTPUT_FOLDER_NAME = 'images';
 const UNDEFINED_OUTPUT_FOLDER_NAME = 'UNDEFINED';
@@ -26,62 +28,69 @@ export const Direction =
 
 export const Ids =
 {
+  loadingScreen: 'loadingScreenId',
   canvas: 'CanvasId1',
-  informationDisplayMapBlock:
+  toolbar:
   {
-    mapWidthTextbox: 'mapWidthTextboxId',
-    mapHeightTextbox: 'mapHeightTextboxId',
-    newButton: 'newButtonId'
+    mapControlBlock:
+    {
+      mapWidthTextbox: 'mapWidthTextboxId',
+      mapHeightTextbox: 'mapHeightTextboxId',
+      newButton: 'newButtonId',
+      importButton: 'importButtonId',
+      importFileInput: 'importFileInputId',
+      exportAsTileHashesButton: 'exportAsTileHashesButtonId',
+      exportAsImageButton: 'exportAsImageButtonId'
+    },
+    editBlock:
+    {
+      undoButton: 'undoButtonId',
+      redoButton: 'redoButtonId',
+      clearTileButton: 'clearTileButtonId'
+    },
+    functionBlock:
+    {
+      randomTileButton: 'randomTileButtonId',
+      strictnessComboBox: 'strictnessComboBoxId',
+      fillTileButton: 'fillTileButtonId',
+      calibrateTileButton: 'calibrateTileButtonId',
+      generateMapButton: 'generateMapButtonId',
+      isAnimateGeneration: 'isAnimateGenerationId'
+    },
+    helpBlock:
+    {
+      printLogButton: 'printLogButtonId',
+      helpButton: 'helpButtonId'
+    },
+    cursorBlock:
+    {
+      tileType: 'tileTypeId',
+      cursorPositionX: 'cursorPositionXId',
+      cursorPositionY: 'cursorPositionYId',
+      tileDescription: 'tileDescriptionId'
+    }
   },
-  genericControlBlock:
+  sidebar:
   {
-    importButton: 'importButtonId',
-    exportAsTileHashesButton: 'exportAsTileHashesButtonId',
-    exportAsImageButton: 'exportAsImageButtonId',
-    importFileInput: 'importFileInputId',
-    undoButton: 'undoButtonId',
-    redoButton: 'redoButtonId'
-  },
-  tileControlBlock:
-  {
-    strictnessComboBox: 'strictnessComboBoxId',
-    randomTileButton: 'randomTileButtonId',
-    clearTileButton: 'clearTileButtonId',
-    fillTileButton: 'fillTileButtonId',
-    generateMapButton: 'generateMapButtonId',
-    isAnimateGeneration: 'isAnimateGenerationId'
-  },
-  otherControlBlock:
-  {
-    printLogButton: 'printLogButtonId',
-    helpButton: 'helpButtonId'
-  },
-  informationDisplayTileBlock:
-  {
-    tileType: 'tileTypeId',
-    cursorPositionX: 'cursorPositionXId',
-    cursorPositionY: 'cursorPositionYId',
-    tileDescription: 'tileDescriptionId'
-  },
-  searchBlock:
-  {
-    searchTileInput: 'searchTileInputId',
-    searchTileResults: 'searchTileResultsId'
-  },
-  statusMessageDisplay: 'statusMessageDisplayId',
-  neighborPane: {},
-  intersectionPane: {}
+    searchBlock:
+    {
+      searchTileInput: 'searchTileInputId',
+      searchTileResults: 'searchTileResultsId'
+    },
+    neighborPane: {},
+    intersectionPane: {}
+  }
 };
 
-Ids.neighborPane[Direction.NORTH] = 'northNeighborPaneId';
-Ids.neighborPane[Direction.EAST] = 'eastNeighborPaneId';
-Ids.neighborPane[Direction.SOUTH] = 'southNeighborPaneId';
-Ids.neighborPane[Direction.WEST] = 'westNeighborPaneId';
+Ids.sidebar.neighborPane[Direction.NORTH] = 'northNeighborPaneId';
+Ids.sidebar.neighborPane[Direction.EAST] = 'eastNeighborPaneId';
+Ids.sidebar.neighborPane[Direction.SOUTH] = 'southNeighborPaneId';
+Ids.sidebar.neighborPane[Direction.WEST] = 'westNeighborPaneId';
 
-Ids.intersectionPane[4] = 'intersectionPaneStrictId4';
-Ids.intersectionPane[3] = 'intersectionPaneStrictId3';
-Ids.intersectionPane[2] = 'intersectionPaneStrictId2';
-Ids.intersectionPane[1] = 'intersectionPaneStrictId1';
+Ids.sidebar.intersectionPane[4] = 'intersectionPaneStrictId4';
+Ids.sidebar.intersectionPane[3] = 'intersectionPaneStrictId3';
+Ids.sidebar.intersectionPane[2] = 'intersectionPaneStrictId2';
+Ids.sidebar.intersectionPane[1] = 'intersectionPaneStrictId1';
 
 
 export const BackgroundColor =
@@ -100,14 +109,14 @@ export const BackgroundColor =
 
 
 
-
-
-
 /* TODO:
 
 
 
-Fix font for status message display textarea
+Undo/redo grey out/disable
+1080, 1440 version
+calibrate button
+
 
 
 
@@ -120,6 +129,8 @@ Higher chance for getFileTile if same TYPE
 25) Given a,b,c,d, find x (center) with given strictness 4,3,2,1
 
 26) After initial fillMap, use #25 function to patch up holes
+
+29) Corners? Missing tiles outside?
 
 
 
@@ -145,8 +156,6 @@ Higher chance for getFileTile if same TYPE
 ?) Fix map extractor last ','
 
 */
-
-
 
 
 
@@ -193,7 +202,9 @@ fetch(tileReferencesJsonFilePath)
     
     setup(tileLookup);
     
-    mapTileEditorUtilities.appendstatusMessageDisplay(Ids.statusMessageDisplay, 'Loaded.');
+    // Hide loading screen when finished loading
+    document.getElementById(Ids.loadingScreen).style.display = 'none';
+    console.log('Finished loading.');
   })
   .catch (function(error)
   {
@@ -212,6 +223,11 @@ function setup(tileLookup)
   context.imageSmoothingEnabled = false;
   
   setupTrackTransforms(context);
+  
+  if (!SHOW_PRINT_LOG_BUTTON)
+  {
+    document.getElementById(Ids.toolbar.helpBlock.printLogButton).style.display = 'none';
+  }
   
   let mapTileEditorData =
   {
