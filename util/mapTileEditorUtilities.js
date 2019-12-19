@@ -160,6 +160,8 @@ export function resetMap(mapTileEditorData)
   mapTileEditorData.userActionHistory = userActionHistory;
   
   redrawAll(mapTileEditorData);
+  
+  updateUndoRedoButtonStates(userActionHistory);
 }
 
 export function resizeMap(mapTileEditorData, isLog = true)
@@ -805,13 +807,13 @@ export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight
     userActionHistory.logs.pop();
   }
   
+  updateUndoRedoButtonStates(userActionHistory);
+  
   /*
   //console.log(userActionHistory);
   //userActionHistory = userActionHistory.splice(0, userActionHistory.counter);
   */
 }
-
-
 
 export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x, y, tileHash)
 {
@@ -837,6 +839,8 @@ export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x
     //console.log((userActionHistory.counter + 1) + ' < ' + userActionHistory.logs.length);
     userActionHistory.logs.pop();
   }
+  
+  updateUndoRedoButtonStates(userActionHistory);
   
   /*
   //console.log(userActionHistory);
@@ -871,6 +875,8 @@ export function undo(mapTileEditorData)
   }
   
   --userActionHistory.counter;
+  
+  updateUndoRedoButtonStates(userActionHistory);
 }
 
 export function redo(mapTileEditorData)
@@ -900,9 +906,15 @@ export function redo(mapTileEditorData)
   }
   
   ++userActionHistory.counter;
+  
+  updateUndoRedoButtonStates(userActionHistory);
 }
 
-
+export function updateUndoRedoButtonStates(userActionHistory)
+{
+  document.getElementById(Ids.toolbar.editBlock.undoButton).disabled = userActionHistory.counter < 0;
+  document.getElementById(Ids.toolbar.editBlock.redoButton).disabled = userActionHistory.counter + 1 >= userActionHistory.logs.length;
+}
 
 
 
@@ -951,8 +963,9 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   let cursor = mapTileEditorData.cursor;
   let userActionHistory = mapTileEditorData.userActionHistory;
   
-  x = x ? x : cursor.tileX;
-  y = y ? y : cursor.tileY;
+  // Use cursor's position if x or y are null
+  x = (x != null) ? x : cursor.tileX;
+  y = (y != null) ? y : cursor.tileY;
   
   let modifiedX = x;
   let modifiedY = y;

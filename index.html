@@ -86,47 +86,42 @@
     
     .toolbar
     {
-      border: 3px black solid;
+      border: 1px black solid;
+    }
+    
+    .toolbarBlock
+    {
+      background-color: #F0F0F0;
+      border: 3px grey solid;
+      justify-content: flex-end;
+      align-items: center;
+      margin: 0px 2px;
+    }
+    
+    .innerToolbarBlock
+    {
+      padding: 0px 5px;
     }
     
     .mapControlBlock
     {
-      background-color: #F0F0F0;
-      border: 3px orange solid;
-      justify-content: center;
-      align-items: center;
+      margin: 0px 2px 0px 0px;
     }
     
     .editBlock
     {
-      background-color: #F0F0F0;
-      border: 3px pink solid;
-      justify-content: center;
-      align-items: center;
     }
     
     .functionBlock
     {
-      background-color: #F0F0F0;
-      border: 3px purple solid;
-      justify-content: center;
-      align-items: center;
     }
     
     .helpBlock
     {
-      background-color: #F0F0F0;
-      border: 3px yellow solid;
-      justify-content: center;
-      align-items: center;
     }
     
     .cursorBlock
     {
-      background-color: #F0F0F0;
-      border: 3px brown solid;
-      justify-content: center;
-      align-items: center;
     }
     
     .searchBlock
@@ -145,6 +140,22 @@
       border: 3px green solid;
     }
     
+    .ribbonGroupTitleHorizontal
+    {
+      width: 100%;
+      font-size: 10px;
+      color: white;
+      background-color: grey;
+    }
+    
+    .ribbonGroupTitleVertical
+    {
+      height: 100%;
+      font-size: 10px;
+      color: white;
+      background-color: grey;
+    }
+    
     .loadingScreen
     {
       position: fixed;
@@ -158,6 +169,7 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 2;
     }
+    
   </style>
   
   <!--
@@ -178,126 +190,122 @@
     <div class="flexBoxRow">
       <div class="flexBoxColumn">
         <div class="flexBoxRow toolbar">
-          <div class="flexBoxRow mapControlBlock">
-            <div>
-              <div style="transform: translateX(15%) translateY(0%) rotate(-33deg)">
-                <u><b>MAP</b></u>
-              </div>
-            </div>
-            
-            <div style="width: 10px;"></div>
           
-            <div class="flexBoxColumn" style="justify-content: center; align-items: flex-end;">
-              <div class="flexBoxRow">
-                Width: <input id="mapWidthTextboxId" type="number" min="1" max="999" value="16" placeholder="W" style="width: 4em; text-align: center;">
+          <div class="flexBoxColumn toolbarBlock mapControlBlock">
+            <div class="flexBoxRow innerToolbarBlock">
+              <div style="width: 10px;"></div>
+              
+              <div class="flexBoxColumn" style="justify-content: center; align-items: flex-end; font-size: 12px;">
+                <div class="flexBoxRow">
+                  Width: <input id="mapWidthTextboxId" type="number" min="1" max="999" value="16" placeholder="W" style="width: 4em; text-align: center; font-size: 10px;">
+                </div>
+                <div class="flexBoxRow">
+                  Height: <input id="mapHeightTextboxId" type="number" min="1" max="999" value="9" placeholder="H" style="width: 4em; text-align: center; font-size: 10px;">
+                </div>
               </div>
-              <div class="flexBoxRow">
-                Height: <input id="mapHeightTextboxId" type="number" min="1" max="999" value="9" placeholder="H" style="width: 4em; text-align: center;">
-              </div>
+              
+              <button id="newButtonId" class="font-awesome-icons" title="NEW">
+                <i class="fa fa-file"></i>
+              </button>
+              
+              <button id="importButtonId" class="font-awesome-icons" title="IMPORT">
+                <i class="fa fa-folder-open"></i>
+              </button>
+              <input id="importFileInputId" type="file" style="display: none;"/>
+              <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="EXPORT TILE HASH">
+                <i class="fa fa-file-download"></i>
+              </button>
+              <button id="exportAsImageButtonId" class="font-awesome-icons" title="EXPORT IMAGE">
+                <i class="fa fa-file-image"></i>
+              </button>
             </div>
-            
-            <button id="newButtonId" class="font-awesome-icons" title="NEW">
-              <i class="fa fa-file"></i>
-            </button>
-            
-            <button id="importButtonId" class="font-awesome-icons" title="IMPORT">
-              <i class="fa fa-folder-open"></i>
-            </button>
-            <input id="importFileInputId" type="file" style="display: none;"/>
-            <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="EXPORT TILE HASH">
-              <i class="fa fa-file-download"></i>
-            </button>
-            <button id="exportAsImageButtonId" class="font-awesome-icons" title="EXPORT IMAGE">
-              <i class="fa fa-file-image"></i>
-            </button>
+            <div class="ribbonGroupTitleHorizontal">MAP</div>
           </div>
           
-          
-          <div class="flexBoxRow editBlock">
-            <button id="undoButtonId" class="font-awesome-icons" title="UNDO">
-              <i class="fa fa-undo-alt"></i>
-            </button>
-            <button id="redoButtonId" class="font-awesome-icons" title="REDO">
-              <i class="fa fa-redo-alt"></i>
-            </button>
-            <button id="clearTileButtonId" class="font-awesome-icons" title="CLEAR TILE">
-              <!--
-              <i class="fa fa-eraser"></i>
-              -->
-              <i class="fa fa-window-close"></i>
-            </button>
+          <div class="flexBoxColumn toolbarBlock editBlock">
+            <div class="flexBoxRow innerToolbarBlock">
+              <button id="undoButtonId" class="font-awesome-icons" title="UNDO">
+                <i class="fa fa-undo-alt"></i>
+              </button>
+              <button id="redoButtonId" class="font-awesome-icons" title="REDO">
+                <i class="fa fa-redo-alt"></i>
+              </button>
+              <button id="clearTileButtonId" class="font-awesome-icons" title="CLEAR TILE">
+                <!--
+                <i class="fa fa-eraser"></i>
+                -->
+                <i class="fa fa-window-close"></i>
+              </button>
+            </div>
+            <div class="ribbonGroupTitleHorizontal">EDIT</div>
           </div>
           
-          
-          
-          
-          <div class="flexBoxRow functionBlock">
-            <button id="randomTileButtonId" class="font-awesome-icons" title="RANDOM TILE">
-              <i class="fa fa-signature"></i>
-            </button>
-            
-            
-            <div class="flexBoxColumn">
-              <div style="padding-bottom: 5px;">
-                Strictness
+          <div class="flexBoxColumn toolbarBlock functionBlock">
+            <div class="flexBoxRow innerToolbarBlock">
+              <button id="randomTileButtonId" class="font-awesome-icons" title="RANDOM TILE">
+                <i class="fa fa-signature"></i>
+              </button>
+              
+              <div class="flexBoxColumn">
+                <div style="padding-bottom: 5px;">
+                  Strictness
+                </div>
+                <select id="strictnessComboBoxId">
+                  <option value="4">Exact [4]</option>
+                  <option value="3">Near [3]</option>
+                  <option value="2">Fair [2]</option>
+                  <option value="1">Small [1]</option>
+                </select>
               </div>
-              <select id="strictnessComboBoxId">
-                <option value="4">Perfect [4]</option>
-                <option value="3">Close [3]</option>
-                <option value="2">Sufficient [2]</option>
-                <option value="1">Barely [1]</option>
-              </select>
+              
+              <button id="fillTileButtonId" class="font-awesome-icons" title="FILL TILE">
+                <!--
+                <i class="fa fa-fill-drip"></i>
+                -->
+                <i class="fa fa-puzzle-piece"></i>
+              </button>
+              
+              <button id="calibrateTileButtonId" class="font-awesome-icons" title="CALIBRATE TILE">
+                <i class="fa fa-ruler"></i>
+              </button>
+              
+              <button id="generateMapButtonId" class="font-awesome-icons" title="GENERATE MAP">
+                <!--
+                <i class="fa fa-image"></i>
+                -->
+                <!--
+                <i class="fa fa-th"></i>
+                -->
+                <i class="fa fa-fill-drip"></i>
+              </button>
+              
+              <div class="font-awesome-icons">
+                <i id="isAnimateGenerationId" class="fa fa-toggle-off" title="Animate Generation?"></i>
+              </div>
             </div>
-            
-            <button id="fillTileButtonId" class="font-awesome-icons" title="FILL TILE">
-              <!--
-              <i class="fa fa-fill-drip"></i>
-              -->
-              <i class="fa fa-puzzle-piece"></i>
-            </button>
-            
-            <button id="calibrateTileButtonId" class="font-awesome-icons" title="CALIBRATE TILE">
-              <i class="fa fa-ruler"></i>
-            </button>
-            
-            <button id="generateMapButtonId" class="font-awesome-icons" title="GENERATE MAP">
-              <!--
-              <i class="fa fa-image"></i>
-              -->
-              <!--
-              <i class="fa fa-th"></i>
-              -->
-              <i class="fa fa-fill-drip"></i>
-            </button>
-            
-            <div class="font-awesome-icons">
-              <i id="isAnimateGenerationId" class="fa fa-toggle-off" title="Animate Generation?"></i>
-            </div>
+            <div class="ribbonGroupTitleHorizontal">FUNCTION</div>
           </div>
           
-          <div style="width: 20px;"></div>
-          
-          <div class="flexBoxRow helpBlock">
-            <button id="printLogButtonId" class="font-awesome-icons" title="PRINT LOG">
-              <i class="fa fa-receipt"></i>
-            </button>
-            <button id="helpButtonId" class="font-awesome-icons" title="HELP">
-              <i class="fa fa-question-circle"></i>
-            </button>
+          <div class="flexBoxColumn toolbarBlock helpBlock">
+            <div class="flexBoxRow innerToolbarBlock">
+              <button id="printLogButtonId" class="font-awesome-icons" title="PRINT LOG">
+                <i class="fa fa-receipt"></i>
+              </button>
+              <button id="helpButtonId" class="font-awesome-icons" title="HELP">
+                <i class="fa fa-question-circle"></i>
+              </button>
+            </div>
+            <div class="ribbonGroupTitleHorizontal">HELP</div>
           </div>
           
-          <div class="flexBoxColumn cursorBlock">
-            <div>
-              <u><b>CURSOR</b></u>
-            </div>
-            
-            <table style="font-size: 12px;">
+          <div class="flexBoxColumn toolbarBlock cursorBlock">
+            <table class="innerToolbarBlock" style="font-size: 12px; border-spacing: 0 0;">
               <tr>
                 <td nowrap style="padding: 0px 10px 0px 0px; text-align: right;">
                   <b>Position<span>:</span></b>
                 </td>
                 <td nowrap style="padding: 0px; text-align: left;">
-                  (<label id="cursorPositionXId">0</label>, <label id="cursorPositionYId">0</label>)
+                  ( <label id="cursorPositionXId">0</label> , <label id="cursorPositionYId">0</label> )
                 </td>
               </tr>
               <tr>
@@ -317,6 +325,7 @@
                 </td>
               </tr>
             </table>
+            <div class="ribbonGroupTitleHorizontal">CURSOR</div>
           </div>
           
           <!--
@@ -337,16 +346,17 @@
           -->
         </div>
       </div>
+      
       <div style="padding: 2px;"></div>
       
-      
-      
-      
       <div>
-        <div class="flexBoxColumn containerRow searchBlock">
-          <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. hash or type">
-          <ul id="searchTileResultsId">
-          </ul>
+        <div class="flexBoxRow searchBlock">
+          <div class="ribbonGroupTitleVertical" style="transform: translateX(0%) translateY(0%) rotate(-90deg);">SEARCH</div>
+          <div class="flexBoxColumn containerRow">
+            <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. hash or type">
+            <ul id="searchTileResultsId">
+            </ul>
+          </div>
         </div>
         
         <div class="flexBoxRow containerRow neighborPane">

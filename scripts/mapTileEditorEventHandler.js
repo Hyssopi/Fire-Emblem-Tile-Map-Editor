@@ -457,7 +457,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
   
   function keydownResponse(event)
   {
-    console.log('event.key: ' + event.key + ', event.code: ' + event.code + ', event.which: ' + event.which + ', event.shiftKey: ' + event.shiftKey + ', event.ctrlKey: ' + event.ctrlKey);
+    console.log('event.key: ' + event.key + ', event.code: ' + event.code + ', event.which: ' + event.which + ', event.shiftKey: ' + event.shiftKey + ', event.ctrlKey: ' + event.ctrlKey + ', document.activeElement.tagName: ' + document.activeElement.tagName);
     
     // Focus should be not INPUT, for example BODY or BUTTON
     if (document.activeElement.tagName === 'INPUT')
@@ -514,6 +514,11 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 'f' button pressed
       fillTileResponse(mapTileEditorData);
+    }
+    if (event.key === 'c')
+    {
+      // 'c' button pressed
+      calibrateTileResponse(mapTileEditorData);
     }
     if (event.key === 'g')
     {

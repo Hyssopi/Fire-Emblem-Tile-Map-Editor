@@ -7,7 +7,7 @@ export const TILE_WIDTH = 16;
 export const TILE_HEIGHT = 16;
 export const SCALE_FACTOR = 1.1;
 
-const SHOW_PRINT_LOG_BUTTON = false;
+const SHOW_PRINT_LOG_BUTTON = true;
 
 const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
 const IMAGES_OUTPUT_FOLDER_NAME = 'images';
@@ -97,9 +97,7 @@ export const BackgroundColor =
 {
   valid: 'whitesmoke',
   invalid: 'lightgray'
-}
-
-
+};
 
 
 
