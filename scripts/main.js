@@ -109,55 +109,32 @@ export const BackgroundColor =
 
 /* TODO:
 
+1) Fix getCalibratedFillTileHashes(...)
+* Weighted neighbors calculations
+* Given a,b,c,d, find x (center) with given strictness 4,3,2,1
+* After initial fillMap, use #25 function to patch up holes
+* Corners? Missing tiles outside?
+
+2) Clean up code
+* Do not pass mapTileEditorData, pass individual parameters
+* Reorder functions
+
+3) Fix Print Debug
+
+4) Add documentation
+
+5) Fix Help
+
+6) Fix map extractor last ',' in Unity
+
+7) Move tile images to folders as TYPE
 
 
-1080, 1440 version
-
-
-
-
-Higher chance for getFileTile if same TYPE
-
-
-
-10) Weighted neighbors calculations
-
-25) Given a,b,c,d, find x (center) with given strictness 4,3,2,1
-
-26) After initial fillMap, use #25 function to patch up holes
-
-29) Corners? Missing tiles outside?
-
-
-
-
-7) Do not pass mapTileEditorData, pass individual parameters
-
-6) Reorder functions
-
-2) Fix Print Debug
-
-
-
-
-1) Fix Help
-
-
-
-
-27) Double check TYPE
-
-28) Move tile images to folders as TYPE
-
-
-
-?) Multi-select
-?) Add zoom boundaries
-
-?) Fix map extractor last ','
+91) Higher chance for getFileTile if same TYPE
+92) Add zoom boundaries
+93) Multi-select
 
 */
-
 
 
 let tileReferencesJsonFilePath = BASE_OUTPUT_DIRECTORY_PATH + '/' + TILE_REFERENCES_JSON_FILE_NAME;
