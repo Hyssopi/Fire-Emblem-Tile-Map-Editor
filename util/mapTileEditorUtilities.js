@@ -1239,7 +1239,6 @@ export function redrawSearchPane(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
   
   let searchTileResultsUnorderedList = document.getElementById(Ids.sidebar.searchBlock.searchTileResults);
   searchTileResultsUnorderedList.innerHTML = '';
