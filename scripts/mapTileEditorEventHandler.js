@@ -465,11 +465,13 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       return;
     }
     
+    /*
     if (event.key === 'u')
     {
       // 'u' button pressed
       mapTileEditorUtilities.redrawAll(mapTileEditorData);
     }
+    */
     
     if (event.key === 'z')
     {
