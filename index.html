@@ -81,7 +81,7 @@
       height: 124px;
       overflow: auto;
       flex-wrap: nowrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
     
     .toolbar
@@ -103,9 +103,27 @@
       padding: 0px 5px;
     }
     
+    .sidebar
+    {
+      border: 1px black solid;
+    }
+    
+    .sidebarBlock
+    {
+      background-color: #F0F0F0;
+      border: 3px grey solid;
+      justify-content: flex-start;
+      margin: 2px 0px;
+    }
+    
+    .innerSidebarBlock
+    {
+      padding: 5px 0px;
+    }
+    
     .mapControlBlock
     {
-      margin: 0px 2px 0px 0px;
+      margin-left: 0px;
     }
     
     .editBlock
@@ -126,34 +144,47 @@
     
     .searchBlock
     {
-      background-color: #F0F0F0;
-      border: 3px olive solid;
+      margin-top: 0px;
     }
     
     .neighborPane
     {
-      border: 3px blue solid;
+      font-size: 16px;
     }
     
     .intersectionPane
     {
-      border: 3px green solid;
+      font-size: 16px;
+      border: 3px blue solid;
+      margin: 0px 2px;
     }
     
     .ribbonGroupTitleHorizontal
     {
       width: 100%;
-      font-size: 10px;
       color: white;
       background-color: grey;
     }
     
+    .ribbonGroupTitleVerticalWrapper
+    {
+      display: flex;
+    }
+    
     .ribbonGroupTitleVertical
     {
-      height: 100%;
-      font-size: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 1.1em;
       color: white;
       background-color: grey;
+    }
+    
+    .ribbonGroupTitleVertical p
+    {
+      white-space: nowrap;
+      transform: rotate(270deg);
     }
     
     .loadingScreen
@@ -204,18 +235,18 @@
                 </div>
               </div>
               
-              <button id="newButtonId" class="font-awesome-icons" title="NEW">
+              <button id="newButtonId" class="font-awesome-icons" title="New">
                 <i class="fa fa-file"></i>
               </button>
               
-              <button id="importButtonId" class="font-awesome-icons" title="IMPORT">
+              <button id="importButtonId" class="font-awesome-icons" title="Import">
                 <i class="fa fa-folder-open"></i>
               </button>
               <input id="importFileInputId" type="file" style="display: none;"/>
-              <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="EXPORT TILE HASH">
+              <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="Export As Tile Hashes">
                 <i class="fa fa-file-download"></i>
               </button>
-              <button id="exportAsImageButtonId" class="font-awesome-icons" title="EXPORT IMAGE">
+              <button id="exportAsImageButtonId" class="font-awesome-icons" title="Export As Image">
                 <i class="fa fa-file-image"></i>
               </button>
             </div>
@@ -224,13 +255,13 @@
           
           <div class="flexBoxColumn toolbarBlock editBlock">
             <div class="flexBoxRow innerToolbarBlock">
-              <button id="undoButtonId" class="font-awesome-icons" title="UNDO">
+              <button id="undoButtonId" class="font-awesome-icons" title="Undo">
                 <i class="fa fa-undo-alt"></i>
               </button>
-              <button id="redoButtonId" class="font-awesome-icons" title="REDO">
+              <button id="redoButtonId" class="font-awesome-icons" title="Redo">
                 <i class="fa fa-redo-alt"></i>
               </button>
-              <button id="clearTileButtonId" class="font-awesome-icons" title="CLEAR TILE">
+              <button id="clearTileButtonId" class="font-awesome-icons" title="Clear Tile">
                 <!--
                 <i class="fa fa-eraser"></i>
                 -->
@@ -242,7 +273,7 @@
           
           <div class="flexBoxColumn toolbarBlock functionBlock">
             <div class="flexBoxRow innerToolbarBlock">
-              <button id="randomTileButtonId" class="font-awesome-icons" title="RANDOM TILE">
+              <button id="randomTileButtonId" class="font-awesome-icons" title="Random Tile">
                 <i class="fa fa-signature"></i>
               </button>
               
@@ -258,18 +289,18 @@
                 </select>
               </div>
               
-              <button id="fillTileButtonId" class="font-awesome-icons" title="FILL TILE">
+              <button id="fillTileButtonId" class="font-awesome-icons" title="Fill Tile">
                 <!--
                 <i class="fa fa-fill-drip"></i>
                 -->
                 <i class="fa fa-puzzle-piece"></i>
               </button>
               
-              <button id="calibrateTileButtonId" class="font-awesome-icons" title="CALIBRATE TILE">
+              <button id="calibrateTileButtonId" class="font-awesome-icons" title="Calibrate Tile (WIP)">
                 <i class="fa fa-ruler"></i>
               </button>
               
-              <button id="generateMapButtonId" class="font-awesome-icons" title="GENERATE MAP">
+              <button id="generateMapButtonId" class="font-awesome-icons" title="Generate Map">
                 <!--
                 <i class="fa fa-image"></i>
                 -->
@@ -279,8 +310,8 @@
                 <i class="fa fa-fill-drip"></i>
               </button>
               
-              <div class="font-awesome-icons">
-                <i id="isAnimateGenerationId" class="fa fa-toggle-off" title="Animate Generation?"></i>
+              <div class="font-awesome-icons" style="display: flex; align-items: center; padding-left: 5px;">
+                <i id="isAnimateGenerationId" class="fa fa-toggle-off" title="Animate Generation"></i>
               </div>
             </div>
             <div class="ribbonGroupTitleHorizontal">FUNCTION</div>
@@ -288,10 +319,10 @@
           
           <div class="flexBoxColumn toolbarBlock helpBlock">
             <div class="flexBoxRow innerToolbarBlock">
-              <button id="printLogButtonId" class="font-awesome-icons" title="PRINT LOG">
+              <button id="printLogButtonId" class="font-awesome-icons" title="Print Debug Log">
                 <i class="fa fa-receipt"></i>
               </button>
-              <button id="helpButtonId" class="font-awesome-icons" title="HELP">
+              <button id="helpButtonId" class="font-awesome-icons" title="Help">
                 <i class="fa fa-question-circle"></i>
               </button>
             </div>
@@ -349,43 +380,100 @@
       
       <div style="padding: 2px;"></div>
       
-      <div>
-        <div class="flexBoxRow searchBlock">
-          <div class="ribbonGroupTitleVertical" style="transform: translateX(0%) translateY(0%) rotate(-90deg);">SEARCH</div>
-          <div class="flexBoxColumn containerRow">
+      <div class="sidebar">
+        <div class="flexBoxRow sidebarBlock searchBlock">
+          <div class="ribbonGroupTitleVerticalWrapper">
+            <div class="ribbonGroupTitleVertical">
+              <p>SEARCH</p>
+            </div>
+          </div>
+          
+          <div class="flexBoxColumn">
             <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. hash or type">
-            <ul id="searchTileResultsId">
-            </ul>
+            <div class="containerRow">
+              <ul id="searchTileResultsId"></ul>
+            </div>
           </div>
         </div>
         
-        <div class="flexBoxRow containerRow neighborPane">
-          <div id="northNeighborPaneId"></div>
+        <div class="flexBoxRow sidebarBlock neighborPane">
+          <div class="ribbonGroupTitleVerticalWrapper">
+            <div class="ribbonGroupTitleVertical">
+              <p>NORTH</p>
+            </div>
+          </div>
+          <div id="northNeighborPaneId" class="containerRow"></div>
         </div>
+        
         <div class="flexBoxRow" style="justify-content: space-between;">
-          <div class="flexBoxColumn containerColumn neighborPane">
-            <div id="westNeighborPaneId"></div>
+          <div class="flexBoxColumn sidebarBlock neighborPane">
+            <div class="ribbonGroupTitleHorizontal">WEST</div>
+            <div class="containerColumn">
+              <div id="westNeighborPaneId"></div>
+            </div>
           </div>
+          
           <div>
-            <div class="flexBoxRow containerDoubleRow intersectionPane">
-              <div id="intersectionPaneStrictId4"></div>
+            <div class="flexBoxRow intersectionPane">
+              <div class="ribbonGroupTitleVerticalWrapper">
+                <div class="ribbonGroupTitleVertical">
+                  <p>EXACT [4]</p>
+                </div>
+              </div>
+              <div class="containerDoubleRow">
+                <div id="intersectionPaneStrictId4"></div>
+              </div>
             </div>
-            <div class="flexBoxRow containerDoubleRow intersectionPane">
-              <div id="intersectionPaneStrictId3"></div>
+            
+            <div class="flexBoxRow intersectionPane">
+              <div class="ribbonGroupTitleVerticalWrapper">
+                <div class="ribbonGroupTitleVertical">
+                  <p>NEAR [3]</p>
+                </div>
+              </div>
+              <div class="containerDoubleRow">
+                <div id="intersectionPaneStrictId3"></div>
+              </div>
             </div>
-            <div class="flexBoxRow containerDoubleRow intersectionPane">
-              <div id="intersectionPaneStrictId2"></div>
+            
+            <div class="flexBoxRow intersectionPane">
+              <div class="ribbonGroupTitleVerticalWrapper">
+                <div class="ribbonGroupTitleVertical">
+                  <p>FAIR [2]</p>
+                </div>
+              </div>
+              <div class="containerDoubleRow">
+                <div id="intersectionPaneStrictId2"></div>
+              </div>
             </div>
-            <div class="flexBoxRow containerDoubleRow intersectionPane">
-              <div id="intersectionPaneStrictId1"></div>
+            
+            <div class="flexBoxRow intersectionPane">
+              <div class="ribbonGroupTitleVerticalWrapper">
+                <div class="ribbonGroupTitleVertical">
+                  <p>SMALL [1]</p>
+                </div>
+              </div>
+              <div class="containerDoubleRow">
+                <div id="intersectionPaneStrictId1"></div>
+              </div>
             </div>
           </div>
-          <div class="flexBoxColumn containerColumn neighborPane">
-            <div id="eastNeighborPaneId"></div>
+          
+          <div class="flexBoxColumn sidebarBlock neighborPane">
+            <div class="ribbonGroupTitleHorizontal">EAST</div>
+            <div class="containerColumn">
+              <div id="eastNeighborPaneId"></div>
+            </div>
           </div>
         </div>
-        <div class="flexBoxRow containerRow neighborPane">
-          <div id="southNeighborPaneId"></div>
+        
+        <div class="flexBoxRow sidebarBlock neighborPane" style="margin-bottom: 0px;">
+          <div class="ribbonGroupTitleVerticalWrapper">
+            <div class="ribbonGroupTitleVertical">
+              <p>SOUTH</p>
+            </div>
+          </div>
+          <div id="southNeighborPaneId" class="containerRow"></div>
         </div>
       </div>
     </div>

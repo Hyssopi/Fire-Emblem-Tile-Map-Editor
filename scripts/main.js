@@ -111,15 +111,13 @@ export const BackgroundColor =
 
 
 
-Undo/redo grey out/disable
 1080, 1440 version
-calibrate button
-
 
 
 
 
 Higher chance for getFileTile if same TYPE
+
 
 
 10) Weighted neighbors calculations
@@ -132,15 +130,20 @@ Higher chance for getFileTile if same TYPE
 
 
 
+
 7) Do not pass mapTileEditorData, pass individual parameters
 
 6) Reorder functions
 
-
-
 2) Fix Print Debug
 
+
+
+
 1) Fix Help
+
+
+
 
 27) Double check TYPE
 
