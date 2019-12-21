@@ -475,10 +475,23 @@ export function getFillTileHashesSplit(possibleTileHashLists)
 
 
 
+export function getCalibratedFillTileHashes(mapTileEditorData, x, y, minimumStrictness, isAnimate)
+{
+  let initialFillTileQueue = [];
+  
+  initialFillTileQueue.push({x: x, y: y});
+  /*
+  initialFillTileQueue.push({x: x, y: y - 1});
+  initialFillTileQueue.push({x: x + 1, y: y});
+  initialFillTileQueue.push({x: x, y: y + 1});
+  initialFillTileQueue.push({x: x - 1, y: y});
+  */
+  
+  fillMap(mapTileEditorData, x, y, minimumStrictness, false, isAnimate, initialFillTileQueue);
+}
 
 
-
-export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
+export function getCalibratedFillTileHashesOld(mapTileEditorData, x, y)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -494,37 +507,18 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
     west: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.WEST),
     center: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y)
   }
-  
-  /*
-  let calibratedTileHashes =
-  {
-    north: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
-    east: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
-    south: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
-    west: 'bc24bc25adbc371c0d6a9cbfa8e9f96d',
-    center: 'bc24bc25adbc371c0d6a9cbfa8e9f96d'
-  }
-  */
-  
+ 
   let possibleFillNeighborTileHashes = [];
   possibleFillNeighborTileHashes[Direction.NORTH] = [];
   possibleFillNeighborTileHashes[Direction.EAST] = [];
   possibleFillNeighborTileHashes[Direction.SOUTH] = [];
   possibleFillNeighborTileHashes[Direction.WEST] = [];
   
-  //let minimumStrictness = 3;
   let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
   
   // Fill out possibleFillNeighborTileHashes
   
   // TODO: Consider edges for strictness
-  
-  
-  
-  
-  
-  
-  
   
   
   {
@@ -614,53 +608,19 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
   
   console.warn(possibleFillNeighborTileHashes);
   
-  
   for (let i = 0; i < possibleFillNeighborTileHashes[Direction.NORTH].length; i++)
   {
-    //setTile(mapTileEditorData, x, y, possibleFillNeighborTileHashes[Direction.NORTH][i], Direction.NORTH, false);
     for (let j = 0; j < possibleFillNeighborTileHashes[Direction.EAST].length; j++)
     {
-      //setTile(mapTileEditorData, x, y, possibleFillNeighborTileHashes[Direction.EAST][j], Direction.EAST, false);
       for (let k = 0; k < possibleFillNeighborTileHashes[Direction.SOUTH].length; k++)
       {
-        //setTile(mapTileEditorData, x, y, possibleFillNeighborTileHashes[Direction.SOUTH][k], Direction.SOUTH, false);
         for (let l = 0; l < possibleFillNeighborTileHashes[Direction.WEST].length; l++)
         {
-          //setTile(mapTileEditorData, x, y, possibleFillNeighborTileHashes[Direction.WEST][l], Direction.WEST, false);
-          
-          /*
-          let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileEditorData.layeredTileHashesDisplay.map, x, y, strictness);
-          if (fillTileHash != EMPTY_TILE_HASH)
-          {
-            setTile(mapTileEditorData, x, y, fillTileHash, null, false);
-            return;
-          }
-          */
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
           let possibleTileHashLists = [];
           possibleTileHashLists.push(getTileNeighborList(tileLookup, possibleFillNeighborTileHashes[Direction.NORTH][i], Direction.SOUTH));
           possibleTileHashLists.push(getTileNeighborList(tileLookup, possibleFillNeighborTileHashes[Direction.EAST][j], Direction.WEST));
           possibleTileHashLists.push(getTileNeighborList(tileLookup, possibleFillNeighborTileHashes[Direction.SOUTH][k], Direction.NORTH));
           possibleTileHashLists.push(getTileNeighborList(tileLookup, possibleFillNeighborTileHashes[Direction.WEST][l], Direction.EAST));
-          
-          /*
-          console.error('possibleTileHashLists:');
-          console.error(possibleTileHashLists);
-          console.log('\n\n\n\n\n');
-          */
-          
-          //let strictness = 3;
-          //let fillTileHashes = getFillTileHashes(possibleTileHashLists, strictness);
           
           let fillTileHashesSplit = getFillTileHashesSplit(possibleTileHashLists);
           
@@ -673,21 +633,6 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
               break;
             }
           }
-          
-          /*
-          console.error('fillTileHashesSplit:');
-          console.error(fillTileHashesSplit);
-          console.log('\n\n\n\n\n');
-          */
-          
-          /*
-          console.error(possibleTileHashLists);
-          console.log('\n\n\n');
-          let fillTileHashes = getFillTileHashes(possibleTileHashLists, strictness);
-          console.error(fillTileHashes);
-          console.log('\n\n\n');
-          */
-          
           
           if (outputFillTileHashes.length > 0)
           {
@@ -703,27 +648,6 @@ export function getCalibratedFillTileHashes(mapTileEditorData, x, y)
       }
     }
   }
-  
-  
-  
-  
-  /*
-  
-  let calibratedTileHashes =
-  {
-    north: EMPTY_TILE_HASH,
-    east: EMPTY_TILE_HASH,
-    south: EMPTY_TILE_HASH,
-    west: EMPTY_TILE_HASH,
-    center: EMPTY_TILE_HASH
-  }
-  
-  setTile(mapTileEditorData, x, y, calibratedTileHashes.north, Direction.NORTH);
-  setTile(mapTileEditorData, x, y, calibratedTileHashes.east, Direction.EAST);
-  setTile(mapTileEditorData, x, y, calibratedTileHashes.south, Direction.SOUTH);
-  setTile(mapTileEditorData, x, y, calibratedTileHashes.west, Direction.WEST);
-  setTile(mapTileEditorData, x, y, calibratedTileHashes.center);
-  */
 }
 
 
@@ -1281,7 +1205,7 @@ export function redrawSearchPane(mapTileEditorData)
 
 
 
-export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
+export function fillMap(mapTileEditorData, x, y, minimumStrictness, isSpread, isAnimate, initialFillTileQueue = [])
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -1289,11 +1213,23 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   
   let fillTileQueue = [];
-  fillTileQueue.push({x: x, y: y});
-  fillTileQueue.push({x: x, y: y - 1});
-  fillTileQueue.push({x: x + 1, y: y});
-  fillTileQueue.push({x: x, y: y + 1});
-  fillTileQueue.push({x: x - 1, y: y});
+  
+  if (initialFillTileQueue.length > 0)
+  {
+    for (let position in initialFillTileQueue)
+    {
+      fillTileQueue.push({x: position.x, y: position.y});
+    }
+  }
+  
+  if (fillTileQueue.length === 0)
+  {
+    fillTileQueue.push({x: x, y: y});
+    fillTileQueue.push({x: x, y: y - 1});
+    fillTileQueue.push({x: x + 1, y: y});
+    fillTileQueue.push({x: x, y: y + 1});
+    fillTileQueue.push({x: x - 1, y: y});
+  }
   
   let isEmptyMap = true;
   for (let y = 0; y < mapHeight; y++)
@@ -1338,7 +1274,7 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
         return;
       }
       
-      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate);
+      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpread, isAnimate);
     }, 100);
   }
   else
@@ -1359,12 +1295,12 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
         break;
       }
       
-      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate);
+      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpread, isAnimate);
     }
   }
 }
 
-function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate)
+function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpread, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -1398,6 +1334,11 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
     clearHoverTile(layeredTileHashesDisplay);
     //redrawNeighborPanes(mapTileEditorData);
     redrawAll(mapTileEditorData);
+  }
+  
+  if (isSpread)
+  {
+    return;
   }
   
   if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))

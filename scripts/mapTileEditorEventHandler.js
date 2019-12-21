@@ -335,7 +335,11 @@ function calibrateTileResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
   
-  mapTileEditorUtilities.getCalibratedFillTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY);
+  let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
+  
+  let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
+  
+  mapTileEditorUtilities.getCalibratedFillTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
@@ -347,7 +351,7 @@ function generateMapResponse(mapTileEditorData)
   
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, true, isAnimate);
 }
 
 function printDebugResponse(mapTileEditorData)
