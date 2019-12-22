@@ -339,7 +339,9 @@ function calibrateTileResponse(mapTileEditorData)
   
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
-  mapTileEditorUtilities.getCalibratedFillTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  let calibrateRange = document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).valueAsNumber;
+  
+  mapTileEditorUtilities.getCalibratedFillTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
@@ -351,7 +353,7 @@ function generateMapResponse(mapTileEditorData)
   
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, true, isAnimate);
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
 }
 
 function printDebugResponse(mapTileEditorData)
@@ -498,18 +500,18 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       // 'r' button pressed
       randomTileResponse(mapTileEditorData);
     }
-    if (event.key === '[')
+    if (event.key === 'PageDown')
     {
-      // '[' button pressed
+      // 'PageDown' button pressed
       // 1 is the minimum value for strictness combo box
       if (document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value > 1)
       {
         document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value--;
       }
     }
-    if (event.key === ']')
+    if (event.key === 'PageUp')
     {
-      // ']' button pressed
+      // 'PageUp' button pressed
       // 4 is the maximum value for strictness combo box
       if (document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value < 4)
       {
@@ -520,6 +522,24 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 'f' button pressed
       fillTileResponse(mapTileEditorData);
+    }
+    if (event.key === '[')
+    {
+      // '[' button pressed
+      // 1 is the minimum value for calibrate range text box
+      if (document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value > 1)
+      {
+        document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value--;
+      }
+    }
+    if (event.key === ']')
+    {
+      // ']' button pressed
+      // 999 is the maximum value for calibrate range text box
+      if (document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value < 999)
+      {
+        document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value++;
+      }
     }
     if (event.key === 'c')
     {

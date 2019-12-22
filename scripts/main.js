@@ -53,6 +53,7 @@ export const Ids =
       randomTileButton: 'randomTileButtonId',
       strictnessComboBox: 'strictnessComboBoxId',
       fillTileButton: 'fillTileButtonId',
+      calibrateRangeTextbox: 'calibrateRangeTextboxId',
       calibrateTileButton: 'calibrateTileButtonId',
       generateMapButton: 'generateMapButtonId',
       isAnimateGeneration: 'isAnimateGenerationId'
@@ -139,7 +140,29 @@ Webpage:
   Copy that and move it to spreadsheet: move "" ""
   
   images: 13,148 files
-  
+
+
+**Add shortcuts for up/down calibrate
+
+
+known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
+known issue: sometimes with generate animation enabled, calibrate skips filling as it goes
+
+
+
+
+
+fillMap
+starts at 4
+then supple4
+then supple3
+then supple2
+then supple1
+
+
+
+
+
 
 
 91) Higher chance for getFileTile if same TYPE

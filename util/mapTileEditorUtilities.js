@@ -131,8 +131,8 @@ export function resetMap(mapTileEditorData)
   
   cursor.image = tileLookup[CURSOR_TILE_HASH].image;
   
-  let mapWidth = document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value;
-  let mapHeight = document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value;
+  let mapWidth = document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber;
+  let mapHeight = document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber;
   
   mapWidth = mapWidth ? mapWidth : 1;
   mapHeight = mapHeight ? mapHeight : 1;
@@ -170,8 +170,8 @@ export function resizeMap(mapTileEditorData, isLog = true)
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  let mapWidth = document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value;
-  let mapHeight = document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value;
+  let mapWidth = document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber;
+  let mapHeight = document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber;
   
   mapWidth = mapWidth ? mapWidth : 1;
   mapHeight = mapHeight ? mapHeight : 1;
@@ -236,11 +236,8 @@ export function loadMapJson(mapTileEditorData, mapJson)
   let mapWidth = mapJson[0].length;
   let mapHeight = mapJson.length;
   
-  //mapWidth = mapWidth ? mapWidth : 1;
-  //mapHeight = mapHeight ? mapHeight : 1;
-  
-  document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value = mapWidth;
-  document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value = mapHeight;
+  document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber = mapWidth;
+  document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber = mapHeight;
   
   let layeredTileHashesDisplay = {};
   layeredTileHashesDisplay.map = [];
@@ -475,21 +472,42 @@ export function getFillTileHashesSplit(possibleTileHashLists)
 
 
 
-export function getCalibratedFillTileHashes(mapTileEditorData, x, y, minimumStrictness, isAnimate)
+export function getCalibratedFillTileHashes(mapTileEditorData, originX, originY, minimumStrictness, calibrateRange, isAnimate)
 {
-  let initialFillTileQueue = [];
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
+  let cursor = mapTileEditorData.cursor;
   
-  initialFillTileQueue.push({x: x, y: y});
-  /*
-  initialFillTileQueue.push({x: x, y: y - 1});
-  initialFillTileQueue.push({x: x + 1, y: y});
-  initialFillTileQueue.push({x: x, y: y + 1});
-  initialFillTileQueue.push({x: x - 1, y: y});
-  */
+  let inputFillTileQueue = [];
   
-  fillMap(mapTileEditorData, x, y, minimumStrictness, false, isAnimate, initialFillTileQueue);
+  if (!calibrateRange || calibrateRange < 0)
+  {
+    console.warn('calibrateRange is not valid');
+    calibrateRange = 0;
+  }
+  
+  for (let y = originY - calibrateRange; y <= originY + calibrateRange; y++)
+  {
+    for (let x = originX - calibrateRange; x <= originX + calibrateRange; x++)
+    {
+      if (isValidTileCoordinate(mapWidth, mapHeight, x, y))
+      {
+        setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+        inputFillTileQueue.push({x: x, y: y});
+      }
+    }
+  }
+  
+  for (let i = 4; i >= minimumStrictness; i--)
+  {
+    fillMapSupplement(mapTileEditorData, i, isAnimate, inputFillTileQueue);
+  }
+  
+  mapTileEditorData.cursor.tileX = originX;
+  mapTileEditorData.cursor.tileY = originY;
+  
+  redrawAll(mapTileEditorData);
 }
-
 
 export function getCalibratedFillTileHashesOld(mapTileEditorData, x, y)
 {
@@ -792,8 +810,8 @@ export function undo(mapTileEditorData)
   else if (userAction.oldMapWidth && userAction.oldMapHeight)
   {
     // TODO: Check if newMapWidth/newMapHeight
-    document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value = userAction.oldMapWidth;
-    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value = userAction.oldMapHeight;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber = userAction.oldMapWidth;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber = userAction.oldMapHeight;
     
     resizeMap(mapTileEditorData, false);
   }
@@ -823,8 +841,8 @@ export function redo(mapTileEditorData)
   else if (userAction.newMapWidth && userAction.newMapHeight)
   {
     // TODO: Check if oldMapWidth/oldMapHeight
-    document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).value = userAction.newMapWidth;
-    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).value = userAction.newMapHeight;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber = userAction.newMapWidth;
+    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber = userAction.newMapHeight;
     
     resizeMap(mapTileEditorData, false);
   }
@@ -1205,7 +1223,7 @@ export function redrawSearchPane(mapTileEditorData)
 
 
 
-export function fillMap(mapTileEditorData, x, y, minimumStrictness, isSpread, isAnimate, initialFillTileQueue = [])
+export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -1214,29 +1232,18 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isSpread, is
   
   let fillTileQueue = [];
   
-  if (initialFillTileQueue.length > 0)
-  {
-    for (let position in initialFillTileQueue)
-    {
-      fillTileQueue.push({x: position.x, y: position.y});
-    }
-  }
-  
-  if (fillTileQueue.length === 0)
-  {
-    fillTileQueue.push({x: x, y: y});
-    fillTileQueue.push({x: x, y: y - 1});
-    fillTileQueue.push({x: x + 1, y: y});
-    fillTileQueue.push({x: x, y: y + 1});
-    fillTileQueue.push({x: x - 1, y: y});
-  }
+  fillTileQueue.push({x: x, y: y});
+  fillTileQueue.push({x: x, y: y - 1});
+  fillTileQueue.push({x: x + 1, y: y});
+  fillTileQueue.push({x: x, y: y + 1});
+  fillTileQueue.push({x: x - 1, y: y});
   
   let isEmptyMap = true;
-  for (let y = 0; y < mapHeight; y++)
+  for (let loopY = 0; loopY < mapHeight; loopY++)
   {
-    for (let x = 0; x < mapWidth; x++)
+    for (let loopX = 0; loopX < mapWidth; loopX++)
     {
-      if (layeredTileHashesDisplay.map[y][x] !== EMPTY_TILE_HASH)
+      if (layeredTileHashesDisplay.map[loopY][loopX] !== EMPTY_TILE_HASH)
       {
         isEmptyMap = false;
         break;
@@ -1274,7 +1281,7 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isSpread, is
         return;
       }
       
-      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpread, isAnimate);
+      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate);
     }, 100);
   }
   else
@@ -1295,12 +1302,13 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isSpread, is
         break;
       }
       
-      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpread, isAnimate);
+      fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate);
     }
   }
 }
 
-function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpread, isAnimate)
+// Note: strictness set to 4
+function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;
@@ -1336,11 +1344,6 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpr
     redrawAll(mapTileEditorData);
   }
   
-  if (isSpread)
-  {
-    return;
-  }
-  
   if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
   {
     return;
@@ -1372,7 +1375,7 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isSpr
   }
 }
 
-export function fillMapSupplement(mapTileEditorData, strictness, isAnimate)
+export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inputFillTileQueue = [])
 {
   let mapWidth = mapTileEditorData.mapWidth;
   let mapHeight = mapTileEditorData.mapHeight;
@@ -1380,13 +1383,24 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate)
   
   let fillTileQueue = [];
   
-  for (let y = 0; y < mapHeight; y++)
+  if (inputFillTileQueue.length > 0)
   {
-    for (let x = 0; x < mapWidth; x++)
+    for (let tilePosition of inputFillTileQueue)
     {
-      if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
+      fillTileQueue.push({x: tilePosition.x, y: tilePosition.y});
+    }
+  }
+  
+  if (fillTileQueue.length === 0)
+  {
+    for (let y = 0; y < mapHeight; y++)
+    {
+      for (let x = 0; x < mapWidth; x++)
       {
-        fillTileQueue.push({x: x, y: y});
+        if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
+        {
+          fillTileQueue.push({x: x, y: y});
+        }
       }
     }
   }

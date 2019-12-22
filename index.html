@@ -297,7 +297,11 @@
                 <i class="fa fa-puzzle-piece"></i>
               </button>
               
-              <button id="calibrateTileButtonId" class="font-awesome-icons" title="Calibrate Tile (WIP)">
+              <div class="flexBoxColumn" style="justify-content: center; align-items: flex-end; font-size: 12px;">
+                Calibrate Range <input id="calibrateRangeTextboxId" type="number" min="0" max="999" value="2" placeholder="CR" style="width: 4em; text-align: center; font-size: 10px;">
+              </div>
+              
+              <button id="calibrateTileButtonId" class="font-awesome-icons" title="Calibrate Tile(s)">
                 <i class="fa fa-ruler"></i>
               </button>
               
@@ -331,7 +335,7 @@
           </div>
           
           <div class="flexBoxColumn toolbarBlock cursorBlock">
-            <table class="innerToolbarBlock" style="font-size: 12px; border-spacing: 0 0;">
+            <table class="innerToolbarBlock" style="font-size: 12px; border-spacing: 0 0; user-select: text;">
               <tr>
                 <td nowrap style="padding: 0px 10px 0px 0px; text-align: right;">
                   <b>Position<span>:</span></b>
