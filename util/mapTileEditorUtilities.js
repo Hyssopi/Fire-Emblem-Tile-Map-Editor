@@ -472,11 +472,10 @@ export function getFillTileHashesSplit(possibleTileHashLists)
 
 
 
-export function getCalibratedFillTileHashes(mapTileEditorData, originX, originY, minimumStrictness, calibrateRange, isAnimate)
+export function calibrateTileHashes(mapTileEditorData, originX, originY, minimumStrictness, calibrateRange, isAnimate)
 {
   let mapWidth = mapTileEditorData.mapWidth;
   let mapHeight = mapTileEditorData.mapHeight;
-  let cursor = mapTileEditorData.cursor;
   
   let inputFillTileQueue = [];
   
@@ -509,7 +508,7 @@ export function getCalibratedFillTileHashes(mapTileEditorData, originX, originY,
   redrawAll(mapTileEditorData);
 }
 
-export function getCalibratedFillTileHashesOld(mapTileEditorData, x, y)
+export function calibrateTileHashesOld(mapTileEditorData, x, y)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let mapWidth = mapTileEditorData.mapWidth;

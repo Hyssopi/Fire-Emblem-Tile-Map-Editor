@@ -341,7 +341,7 @@ function calibrateTileResponse(mapTileEditorData)
   
   let calibrateRange = document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).valueAsNumber;
   
-  mapTileEditorUtilities.getCalibratedFillTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+  mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
@@ -354,6 +354,62 @@ function generateMapResponse(mapTileEditorData)
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
   mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+}
+
+function autoGenerateMapResponse(mapTileEditorData)
+{
+  let mapWidth = mapTileEditorData.mapWidth;
+  let mapHeight = mapTileEditorData.mapHeight;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+  let cursor = mapTileEditorData.cursor;
+  
+  let isAnimate = false;
+  
+  let minimumStrictness = 4;
+  let calibrateRange = 1;
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  for (let y = 0; y < mapHeight; y++)
+  {
+    for (let x = 0; x < mapWidth; x++)
+    {
+      if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
+      {
+        mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+      }
+    }
+  }
+  
+  minimumStrictness = 3;
+  calibrateRange = 2;
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  for (let y = 0; y < mapHeight; y++)
+  {
+    for (let x = 0; x < mapWidth; x++)
+    {
+      if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
+      {
+        mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+      }
+    }
+  }
+  
+  minimumStrictness = 2;
+  calibrateRange = 1;
+  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  for (let y = 0; y < mapHeight; y++)
+  {
+    for (let x = 0; x < mapWidth; x++)
+    {
+      if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
+      {
+        mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+      }
+    }
+  }
+  
+  minimumStrictness = 1;
+  calibrateRange = 1;
+  mapTileEditorUtilities.fillMapSupplement(mapTileEditorData, 1, isAnimate);
 }
 
 function printDebugResponse(mapTileEditorData)
@@ -550,6 +606,12 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 'g' button pressed
       generateMapResponse(mapTileEditorData);
+    }
+    
+    if (event.key === 'o')
+    {
+      // 'o' button pressed
+      autoGenerateMapResponse(mapTileEditorData);
     }
     
     if (event.key === 'p')

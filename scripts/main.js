@@ -110,11 +110,6 @@ export const BackgroundColor =
 
 /* TODO:
 
-1) Fix getCalibratedFillTileHashes(...)
-* Weighted neighbors calculations
-* Given a,b,c,d, find x (center) with given strictness 4,3,2,1
-* After initial fillMap, use #25 function to patch up holes
-* Corners? Missing tiles outside?
 
 2) Clean up code
 * Do not pass mapTileEditorData, pass individual parameters
