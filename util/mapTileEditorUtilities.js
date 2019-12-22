@@ -268,13 +268,13 @@ export function exportMapAsTileHashes(mapWidth, mapHeight, mapTileHashesDisplay)
   }
   
   let mapJsonOutput = JSON.stringify(tileHashesOutput);
-  console.log(mapJsonOutput);
+  //console.log(mapJsonOutput);
   
   utilities.copyTextToClipboard(mapJsonOutput);
   
   window.open('data:application/json,' + encodeURIComponent(mapJsonOutput), '_blank', 'width = 800, height = 600, resizable = 1');
   
-  console.log('Save the opened new window as a JSON file.\nCtrl+S --> Map1.json (example)');
+  //console.log('Save the opened new window as a JSON file.\nCtrl+S --> Map1.json (example)');
 }
 
 export function exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
@@ -322,12 +322,6 @@ export function getFillTileHash(tileLookup, mapWidth, mapHeight, mapTileHashesDi
 
 export function getOneTileHash(fillTileHashes)
 {
-  /*
-  console.log('\n\n\n\n\n\n\n\n');
-  console.log(fillTileHashes);
-  console.log('\n\n\n\n\n\n\n\n');
-  */
-  
   if (!fillTileHashes || fillTileHashes.length <= 0)
   {
     return EMPTY_TILE_HASH;
@@ -417,7 +411,6 @@ export function getFillTileHashes(possibleTileHashLists, strictness = 4)
   
   for (let tileHash in allUniqueTileHashes)
   {
-    //console.log(allUniqueTileHashes[tileHash]);
     if (allUniqueTileHashes[tileHash] >= strictness - invalidNeighborListCount)
     {
       fillTileHashes.push(tileHash);
@@ -736,16 +729,10 @@ export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight
   // Clear user action entries after the most recent user action
   while (userActionHistory.counter + 1 < userActionHistory.logs.length)
   {
-    //console.log((userActionHistory.counter + 1) + ' < ' + userActionHistory.logs.length);
     userActionHistory.logs.pop();
   }
   
   updateUndoRedoButtonStates(userActionHistory);
-  
-  /*
-  //console.log(userActionHistory);
-  //userActionHistory = userActionHistory.splice(0, userActionHistory.counter);
-  */
 }
 
 export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x, y, tileHash)
@@ -769,16 +756,10 @@ export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x
   // Clear user action entries after the most recent user action
   while (userActionHistory.counter + 1 < userActionHistory.logs.length)
   {
-    //console.log((userActionHistory.counter + 1) + ' < ' + userActionHistory.logs.length);
     userActionHistory.logs.pop();
   }
   
   updateUndoRedoButtonStates(userActionHistory);
-  
-  /*
-  //console.log(userActionHistory);
-  //userActionHistory = userActionHistory.splice(0, userActionHistory.counter);
-  */
 }
 
 export function undo(mapTileEditorData)
@@ -1001,9 +982,6 @@ export function redrawAll(mapTileEditorData)
   updateInformationDisplayTile(mapTileEditorData);
 }
 
-
-
-
 export function redrawMap(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1166,8 +1144,6 @@ export function updateInformationDisplayTile(mapTileEditorData)
   document.getElementById(Ids.toolbar.cursorBlock.tileDescription).textContent = tileLookup[tileHash].description;
 }
 
-
-
 export function redrawSearchPane(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1277,7 +1253,6 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
   }
   else
   {
-    // TODO: Fix true
     while (true)
     {
       if (fillTileQueue.length <= 0)
@@ -1309,7 +1284,7 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
   
   let tileCoordinate = fillTileQueue.shift();
   
-  console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
+  //console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
   
   if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
   {
@@ -1324,14 +1299,12 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
   cursor.tileX = tileCoordinate.x;
   cursor.tileY = tileCoordinate.y;
   
-  //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
   let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
   setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
   
   if (isAnimate)
   {
     clearHoverTile(layeredTileHashesDisplay);
-    //redrawNeighborPanes(mapTileEditorData);
     redrawAll(mapTileEditorData);
   }
   
@@ -1412,7 +1385,6 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
   }
   else
   {
-    // TODO: Fix true
     while (true)
     {
       if (fillTileQueue.length <= 0)
@@ -1439,7 +1411,7 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
   
   let tileCoordinate = fillTileQueue.shift();
   
-  console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
+  //console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
   
   if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
   {
@@ -1454,14 +1426,12 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
   cursor.tileX = tileCoordinate.x;
   cursor.tileY = tileCoordinate.y;
   
-  //setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, getRandomTileHash(tileLookup));
   let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
   setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
   
   if (isAnimate)
   {
     clearHoverTile(layeredTileHashesDisplay);
-    //redrawNeighborPanes(mapTileEditorData);
     redrawAll(mapTileEditorData);
   }
   
@@ -1481,20 +1451,6 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
 
 
 
-
-
-
-
-
-
-/*
-export function appendstatusMessageDisplay(statusMessageDisplayId, text)
-{
-  let statusMessageDisplayTextArea = document.getElementById(statusMessageDisplayId);
-  statusMessageDisplayTextArea.value = text + '\n\n\n' + statusMessageDisplayTextArea.value;
-  statusMessageDisplayTextArea.scrollTop = 0;
-}
-*/
 
 
 
@@ -1544,13 +1500,3 @@ export function printDebug(mapTileEditorData)
   
   console.log("*****DEBUG PRINT END*****");
 }
-
-
-
-
-
-
-
-
-
-
