@@ -3,15 +3,14 @@ import * as mapTileEditorEventHandler from '../scripts/mapTileEditorEventHandler
 import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
 
 
+const SHOW_PRINT_LOG_BUTTON = false;
+
 export const TILE_WIDTH = 16;
 export const TILE_HEIGHT = 16;
 export const SCALE_FACTOR = 1.1;
 
-const SHOW_PRINT_LOG_BUTTON = false;
-
 const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
 const IMAGES_OUTPUT_FOLDER_NAME = 'images';
-const UNDEFINED_OUTPUT_FOLDER_NAME = 'UNDEFINED';
 const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
 export const HELP_FILE_PATH = 'help/index.html';
 
@@ -93,7 +92,6 @@ Ids.sidebar.intersectionPane[3] = 'intersectionPaneStrictId3';
 Ids.sidebar.intersectionPane[2] = 'intersectionPaneStrictId2';
 Ids.sidebar.intersectionPane[1] = 'intersectionPaneStrictId1';
 
-
 export const BackgroundColor =
 {
   valid: 'whitesmoke',
@@ -109,7 +107,6 @@ export const BackgroundColor =
 
 
 /* TODO:
-
 
 2) Clean up code
 * Do not pass mapTileEditorData, pass individual parameters
@@ -143,21 +140,7 @@ Webpage:
 known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
 known issue: sometimes with generate animation enabled, calibrate skips filling as it goes
 
-
-
-
-
-fillMap
-starts at 4
-then supple4
-then supple3
-then supple2
-then supple1
-
-
-
-
-
+rename exportAsTileHashesButton
 
 
 91) Higher chance for getFileTile if same TYPE
@@ -167,6 +150,11 @@ then supple1
 */
 
 
+
+
+
+
+// Reading tile reference JSON file
 let tileReferencesJsonFilePath = BASE_OUTPUT_DIRECTORY_PATH + '/' + TILE_REFERENCES_JSON_FILE_NAME;
 console.info('Reading: \'' + tileReferencesJsonFilePath + '\'');
 fetch(tileReferencesJsonFilePath)
@@ -186,6 +174,7 @@ fetch(tileReferencesJsonFilePath)
     console.info('Successfully read tile references:');
     //console.log(tileReferencesJson);
     
+    // Setting up the tileLookup from reading the data from the tile reference JSON file
     let tileLookup = {};
     for (let i = 0; i < tileReferencesJson.length; i++)
     {
@@ -193,9 +182,7 @@ fetch(tileReferencesJsonFilePath)
       {
         tileLookup[tileReferencesJson[i].tileHash] = {};
       }
-      
       tileLookup[tileReferencesJson[i].tileHash].group = tileReferencesJson[i].group;
-      
       tileLookup[tileReferencesJson[i].tileHash].description = tileReferencesJson[i].tileHash;
       
       tileLookup[tileReferencesJson[i].tileHash][Direction.NORTH] = tileReferencesJson[i][Direction.NORTH];
@@ -219,7 +206,11 @@ fetch(tileReferencesJsonFilePath)
     console.error('Error in fetching: ' + error);
   })
 
-
+/**
+ * Setup editor.
+ * 
+ * @param tileLookup tileLookup
+ */
 function setup(tileLookup)
 {
   let canvas = document.getElementById(Ids.canvas);
@@ -232,11 +223,13 @@ function setup(tileLookup)
   
   setupTrackTransforms(context);
   
+  // Set to show/hide the debug button
   if (!SHOW_PRINT_LOG_BUTTON)
   {
     document.getElementById(Ids.toolbar.helpBlock.printLogButton).style.display = 'none';
   }
   
+  // Setup the mapTileEditorData, containing the information passed around in the editor
   let mapTileEditorData =
   {
     tileLookup: tileLookup,
@@ -250,17 +243,23 @@ function setup(tileLookup)
   
   mapTileEditorUtilities.resetMap(mapTileEditorData);
   
+  // Setup the event listeners
   mapTileEditorEventHandler.setupMouseEventListeners(mapTileEditorData);
   
   mapTileEditorEventHandler.setupKeyboardEventListeners(mapTileEditorData);
   
   mapTileEditorEventHandler.setupUIEventListeners(mapTileEditorData);
   
+  // Draw the search pane
   mapTileEditorUtilities.redrawSearchPane(mapTileEditorData);
 }
 
-// Adds context.getTransform() - returns an SVGMatrix
-// Adds context.transformedPoint(x, y) - returns an SVGPoint
+/**
+ * Adds context.getTransform() - returns an SVGMatrix
+ * Adds context.transformedPoint(x, y) - returns an SVGPoint
+ * 
+ * @param context Canvas context
+ */
 function setupTrackTransforms(context)
 {
   let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');

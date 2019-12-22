@@ -5,6 +5,11 @@ import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
 import {SCALE_FACTOR, HELP_FILE_PATH, EMPTY_TILE_HASH, Ids} from './main.js';
 
 
+/**
+ * Setup mouse event listeners.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 export function setupMouseEventListeners(mapTileEditorData)
 {
   let canvas = mapTileEditorData.canvas;
@@ -79,6 +84,12 @@ export function setupMouseEventListeners(mapTileEditorData)
   }, false);
 }
 
+/**
+ * Move up cursor response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ * @param isCtrlKeyDown isCtrlKeyDown
+ */
 function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -130,6 +141,12 @@ function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
   }
 }
 
+/**
+ * Move up cursor response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ * @param isCtrlKeyDown isCtrlKeyDown
+ */
 function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -181,6 +198,12 @@ function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
   }
 }
 
+/**
+ * Move up cursor response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ * @param isCtrlKeyDown isCtrlKeyDown
+ */
 function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -232,6 +255,12 @@ function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
   }
 }
 
+/**
+ * Move up cursor response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ * @param isCtrlKeyDown isCtrlKeyDown
+ */
 function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -283,6 +312,11 @@ function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
   }
 }
 
+/**
+ * Undo response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function undoResponse(mapTileEditorData)
 {
   mapTileEditorUtilities.undo(mapTileEditorData);
@@ -290,6 +324,11 @@ function undoResponse(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+/**
+ * Redo response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function redoResponse(mapTileEditorData)
 {
   mapTileEditorUtilities.redo(mapTileEditorData);
@@ -297,6 +336,11 @@ function redoResponse(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+/**
+ * Delete tile response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function deleteTileResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
@@ -306,6 +350,11 @@ function deleteTileResponse(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+/**
+ * Random tile response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function randomTileResponse(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -317,6 +366,11 @@ function randomTileResponse(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+/**
+ * Fill tile response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function fillTileResponse(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -331,31 +385,44 @@ function fillTileResponse(mapTileEditorData)
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+/**
+ * Calibrate tile response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function calibrateTileResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
   
   let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
-  
-  let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
-  
   let calibrateRange = document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).valueAsNumber;
+  let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
   mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
   mapTileEditorUtilities.redrawAll(mapTileEditorData);
 }
 
+/**
+ * Generate map response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function generateMapResponse(mapTileEditorData)
 {
   let cursor = mapTileEditorData.cursor;
   
   let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
-  
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
   mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
 }
 
+/**
+ * Auto generate map response.
+ * Auto generate map based on recommended generation steps.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function autoGenerateMapResponse(mapTileEditorData)
 {
   let mapWidth = mapTileEditorData.mapWidth;
@@ -412,16 +479,29 @@ function autoGenerateMapResponse(mapTileEditorData)
   mapTileEditorUtilities.fillMapSupplement(mapTileEditorData, 1, isAnimate);
 }
 
+/**
+ * Print debug response.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 function printDebugResponse(mapTileEditorData)
 {
   mapTileEditorUtilities.printDebug(mapTileEditorData);
 }
 
+/**
+ * Help response.
+ */
 function helpResponse()
 {
   window.open(HELP_FILE_PATH, '_blank', 'menubar = 0, toolbar = 0');
 }
 
+/**
+ * Prevent non-numerical event response.
+ * 
+ * @param event event
+ */
 function preventNonNumericalResponse(event)
 {
   // Between 0 and 9
@@ -431,18 +511,23 @@ function preventNonNumericalResponse(event)
   }
 }
 
+/**
+ * Setup keyboard event listeners.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 export function setupKeyboardEventListeners(mapTileEditorData)
 {
-  /*
-  TODO: Temporarily comment out while developing
   // Prevent Ctrl + W from closing the window/tab
   window.onbeforeunload = function(event)
   {
     event.preventDefault();
   };
-  */
   
+  // Keep track of the keys pressed
   let eventKeyMap = {};
+  
+  // Keep track of the previously moved directions
   let isPreviouslyMoved =
   {
     up: false,
@@ -469,11 +554,12 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       event.preventDefault();
     }
     
+    // Prevent cursor from skipping while updated
+    // For example: pressing down (move down), then pressing right (move down and right since down is still considered pressed), then releasing down (move right since right is still considered pressed)
     if (!isPreviouslyMoved.up && (eventKeyMap['w'] || eventKeyMap['ArrowUp']))
     {
       // 'w' or arrow up button pressed
       cursorMoveUpResponse(mapTileEditorData, event.ctrlKey);
-      console.log("MOVED UP");
       isPreviouslyMoved.up = true;
     }
     else
@@ -484,7 +570,6 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 's' or arrow down button pressed
       cursorMoveDownResponse(mapTileEditorData, event.ctrlKey);
-      console.log("MOVED DOWN");
       isPreviouslyMoved.down = true;
     }
     else
@@ -495,7 +580,6 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 'a' or arrow left button pressed
       cursorMoveLeftResponse(mapTileEditorData, event.ctrlKey);
-      console.log("MOVED LEFT");
       isPreviouslyMoved.left = true;
     }
     else
@@ -506,7 +590,6 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       // 'd' or arrow right button pressed
       cursorMoveRightResponse(mapTileEditorData, event.ctrlKey);
-      console.log("MOVED RIGHT");
       isPreviouslyMoved.right = true;
     }
     else
@@ -527,38 +610,24 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       return;
     }
     
-    /*
-    if (event.key === 'u')
-    {
-      // 'u' button pressed
-      mapTileEditorUtilities.redrawAll(mapTileEditorData);
-    }
-    */
-    
     if (event.key === 'z')
     {
-      // 'z' button pressed
       undoResponse(mapTileEditorData);
     }
     else if (event.key === 'y')
     {
-      // 'y' button pressed
       redoResponse(mapTileEditorData);
     }
     if (event.key === 'Delete')
     {
-      // 'Delete' button pressed
       deleteTileResponse(mapTileEditorData);
     }
-    
     if (event.key === 'r')
     {
-      // 'r' button pressed
       randomTileResponse(mapTileEditorData);
     }
     if (event.key === 'PageDown')
     {
-      // 'PageDown' button pressed
       // 1 is the minimum value for strictness combo box
       if (document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value > 1)
       {
@@ -567,7 +636,6 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === 'PageUp')
     {
-      // 'PageUp' button pressed
       // 4 is the maximum value for strictness combo box
       if (document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value < 4)
       {
@@ -576,12 +644,10 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === 'f' && !event.ctrlKey)
     {
-      // 'f' button pressed
       fillTileResponse(mapTileEditorData);
     }
     if (event.key === '[')
     {
-      // '[' button pressed
       // 1 is the minimum value for calibrate range text box
       if (document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value > 1)
       {
@@ -590,7 +656,6 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === ']')
     {
-      // ']' button pressed
       // 999 is the maximum value for calibrate range text box
       if (document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value < 999)
       {
@@ -599,40 +664,40 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === 'c')
     {
-      // 'c' button pressed
       calibrateTileResponse(mapTileEditorData);
     }
     if (event.key === 'g')
     {
-      // 'g' button pressed
       generateMapResponse(mapTileEditorData);
     }
-    
     if (event.key === 'o')
     {
-      // 'o' button pressed
       autoGenerateMapResponse(mapTileEditorData);
     }
-    
     if (event.key === 'p')
     {
-      // 'p' button pressed
       printDebugResponse(mapTileEditorData);
     }
-    
     if (event.key === 'f' && event.ctrlKey)
     {
+      // Move focus to search input
       event.preventDefault();
       document.getElementById(Ids.sidebar.searchBlock.searchTileInput).focus();
     }
   }
   document.addEventListener('keydown', keydownResponse, false);
   
+  // Prevent non-numerical inputs for inputs
   document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).addEventListener('keypress', preventNonNumericalResponse, false);
-  
   document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).addEventListener('keypress', preventNonNumericalResponse, false);
+  document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).addEventListener('keypress', preventNonNumericalResponse, false);
 }
 
+/**
+ * Setup UI event listeners.
+ * 
+ * @param mapTileEditorData mapTileEditorData
+ */
 export function setupUIEventListeners(mapTileEditorData)
 {
   document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).addEventListener('change',
@@ -682,7 +747,6 @@ export function setupUIEventListeners(mapTileEditorData)
     {
       let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
       
-      //mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
       mapTileEditorUtilities.exportMapAsTileHashes(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map);
     });
   
@@ -692,7 +756,6 @@ export function setupUIEventListeners(mapTileEditorData)
       let tileLookup = mapTileEditorData.tileLookup;
       let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
       
-      //mapTileEditorUtilities.exportMap(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
       mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
     });
   
@@ -741,6 +804,7 @@ export function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).addEventListener('click',
     function()
     {
+      // Change the icon image
       let isAnimateGeneration = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration);
       if (isAnimateGeneration.classList.contains('fa-toggle-off'))
       {
@@ -780,7 +844,7 @@ export function setupUIEventListeners(mapTileEditorData)
       let listItems = searchTileResultsUnorderedList.getElementsByTagName('li');
       let filter = input.value.toUpperCase();
       
-      // Loop through all list items, and hide those who don't match the search query
+      // Loop through all list items, and hide those that don't match the search query
       for (let listItem of listItems)
       {
         let textValue = listItem.title.toUpperCase();

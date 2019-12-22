@@ -221,14 +221,6 @@ export function resizeMap(mapTileEditorData, isLog = true)
   redrawAll(mapTileEditorData);
 }
 
-/*
-export function exportMap(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay)
-{
-  exportMapAsImage(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay);
-  exportMapAsTileHashes(mapWidth, mapHeight, layeredTileHashesDisplay.map);
-}
-*/
-
 export function loadMapJson(mapTileEditorData, mapJson)
 {
   resetMap(mapTileEditorData);
