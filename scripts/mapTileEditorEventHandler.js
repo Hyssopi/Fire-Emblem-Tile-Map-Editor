@@ -46,7 +46,9 @@ export function setupMouseEventListeners(mapTileEditorData)
   
   canvas.addEventListener('mousedown', function(event)
   {
-    document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
+    document.body.style.mozUserSelect = 'none';
+    document.body.style.webkitUserSelect = 'none';
+    document.body.style.userSelect = 'none';
     lastX = event.offsetX || (event.pageX - canvas.offsetLeft);
     lastY = event.offsetY || (event.pageY - canvas.offsetTop);
     dragStart = context.transformedPoint(lastX, lastY);
@@ -142,7 +144,7 @@ function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
 }
 
 /**
- * Move up cursor response.
+ * Move down cursor response.
  * 
  * @param mapTileEditorData mapTileEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
@@ -199,7 +201,7 @@ function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
 }
 
 /**
- * Move up cursor response.
+ * Move left cursor response.
  * 
  * @param mapTileEditorData mapTileEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
@@ -256,7 +258,7 @@ function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
 }
 
 /**
- * Move up cursor response.
+ * Move right cursor response.
  * 
  * @param mapTileEditorData mapTileEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
@@ -425,8 +427,6 @@ function generateMapResponse(mapTileEditorData)
  */
 function autoGenerateMapResponse(mapTileEditorData)
 {
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -435,9 +435,9 @@ function autoGenerateMapResponse(mapTileEditorData)
   let minimumStrictness = 4;
   let calibrateRange = 1;
   mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
-  for (let y = 0; y < mapHeight; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapWidth; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
@@ -449,9 +449,9 @@ function autoGenerateMapResponse(mapTileEditorData)
   minimumStrictness = 3;
   calibrateRange = 2;
   mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
-  for (let y = 0; y < mapHeight; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapWidth; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
@@ -463,9 +463,9 @@ function autoGenerateMapResponse(mapTileEditorData)
   minimumStrictness = 2;
   calibrateRange = 1;
   mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
-  for (let y = 0; y < mapHeight; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapWidth; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
@@ -596,10 +596,12 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     {
       isPreviouslyMoved.right = false;
     }
+    
     mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
     mapTileEditorUtilities.redrawAll(mapTileEditorData);
   }
   
+  // Key down response
   function keydownResponse(event)
   {
     console.log('event.key: ' + event.key + ', event.code: ' + event.code + ', event.which: ' + event.which + ', event.shiftKey: ' + event.shiftKey + ', event.ctrlKey: ' + event.ctrlKey + ', document.activeElement.tagName: ' + document.activeElement.tagName);
@@ -706,7 +708,7 @@ export function setupUIEventListeners(mapTileEditorData)
       mapTileEditorUtilities.resizeMap(mapTileEditorData);
     });
   
-    document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).addEventListener('change',
+  document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).addEventListener('change',
     function()
     {
       mapTileEditorUtilities.resizeMap(mapTileEditorData);

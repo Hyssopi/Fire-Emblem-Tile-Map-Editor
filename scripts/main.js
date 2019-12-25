@@ -111,6 +111,7 @@ export const BackgroundColor =
 2) Clean up code
 * Do not pass mapTileEditorData, pass individual parameters
 * Reorder functions
+* Fix utilities
 
 3) Fix Print Debug
 

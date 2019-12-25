@@ -166,7 +166,6 @@ export function resetMap(mapTileEditorData)
 
 export function resizeMap(mapTileEditorData, isLog = true)
 {
-  let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -459,9 +458,6 @@ export function getFillTileHashesSplit(possibleTileHashLists)
 
 export function calibrateTileHashes(mapTileEditorData, originX, originY, minimumStrictness, calibrateRange, isAnimate)
 {
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
-  
   let inputFillTileQueue = [];
   
   if (!calibrateRange || calibrateRange < 0)
@@ -474,7 +470,7 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
   {
     for (let x = originX - calibrateRange; x <= originX + calibrateRange; x++)
     {
-      if (isValidTileCoordinate(mapWidth, mapHeight, x, y))
+      if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
       {
         setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
         inputFillTileQueue.push({x: x, y: y});
@@ -496,18 +492,15 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
 export function calibrateTileHashesOld(mapTileEditorData, x, y)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
   
   let currentTileHashes =
   {
-    north: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.NORTH),
-    east: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.EAST),
-    south: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.SOUTH),
-    west: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y, Direction.WEST),
-    center: getTileHash(layeredTileHashesDisplay.map, mapWidth, mapHeight, x, y)
+    north: getTileHash(layeredTileHashesDisplay.map, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.NORTH),
+    east: getTileHash(layeredTileHashesDisplay.map, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.EAST),
+    south: getTileHash(layeredTileHashesDisplay.map, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.SOUTH),
+    west: getTileHash(layeredTileHashesDisplay.map, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y, Direction.WEST),
+    center: getTileHash(layeredTileHashesDisplay.map, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y)
   }
  
   let possibleFillNeighborTileHashes = [];
@@ -528,10 +521,10 @@ export function calibrateTileHashesOld(mapTileEditorData, x, y)
     let modifiedY = y - 1;
     
     let possibleTileHashLists = [];
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
     
     let fillTileHashesSplit = getFillTileHashesSplit(possibleTileHashLists);
     
@@ -549,10 +542,10 @@ export function calibrateTileHashesOld(mapTileEditorData, x, y)
     let modifiedY = y;
     
     let possibleTileHashLists = [];
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
     
     let fillTileHashesSplit = getFillTileHashesSplit(possibleTileHashLists);
     
@@ -570,10 +563,10 @@ export function calibrateTileHashesOld(mapTileEditorData, x, y)
     let modifiedY = y + 1;
     
     let possibleTileHashLists = [];
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
     
     let fillTileHashesSplit = getFillTileHashesSplit(possibleTileHashLists);
     
@@ -591,10 +584,10 @@ export function calibrateTileHashesOld(mapTileEditorData, x, y)
     let modifiedY = y;
     
     let possibleTileHashLists = [];
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
-    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.NORTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.EAST));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.SOUTH));
+    possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, modifiedX, modifiedY, Direction.WEST));
     
     let fillTileHashesSplit = getFillTileHashesSplit(possibleTileHashLists);
     
@@ -871,8 +864,6 @@ export function getTileHash(mapTileHashesDisplay, mapWidth, mapHeight, x, y, dir
 
 export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isLog = true)
 {
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -901,7 +892,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
     modifiedX = x - 1;
   }
   
-  if (isValidTileCoordinate(mapWidth, mapHeight, modifiedX, modifiedY))
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, modifiedX, modifiedY))
   {
     if (isLog)
     {
@@ -917,8 +908,6 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
 
 export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null)
 {
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -945,7 +934,7 @@ export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null
     modifiedX = x - 1;
   }
   
-  if (isValidTileCoordinate(mapWidth, mapHeight, modifiedX, modifiedY))
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, modifiedX, modifiedY))
   {
     layeredTileHashesDisplay.hover[modifiedY][modifiedX] = tileHash;
   }
@@ -986,8 +975,6 @@ export function redrawMap(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let canvas = mapTileEditorData.canvas;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -1003,9 +990,9 @@ export function redrawMap(mapTileEditorData)
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.restore();
   
-  for (let y = 0; y < mapHeight; y++)
+  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapWidth; x++)
+    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
     {
       let layeredTopTileHash = getLayeredTopTileHash(layeredTileHashesDisplay, x, y);
       context.drawImage(tileLookup[layeredTopTileHash].image, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
@@ -1068,8 +1055,6 @@ export function redrawNeighborPane(mapTileEditorData, direction)
 export function redrawIntersectionPanes(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -1077,10 +1062,10 @@ export function redrawIntersectionPanes(mapTileEditorData)
   let x = cursor.tileX;
   
   let possibleTileHashLists = [];
-  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.NORTH));
-  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.EAST));
-  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.SOUTH));
-  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, x, y, Direction.WEST));
+  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, x, y, Direction.NORTH));
+  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, x, y, Direction.EAST));
+  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, x, y, Direction.SOUTH));
+  possibleTileHashLists.push(getNeighborTileHashListForXYPosition(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, x, y, Direction.WEST));
   
   let fillTileHashesSplit = getFillTileHashesSplit(possibleTileHashLists);
   
@@ -1193,8 +1178,6 @@ export function redrawSearchPane(mapTileEditorData)
 export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   
   let fillTileQueue = [];
@@ -1206,9 +1189,9 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
   fillTileQueue.push({x: x - 1, y: y});
   
   let isEmptyMap = true;
-  for (let loopY = 0; loopY < mapHeight; loopY++)
+  for (let loopY = 0; loopY < mapTileEditorData.mapHeight; loopY++)
   {
-    for (let loopX = 0; loopX < mapWidth; loopX++)
+    for (let loopX = 0; loopX < mapTileEditorData.mapWidth; loopX++)
     {
       if (layeredTileHashesDisplay.map[loopY][loopX] !== EMPTY_TILE_HASH)
       {
@@ -1277,8 +1260,6 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
 function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -1286,7 +1267,7 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
   
   //console.log('x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
   
-  if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
+  if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
   {
     return;
   }
@@ -1299,7 +1280,7 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
   cursor.tileX = tileCoordinate.x;
   cursor.tileY = tileCoordinate.y;
   
-  let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
+  let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, 4);
   setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
   
   if (isAnimate)
@@ -1313,25 +1294,25 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
     return;
   }
   
-  if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
     && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.NORTH)
   )
   {
     fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y - 1});
   }
-  if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
     && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.EAST)
   )
   {
     fillTileQueue.push({x: tileCoordinate.x + 1, y: tileCoordinate.y});
   }
-  if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
     && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.SOUTH)
   )
   {
     fillTileQueue.push({x: tileCoordinate.x, y: tileCoordinate.y + 1});
   }
-  if (isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
+  if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
     && isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, Direction.WEST)
   )
   {
@@ -1341,8 +1322,6 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
 
 export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inputFillTileQueue = [])
 {
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   
   let fillTileQueue = [];
@@ -1357,9 +1336,9 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
   
   if (fillTileQueue.length === 0)
   {
-    for (let y = 0; y < mapHeight; y++)
+    for (let y = 0; y < mapTileEditorData.mapHeight; y++)
     {
-      for (let x = 0; x < mapWidth; x++)
+      for (let x = 0; x < mapTileEditorData.mapWidth; x++)
       {
         if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
         {
@@ -1404,8 +1383,6 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
 function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, strictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
@@ -1413,7 +1390,7 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
   
   //console.log('strictness: ' + strictness + ', x: ' + tileCoordinate.x + ', y: ' + tileCoordinate.y + ', fillTileQueue.length = ' + fillTileQueue.length);
   
-  if (!isValidTileCoordinate(mapWidth, mapHeight, tileCoordinate.x, tileCoordinate.y))
+  if (!isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, tileCoordinate.x, tileCoordinate.y))
   {
     return;
   }
@@ -1426,7 +1403,7 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
   cursor.tileX = tileCoordinate.x;
   cursor.tileY = tileCoordinate.y;
   
-  let fillTileHash = getFillTileHash(tileLookup, mapWidth, mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
+  let fillTileHash = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y, strictness);
   setTile(mapTileEditorData, tileCoordinate.x, tileCoordinate.y, fillTileHash);
   
   if (isAnimate)
@@ -1457,8 +1434,6 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
 export function printDebug(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
-  let mapWidth = mapTileEditorData.mapWidth;
-  let mapHeight = mapTileEditorData.mapHeight;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -1471,11 +1446,11 @@ export function printDebug(mapTileEditorData)
   console.log('\n');
   
   console.info('mapWidth:');
-  console.log(mapWidth);
+  console.log(mapTileEditorData.mapWidth);
   console.log('\n');
   
   console.info('mapHeight:');
-  console.log(mapHeight);
+  console.log(mapTileEditorData.mapHeight);
   console.log('\n');
   
   console.info('layeredTileHashesDisplay:');

@@ -17,7 +17,6 @@
     <div class="flexBoxRow">
       <div class="flexBoxColumn">
         <div class="flexBoxRow toolbar">
-          
           <div class="flexBoxColumn toolbarBlock mapControlBlock">
             <div class="flexBoxRow innerToolbarBlock">
               <div style="width: 10px;"></div>
@@ -39,9 +38,11 @@
                 <i class="fa fa-folder-open"></i>
               </button>
               <input id="importFileInputId" type="file" style="display: none;"/>
-              <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="Export As Tile Hashes">
+              
+              <button id="exportAsTileHashesButtonId" class="font-awesome-icons" title="Export As File">
                 <i class="fa fa-file-download"></i>
               </button>
+              
               <button id="exportAsImageButtonId" class="font-awesome-icons" title="Export As Image">
                 <i class="fa fa-file-image"></i>
               </button>
@@ -54,13 +55,12 @@
               <button id="undoButtonId" class="font-awesome-icons" title="Undo">
                 <i class="fa fa-undo-alt"></i>
               </button>
+              
               <button id="redoButtonId" class="font-awesome-icons" title="Redo">
                 <i class="fa fa-redo-alt"></i>
               </button>
+              
               <button id="clearTileButtonId" class="font-awesome-icons" title="Clear Tile">
-                <!--
-                <i class="fa fa-eraser"></i>
-                -->
                 <i class="fa fa-window-close"></i>
               </button>
             </div>
@@ -86,27 +86,19 @@
               </div>
               
               <button id="fillTileButtonId" class="font-awesome-icons" title="Fill Tile">
-                <!--
-                <i class="fa fa-fill-drip"></i>
-                -->
                 <i class="fa fa-puzzle-piece"></i>
               </button>
               
               <div class="flexBoxColumn" style="justify-content: center; align-items: flex-end; font-size: 12px;">
-                Calibrate Range <input id="calibrateRangeTextboxId" type="number" min="0" max="999" value="2" placeholder="CR" style="width: 4em; text-align: center; font-size: 10px;">
+                <div>Calibrate Range</div>
+                <input id="calibrateRangeTextboxId" type="number" min="0" max="999" value="2" placeholder="CR" style="width: 4em; text-align: center; font-size: 10px;">
               </div>
               
               <button id="calibrateTileButtonId" class="font-awesome-icons" title="Calibrate Tile(s)">
-                <i class="fa fa-ruler"></i>
+                <i class="fa fa-drafting-compass"></i>
               </button>
               
               <button id="generateMapButtonId" class="font-awesome-icons" title="Generate Map">
-                <!--
-                <i class="fa fa-image"></i>
-                -->
-                <!--
-                <i class="fa fa-th"></i>
-                -->
                 <i class="fa fa-fill-drip"></i>
               </button>
               
@@ -122,6 +114,7 @@
               <button id="printLogButtonId" class="font-awesome-icons" title="Print Debug Log">
                 <i class="fa fa-receipt"></i>
               </button>
+              
               <button id="helpButtonId" class="font-awesome-icons" title="Help">
                 <i class="fa fa-question-circle"></i>
               </button>
@@ -139,6 +132,7 @@
                   ( <label id="cursorPositionXId">0</label> , <label id="cursorPositionYId">0</label> )
                 </td>
               </tr>
+              
               <tr>
                 <td nowrap style="padding: 0px 10px 0px 0px; text-align: right;">
                   <b>Type<span>:</span></b>
@@ -147,6 +141,7 @@
                   <label id="tileTypeId">TILE_TYPE</label>
                 </td>
               </tr>
+              
               <tr>
                 <td nowrap style="padding: 0px 10px 0px 0px; text-align: right;">
                   <b>Description<span>:</span></b>
@@ -158,11 +153,6 @@
             </table>
             <div class="ribbonGroupTitleHorizontal">CURSOR</div>
           </div>
-          
-          <!--
-          // should add a commonability score? add number of neighbors sum
-          -->
-          
         </div>
         <div>
           <canvas id="CanvasId1" width="1300" height="850"></canvas>

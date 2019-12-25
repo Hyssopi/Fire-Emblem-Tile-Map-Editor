@@ -2,10 +2,7 @@
 body
 {
   font-family: Times New Roman, Liberation Serif, serif;
-  background: #eee;
-  /*
-  margin: 1em;
-  */
+  background: #EEEEEE;
   text-align: center;
 }
 
@@ -41,9 +38,9 @@ li
 canvas
 {
   display: block;
+  background: #FFFFFF;
   margin-top: 2px;
-  background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #CCCCCC;
 }
 
 /*
@@ -51,8 +48,8 @@ canvas
 */
 img
 {
-  margin: 5px;
   image-rendering: crisp-edges;
+  margin: 5px;
 }
 
 img:hover
@@ -75,9 +72,6 @@ img:hover
 
 .containerColumn
 {
-  /*
-  width: 100px;
-  */
   min-width: 134px;
   max-width: 134px;
   height: 540px;
@@ -93,9 +87,6 @@ img:hover
   height: 123px;
   overflow: auto;
   flex-wrap: nowrap;
-  /*
-  justify-content: center;
-  */
 }
 
 .containerDoubleRow
