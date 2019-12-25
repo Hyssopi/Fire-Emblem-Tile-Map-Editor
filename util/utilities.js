@@ -274,15 +274,162 @@ export function getWindowHeight()
   return isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
 }
 
+/**
+ * Sanitize input string to get filename-safe string.
+ *
+ * @param filename Filename to sanitize
+ * @return Sanitized filename-safe string
+ */
+export function getSanitizedFilename(filename)
+{
+  return filename.replace(/[^A-Za-z0-9-_ \[\]()]/g, '_');
+}
 
+/**
+ * Generates random UUID.
+ * @returns Random UUID
+ */
+export function generateUuid()
+{
+  let S4 = function()
+  {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  };
+  return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+}
 
+/**
+ * Get the chroma color scale of a gradient range.
+ * @param colors Array of colors (example: ['red', 'yellow', '#228B22'])
+ * @param minimumRange Minimum value range (example: 0)
+ * @param maximumRange Maximum value range (example: 255)
+ * @returns chromaJS color scale
+ */
+export function getColorScale(colors, minimumRange, maximumRange)
+{
+  return chroma.scale(colors).domain([minimumRange, maximumRange]);
+}
 
+/**
+ * Format given hertz values to shortened multiples, example: 40000000 to '40 MHz'
+ * @param inputNumber Input number in hertz
+ * @param decimalPrecision Decimal precision
+ * @returns Shortened hertz multiples string
+ */
+export function formatHertzNumbers(inputNumber, decimalPrecision)
+{
+  if (inputNumber === 0)
+  {
+    return '0 Hz';
+  }
+  let k = 1000;
+  let dm = decimalPrecision <= 0 ? 0 : decimalPrecision || 0;
+  let sizes = ['', 'KHz', 'MHz', 'GHz', 'THz', 'PHz', 'EHz', 'ZHz', 'YHz'];
+  let i = Math.floor(Math.log(inputNumber) / Math.log(k));
+  
+  return parseFloat((inputNumber / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
 
+/**
+ * Format the input seconds number string to "hh:mm:ss" format.
+ * @returns String in "hh:mm:ss" format
+ */
+String.prototype.toHHMMSS = function()
+{
+  let secondsInput = parseInt(this, 10);
+  let hours = Math.floor(secondsInput / 3600);
+  let minutes = Math.floor(secondsInput % 3600 / 60);
+  let seconds = Math.floor(secondsInput % 3600 % 60);
+  
+  let hourDisplay = hours;
+  let minuteDisplay = (minutes < 10 ? '0' : '') + minutes;
+  let secondDisplay = (seconds < 10 ? '0' : '') + seconds;
+  
+  return hourDisplay + ':' + minuteDisplay + ':' + secondDisplay;
+}
 
-//**********Add to main utilities.js***********//
+/**
+ * Format the input seconds number string to "hh hours, mm minutes, ss seconds" format.
+ * @returns String in "hh hours, mm minutes, ss seconds" format
+ */
+String.prototype.toHHMMSSText = function()
+{
+  let secondsInput = parseInt(this, 10);
+  let hours = Math.floor(secondsInput / 3600);
+  let minutes = Math.floor(secondsInput % 3600 / 60);
+  let seconds = Math.floor(secondsInput % 3600 % 60);
+  
+  let hourDisplay = '';
+  let minuteDisplay = '';
+  let secondDisplay = '';
+  if (hours > 0)
+  {
+    hourDisplay += hours + (hours === 1 ? ' hour' : ' hours');
+  }
+  if (minutes > 0)
+  {
+    if (hourDisplay)
+    {
+      minuteDisplay += ', ';
+    }
+    minuteDisplay += minutes + (minutes === 1 ? ' minute' : ' minutes');
+  }
+  if (seconds > 0)
+  {
+    if (hourDisplay || minuteDisplay)
+    {
+      secondDisplay += ', ';
+    }
+    secondDisplay += seconds + (seconds === 1 ? ' second' : ' seconds');
+  }
+  
+  return hourDisplay + minuteDisplay + secondDisplay;
+}
 
+/**
+ * Setup the HTML canvas with parameters.
+ *
+ * @param canvasId HTML canvas ID
+ * @param width Width of canvas
+ * @param height Height of canvas
+ * @param style CSS styling
+ * @return HTML canvas with parameters
+ */
+export function setupCanvas(canvasId, width, height, style)
+{
+  let canvas = document.getElementById(canvasId);
+  if (canvas)
+  {
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+    canvas.setAttribute('style', style);
+  }
+  return canvas;
+}
 
+/**
+ * Clear HTML canvas with inputted color.
+ *
+ * @param canvasId HTML canvas ID
+ * @param color Color used to clear canvas
+ */
+export function clearCanvas(canvasId, color)
+{
+  let canvas = document.getElementById(canvasId);
+  if (canvas)
+  {
+    let canvasContext = canvas.getContext('2d');
+    canvasContext.fillStyle = color;
+    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
 
+/**
+ * Check if the URL exists.
+ *
+ * @param url Input URL
+ * @return True if the URL exists, false otherwise
+ */
 export function isUrlExists(url)
 {
   try
@@ -292,15 +439,17 @@ export function isUrlExists(url)
     http.send();
     return http.status != 404;
   }
-  catch(exception)
+  catch (exception)
   {
     return false;
   }
 }
 
-
-
-
+/**
+ * Copy text to clipboard.
+ *
+ * @param text Text to put to clipboard
+ */
 export function copyTextToClipboard(text)
 {
   let textArea = document.createElement('textarea');
@@ -308,9 +457,9 @@ export function copyTextToClipboard(text)
   textArea.textContent = text;
   document.body.appendChild(textArea);
   
-  let selection = document.getSelection();
   let range = document.createRange();
   range.selectNode(textArea);
+  let selection = document.getSelection();
   selection.removeAllRanges();
   selection.addRange(range);
   
@@ -320,44 +469,13 @@ export function copyTextToClipboard(text)
   document.body.removeChild(textArea);
 }
 
+/**
+ * Get filename string without extension.
+ *
+ * @param filename Input filename
+ * @return Filename string without extension
+ */
 export function getFilenameWithoutExtension(filename)
 {
   return filename.substr(0, filename.lastIndexOf('.')) || filename;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
