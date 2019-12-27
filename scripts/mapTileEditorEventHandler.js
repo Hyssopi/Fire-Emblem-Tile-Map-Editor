@@ -650,8 +650,8 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === '[')
     {
-      // 1 is the minimum value for calibrate range text box
-      if (document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value > 1)
+      // 0 is the minimum value for calibrate range text box
+      if (document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value > 0)
       {
         document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).value--;
       }

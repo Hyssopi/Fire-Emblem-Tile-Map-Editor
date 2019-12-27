@@ -1,38 +1,559 @@
 
 <!DOCTYPE html>
 <html>
-  <div style="margin: 20px 0px 0px 10px; line-height: 2; font-size: 26px;">
+  <style>
+    body
+    {
+      line-height: 1.5;
+      font-size: 26px;
+      background: #EEEEEE;
+      margin: 20px 0px 0px 10px;
+    }
     
-    <div style="font-size: 60px; font-weight: bold;">TODO</div>
+    a
+    {
+      text-decoration: none;
+      /*
+      color: black;
+      */
+    }
     
+    ul
+    {
+      list-style-type: square;
+    }
     
+    table, th, td
+    {
+      user-select: text;
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
     
+    th
+    {
+      font-size: 22px;
+    }
     
+    th, td
+    {
+      padding: 15px;
+    }
     
+    .mainTitle
+    {
+      text-align: center;
+      font-size: 50px;
+      font-weight: bold;
+    }
     
+    .chapterTitle
+    {
+      font-size: 36px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
     
+    .sectionTitle
+    {
+      font-size: 26px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
     
+    .chapter
+    {
+      margin-left: 1em;
+    }
     
+    .section
+    {
+      font-size: 20px;
+      margin-left: 2em;
+    }
     
+    .subSection
+    {
+      font-size: 16px;
+      margin-left: 2em;
+    }
     
-    <pre>
-    Shortcuts:
+    .listItem1
+    {
+      font-weight: bold;
+    }
     
-    WASD or Arrow Keys - Move cursor
-    Ctrl + Arrow Keys - Move cursor to the next non-empty tile
-    z - Undo
-    y - Redo
-    Del - Clear at cursor
-    r - Set random tile at cursor
-    f - Fill tile at cursor with tile that matches the strictness condition
-    c - Calibrate tile by re-adjusting adjacent tiles
-    g - Generate map
-    [ - Decrease Strictness
-    ] - Increase Strictness
-    Ctrl + F - Switch to search
+    .listItem2
+    {
+      margin-left: 2em;
+    }
     
-    </pre>
-    
-    
-  </div>
+  </style>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>Tile Map Editor Help</title>
+  </head>
+  
+  <body>
+    <div>
+      <hr>
+      
+      <div id="title" class="mainTitle">
+        Tile Map Editor
+        <img src="images/main.png" width="100%">
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="tableOfContents" class="chapterTitle">Table of Contents</div>
+        <ul class="section">
+          <li class="listItem1"><a href="#shortcuts">Shortcuts</a></li>
+          
+          <li class="listItem1"><a href="#map">Map</a></li>
+          <li class="listItem2"><a href="#map-width-height">Width / Height</a></li>
+          <li class="listItem2"><a href="#map-new">New</a></li>
+          <li class="listItem2"><a href="#map-import">Import</a></li>
+          <li class="listItem2"><a href="#map-exportAsFile">Export As File</a></li>
+          <li class="listItem2"><a href="#map-exportAsImage">Export As Image</a></li>
+          
+          <li class="listItem1"><a href="#edit">Edit</a></li>
+          <li class="listItem2"><a href="#edit-undo-redo">Undo / Redo</a></li>
+          <li class="listItem2"><a href="#edit-clearTile">Clear Tile</a></li>
+          
+          <li class="listItem1"><a href="#function">Function</a></li>
+          <li class="listItem2"><a href="#function-randomTile">Random Tile</a></li>
+          <li class="listItem2"><a href="#function-strictness">Strictness</a></li>
+          <li class="listItem2"><a href="#function-fillTile">Fill Tile</a></li>
+          <li class="listItem2"><a href="#function-calibrateRange">Calibrate Range</a></li>
+          <li class="listItem2"><a href="#function-calibrateTiles">Calibrate Tile(s)</a></li>
+          <li class="listItem2"><a href="#function-generateMap">Generate Map</a></li>
+          <li class="listItem2"><a href="#function-animateGeneration">Animate Generation</a></li>
+          
+          <li class="listItem1"><a href="#help">Help</a></li>
+          <li class="listItem2"><a href="#help-printDebugLog">Print Debug Log</a></li>
+          <li class="listItem2"><a href="#help-help">Help</a></li>
+          
+          <li class="listItem1"><a href="#cursor">Cursor</a></li>
+          <li class="listItem2"><a href="#cursor-position">Position</a></li>
+          <li class="listItem2"><a href="#cursor-type">Type</a></li>
+          <li class="listItem2"><a href="#cursor-description">Description</a></li>
+          
+          <li class="listItem1"><a href="#search">Search</a></li>
+          
+          <li class="listItem1"><a href="#neighborPanes">Neighbor Panes</a></li>
+          
+          <li class="listItem1"><a href="#intersectionPanes">Intersection Panes</a></li>
+        </ul>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="shortcuts" class="chapterTitle">Shortcuts</div>
+        <table class="section">
+          <tr>
+            <th nowrap>Key</th>
+            <th nowrap>Description</th>
+            <th nowrap>Details</th>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">WASD or Arrow Keys</td>
+            <td nowrap>Move cursor</td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">Ctrl + Arrow Keys</td>
+            <td nowrap>Move cursor to the next non-empty tile</td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">z</td>
+            <td nowrap>Undo action</td>
+            <td rowspan="2" nowrap><a href="#edit-undo-redo">Undo / Redo</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">y</td>
+            <td nowrap>Redo action</td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">Delete</td>
+            <td nowrap>Clear tile at cursor</td>
+            <td nowrap><a href="#edit-clearTile">Clear Tile</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">r</td>
+            <td nowrap>Set random tile at cursor</td>
+            <td nowrap><a href="#function-randomTile">Random Tile</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">f</td>
+            <td nowrap>Fill tile at cursor with tile that matches the strictness condition</td>
+            <td nowrap><a href="#function-fillTile">Fill Tile</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">c</td>
+            <td nowrap>Calibrate tile(s) by re-adjusting adjacent tiles</td>
+            <td rowspan="2" nowrap><a href="#function-calibrateTiles">Calibrate Tile(s)</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">[</td>
+            <td nowrap>Decrease Calibrate Range</td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">]</td>
+            <td nowrap>Increase Calibrate Range</td>
+            <td nowrap><a href="#function-calibrateRange">Calibrate Range</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">g</td>
+            <td nowrap>Generate map</td>
+            <td nowrap><a href="#function-generateMap">Generate Map</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">Page Up</td>
+            <td nowrap>Increase Strictness</td>
+            <td rowspan="2" nowrap><a href="#function-strictness">Strictness</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">Page Down</td>
+            <td nowrap>Decrease Strictness</td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">Ctrl + f</td>
+            <td nowrap>Switch to search input</td>
+            <td nowrap><a href="#search">Search</a></td>
+          </tr>
+          <tr>
+            <td nowrap style="font-weight: bold;">p</td>
+            <td nowrap>Print Debug Log</td>
+            <td nowrap><a href="#help-printDebugLog">Print Debug Log</a></td>
+          </tr>
+        </table>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="map" class="chapterTitle">Map</div>
+        <div class="section">
+          <img src="images/map.png">
+          <div>Allows user to change the width / height, resets, imports, or exports the map.</div>
+          
+          <br>
+          
+          <div id="map-width-height" class="sectionTitle">Width / Height</div>
+          <div class="subSection">
+            <img src="images/widthheight.png">
+            <div>
+              <b>Width</b> is how wide (in tiles) the map is. Can be increased/decreased with up/down buttons or modified directly.
+              <br>
+              Range: 1 - 999
+            </div>
+            <div>
+              <b>Height</b> is how high (in tiles) the map is. Can be increased/decreased with up/down buttons or modified directly.
+              <br>
+              Range: 1 - 999
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="map-new" class="sectionTitle">New</div>
+          <div class="subSection">
+            <img src="images/new.png">
+            <div>
+              <b>New</b> clears and resets the map, and also clears the user action log.
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="map-import" class="sectionTitle">Import</div>
+          <div class="subSection">
+            <img src="images/import.png">
+            <div>
+              Opens file selector to <b>Import</b> map JSON file to load.
+              <br>
+              The JSON file can be obtained from <a href="#map-exportAsFile">Export As File</a>.
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="map-exportAsFile" class="sectionTitle">Export As File</div>
+          <div class="subSection">
+            <img src="images/exportAsFile.png">
+            <div>
+              Opens a new window containing the JSON map data of the current map.
+              <br>
+              In order to save the map, the user must save (for example, Ctrl + S) and save as a <b>JSON file</b>.
+              <br>
+              In addition, JSON data is automatically copied to clipboard. (Able to Ctrl + V or Paste)
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="map-exportAsImage" class="sectionTitle">Export As Image</div>
+          <div class="subSection">
+            <img src="images/exportAsImage.png">
+            <div>
+              Opens a new window containing the map image of the current map.
+              <br>
+              User may save (for example, Ctrl + S) and save as a <b>PNG image</b> file.
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="edit" class="chapterTitle">Edit</div>
+        <div class="section">
+          <img src="images/edit.png">
+          <div>Allows user to undo / redo user action and clear tile.</div>
+          
+          <br>
+          
+          <div id="edit-undo-redo" class="sectionTitle">Undo / Redo</div>
+          <div class="subSection">
+            <img src="images/undoredo.png">
+            <div>
+              <b>Undo</b> / <b>redo</b> user action, including modifying tiles or changing the map width / height.
+              <br>
+              Will be greyed out if it cannot undo / redo.
+              <br>
+              <u>Shortcuts</u>: z - Undo, y - Redo
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="edit-clearTile" class="sectionTitle">Clear Tile</div>
+          <div class="subSection">
+            <img src="images/clearTile.png">
+            <div>
+              <b>Clear</b> tile at cursor. Replaces it with an EMPTY tile.
+              <br>
+              <u>Shortcut</u>: Delete
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="function" class="chapterTitle">Function</div>
+        <div class="section">
+          <img src="images/function.png">
+          <div>Allows user to set tile(s) based on features, including: randomly filling, filling based on neighbors, calibrating fix ups, or generating the map.</div>
+          
+          <br>
+          
+          <div id="function-randomTile" class="sectionTitle">Random Tile</div>
+          <div class="subSection">
+            <img src="images/randomTile.png">
+            <div>
+              <b>Random</b>ly sets tile at the cursor to a random tile.
+              <br>
+              <u>Shortcut</u>: r
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="function-strictness" class="sectionTitle">Strictness</div>
+          <div class="subSection">
+            <img src="images/strictness.png">
+            <div>
+              Setting to control how strict the generation for <a href="#function-fillTile">Fill Tile</a>, <a href="#function-calibrateRange">Calibrate Range</a>, and <a href="#function-generateMap">Generate Map</a>.
+              <br>
+              The options are:
+              <ul style="margin: 0px;">
+                <li>Exact [4]</li>
+                <li>Near [3]</li>
+                <li>Fair [2]</li>
+                <li>Small [1]</li>
+              </ul>
+              The number refers to the number of neighbor tiles that are compatible, and adjusted for empty tiles.
+              <br>
+              <u>Shortcuts</u>: Page Up - Increase strictness, Page Down - Decrease strictness
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="function-fillTile" class="sectionTitle">Fill Tile</div>
+          <div class="subSection">
+            <img src="images/fillTile.png">
+            <div>
+              <b>Fill</b> the tile at cursor calculated from a list of compatible tiles based on the neighbor tiles.
+              <br>
+              Uses the <a href="#function-strictness">Strictness</a> value in the calculations.
+              <br>
+              <u>Shortcut</u>: f
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="function-calibrateRange" class="sectionTitle">Calibrate Range</div>
+          <div class="subSection">
+            <img src="images/calibrateRange.png">
+            <div>
+              <b>Calibrate Range</b> used in <a href="#function-calibrateTiles">Calibrate Tile(s)</a> feature. It is the radius from the cursor in a square.
+              <br>
+              Range: 0 - 999
+              <br>
+              <u>Shortcuts</u>: [ - Decrease calibration range, ] - Increase calibration range
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="function-calibrateTiles" class="sectionTitle">Calibrate Tiles</div>
+          <div class="subSection">
+            <img src="images/calibrateTiles.png">
+            <div>
+              <b>Calibrate</b> the tile(s) around the cursor by deleting the tiles and refilling them. The range of the tiles affected around the cursor is based on <a href="#function-calibrateRange">Calibrate Range</a>.
+              <br>
+              Uses the <a href="#function-strictness">Strictness</a> value in the calculations.
+              <br>
+              <u>Shortcut</u>: c
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="function-generateMap" class="sectionTitle">Generate Map</div>
+          <div class="subSection">
+            <img src="images/generateMap.png">
+            <div>
+              <b>Generate</b> map starting from the cursor. Then later sequentially fills the remaining empty tiles based on <a href="#function-strictness">Strictness</a>.
+              <br>
+              Can enable animation with <a href="#function-animateGeneration">Animate Generation</a>.
+              <br>
+              <u>Shortcut</u>: g
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="function-animateGeneration" class="sectionTitle">Animate Generation</div>
+          <div class="subSection">
+            <img src="images/animateGeneration.png">
+            <div>
+              Toggle to enable or disable <b>animation</b> for <a href="#function-calibrateTiles">Calibrate Tile(s)</a> or <a href="#function-generateMap">Generate Map</a>.
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="help" class="chapterTitle">Help</div>
+        <div class="section">
+          <img src="images/help.png">
+          <div>Prints debug log or opens up the help.</div>
+          
+          <br>
+          
+          <div id="help-printDebugLog" class="sectionTitle">Print Debug Log</div>
+          <div class="subSection">
+            <img src="images/printDebugLog.png">
+            <div>
+              <b>Print debug log</b> information to console.
+              <br>
+              Right click webpage -> Inspect -> Console, to view debug information.
+              <br>
+              Button will be hidden unless enabled in code.
+              <br>
+              <u>Shortcut</u>: p
+            </div>
+          </div>
+          
+          <br>
+          
+          <div id="help-help" class="sectionTitle">Help</div>
+          <div class="subSection">
+            <img src="images/helphelp.png">
+            <div>
+              Opens up the <b>Help</b> page.
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="cursor" class="chapterTitle">Cursor</div>
+        <div class="section">
+          <img src="images/cursor.png">
+          <div>
+            Shows details on the tile the cursor is on.
+          </div>
+          <div id="cursor-position">
+            <b>Position</b> of the cursor in ( x , y ) format, starting from the top left.
+          </div>
+          <div id="cursor-type">
+            <b>Type</b> of the tile at the cursor position.
+          </div>
+          <div id="cursor-description">
+            <b>Description</b> of the tile at the cursor position. Is the hash ID of the tile.
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="search" class="chapterTitle">Search</div>
+        <div class="section">
+          <img src="images/search.png">
+          <div>
+            Allows user to <b>search</b> through all the tiles. Search by tile type or hash ID.
+            <br>
+            Hovering over a tile will show a preview of the tile on the map.
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="neighborPanes" class="chapterTitle">Neighbor Panes</div>
+        <div class="section">
+          <img src="images/neighborPanes.png">
+          <div>
+            The four directional (North, West, East, South) panes representing the possible <b>neighbors</b> of the tile at the cursor position.
+            <br>
+            Hovering over a tile will show a preview of the tile on the map.
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="chapter">
+        <div id="intersectionPanes" class="chapterTitle">Intersection Panes</div>
+        <div class="section">
+          <img src="images/intersectionPanes.png">
+          <div>
+            The <b>intersection</b> of the neighbor's compatible tiles at the position of the cursor.
+            <br>
+            Uses the same design as <a href="#function-strictness">Strictness</a>.
+            <br>
+            Hovering over a tile will show a preview of the tile on the map.
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+    </div>
+  </body>
 </html>
