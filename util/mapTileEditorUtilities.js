@@ -657,35 +657,28 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
   redrawAll(mapTileEditorData);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Fill/generate the map starting at the input coordinate. Uses max strictness (4) when filling. Then when main filling is done, it will call supplemental filling starting from highest strictness down until the inputted specified minimum strictness.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param x Horizontal tile position, starting from the left (0)
+ * @param y Vertical tile position, starting from the top (0)
+ * @param minimumStrictness Minimum strictness used in the calculations
+ * @param isAnimate Whether to animate the generation or not
+ */
 export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   
   let fillTileQueue = [];
-  
   fillTileQueue.push({x: x, y: y});
   fillTileQueue.push({x: x, y: y - 1});
   fillTileQueue.push({x: x + 1, y: y});
   fillTileQueue.push({x: x, y: y + 1});
   fillTileQueue.push({x: x - 1, y: y});
   
+  // Check to see if the map is empty
   let isEmptyMap = true;
   for (let loopY = 0; loopY < mapTileEditorData.mapHeight; loopY++)
   {
@@ -703,6 +696,7 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
     }
   }
   
+  // Start with initial random tile if the map is empty
   if (isEmptyMap)
   {
     let randomTileHash = getRandomTileHash(tileLookup);
@@ -720,11 +714,12 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
     {
       if (fillTileQueue.length <= 0)
       {
+        // Main filling is done, running supplemental filling
         for (let i = 4; i >= minimumStrictness; i--)
         {
           fillMapSupplement(mapTileEditorData, i, isAnimate);
         }
-        console.log('Stopping interval');
+        console.log('fillMap(...), Stopping interval');
         clearInterval(interval);
         return;
       }
@@ -738,23 +733,30 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
     {
       if (fillTileQueue.length <= 0)
       {
+        // Main filling is done, running supplemental filling
         for (let i = 4; i >= minimumStrictness; i--)
         {
           fillMapSupplement(mapTileEditorData, i, isAnimate);
         }
-        console.log('Stopping loop');
-        clearHoverTiles(layeredTileHashesDisplay);
-        redrawNeighborPanes(mapTileEditorData);
-        redrawAll(mapTileEditorData);
+        console.log('fillMap(...), Stopping loop');
         break;
       }
       
       fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate);
     }
   }
+  
+  clearHoverTiles(layeredTileHashesDisplay);
+  redrawAll(mapTileEditorData);
 }
 
-// Note: strictness set to 4
+/**
+ * Fill map process of the next fill tile queue. Uses max strictness (4) when filling.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param fillTileQueue A queue of x-y coordinates to fill tile on map
+ * @param isAnimate Whether to animate the generation or not
+ */
 function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -818,6 +820,14 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
   }
 }
 
+/**
+ * Sequentially fill the map starting at the top left based on strictness.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param strictness Strictness used in the calculations
+ * @param isAnimate Whether to animate the generation or not
+ * @param inputFillTileQueue A queue of x-y coordinates to fill tile on map
+ */
 export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inputFillTileQueue = [])
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -852,7 +862,7 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
     {
       if (fillTileQueue.length <= 0)
       {
-        console.log('Stopping interval');
+        console.log('fillMapSupplement(...), Stopping interval');
         clearInterval(interval);
         return;
       }
@@ -866,18 +876,26 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
     {
       if (fillTileQueue.length <= 0)
       {
-        console.log('Stopping loop');
-        clearHoverTiles(layeredTileHashesDisplay);
-        redrawNeighborPanes(mapTileEditorData);
-        redrawAll(mapTileEditorData);
+        console.log('fillMapSupplement(...), Stopping loop');
         break;
       }
       
       fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, strictness, isAnimate);
     }
   }
+  
+  clearHoverTiles(layeredTileHashesDisplay);
+  redrawAll(mapTileEditorData);
 }
 
+/**
+ * Sequentially fill map process of the next fill tile queue based on strictness.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param fillTileQueue A queue of x-y coordinates to fill tile on map
+ * @param strictness Strictness used in the calculations
+ * @param isAnimate Whether to animate the generation or not
+ */
 function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, strictness, isAnimate)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -909,35 +927,7 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
     clearHoverTiles(layeredTileHashesDisplay);
     redrawAll(mapTileEditorData);
   }
-  
-  if (isEmptyTile(layeredTileHashesDisplay.map, tileCoordinate.x, tileCoordinate.y))
-  {
-    return;
-  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Set given tile hash to the input coordinate in the map 2D array.
