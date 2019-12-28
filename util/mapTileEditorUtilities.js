@@ -623,6 +623,8 @@ export function getFillTileHashesSplit(possibleTileHashLists)
  */
 export function calibrateTileHashes(mapTileEditorData, originX, originY, minimumStrictness, calibrateRange, isAnimate)
 {
+  let tileLookup = mapTileEditorData.tileLookup;
+  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
   if (!calibrateRange || calibrateRange < 0)
@@ -631,19 +633,122 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
     calibrateRange = 0;
   }
   
-  let inputFillTileQueue = [];
-  
-  // Starting from the top left of the square to calibrate
-  for (let y = originY - calibrateRange; y <= originY + calibrateRange; y++)
+  let positions =
   {
-    for (let x = originX - calibrateRange; x <= originX + calibrateRange; x++)
+    topLeft:
+    {
+      x: (originX - calibrateRange >= 0) ? (originX - calibrateRange) : 0,
+      y: (originY - calibrateRange >= 0) ? (originY - calibrateRange) : 0,
+      isValidStart: false
+    },
+    topRight:
+    {
+      x: (originX + calibrateRange < mapTileEditorData.mapWidth) ? (originX + calibrateRange) : (mapTileEditorData.mapWidth - 1),
+      y: (originY - calibrateRange >= 0) ? (originY - calibrateRange) : 0,
+      isValidStart: false
+    },
+    bottomLeft:
+    {
+      x: (originX - calibrateRange >= 0) ? (originX - calibrateRange) : 0,
+      y: (originY + calibrateRange < mapTileEditorData.mapHeight) ? (originY + calibrateRange) : (mapTileEditorData.mapHeight - 1),
+      isValidStart: false
+    },
+    bottomRight:
+    {
+      x: (originX + calibrateRange < mapTileEditorData.mapWidth) ? (originX + calibrateRange) : (mapTileEditorData.mapWidth - 1),
+      y: (originY + calibrateRange < mapTileEditorData.mapHeight) ? (originY + calibrateRange) : (mapTileEditorData.mapHeight - 1),
+      isValidStart: false
+    }
+  };
+  
+  // Clear the tiles first to prevent it from affecting isValidStart checks
+  for (let y = positions.topLeft.y; y <= positions.bottomRight.y; y++)
+  {
+    for (let x = positions.topLeft.x; x <= positions.bottomRight.x; x++)
     {
       if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
       {
         setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
-        inputFillTileQueue.push({x: x, y: y});
       }
     }
+  }
+  
+  positions.topLeft.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.topLeft.x, positions.topLeft.y, minimumStrictness) != EMPTY_TILE_HASH;
+  
+  positions.topRight.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.topRight.x, positions.topRight.y, minimumStrictness) != EMPTY_TILE_HASH;
+  
+  positions.bottomLeft.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.bottomLeft.x, positions.bottomLeft.y, minimumStrictness) != EMPTY_TILE_HASH;
+  
+  positions.bottomRight.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.bottomRight.x, positions.bottomRight.y, minimumStrictness) != EMPTY_TILE_HASH;
+  
+  let inputFillTileQueue = [];
+  
+  if (positions.topLeft.isValidStart)
+  {
+    // Starting from the top left of the square to calibrate
+    for (let y = positions.topLeft.y; y <= positions.bottomRight.y; y++)
+    {
+      for (let x = positions.topLeft.x; x <= positions.bottomRight.x; x++)
+      {
+        if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
+        {
+          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          inputFillTileQueue.push({x: x, y: y});
+        }
+      }
+    }
+  }
+  else if (positions.topRight.isValidStart)
+  {
+    // Starting from the top right of the square to calibrate
+    for (let y = positions.topRight.y; y <= positions.bottomLeft.y; y++)
+    {
+      for (let x = positions.topRight.x; x >= positions.bottomLeft.x; x--)
+      {
+        if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
+        {
+          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          inputFillTileQueue.push({x: x, y: y});
+        }
+      }
+    }
+  }
+  else if (positions.bottomRight.isValidStart)
+  {
+    // Starting from the bottom right of the square to calibrate
+    for (let y = positions.bottomRight.y; y >= positions.topLeft.y; y--)
+    {
+      for (let x = positions.bottomRight.x; x >= positions.topLeft.x; x--)
+      {
+        if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
+        {
+          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          inputFillTileQueue.push({x: x, y: y});
+        }
+      }
+    }
+  }
+  else if (positions.bottomLeft.isValidStart)
+  {
+    // Starting from the bottom left of the square to calibrate
+    for (let y = positions.bottomLeft.y; y >= positions.topRight.y; y--)
+    {
+      for (let x = positions.bottomLeft.x; x <= positions.topRight.x; x++)
+      {
+        if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
+        {
+          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          inputFillTileQueue.push({x: x, y: y});
+        }
+      }
+    }
+  }
+  else
+  {
+    console.warn('calibrateTileHashes(....), No valid start');
+    console.info('positions:');
+    console.table(positions);
+    return;
   }
   
   for (let i = 4; i >= minimumStrictness; i--)
@@ -1471,6 +1576,7 @@ export function printDebug(mapTileEditorData)
   console.log('\n\n');
   console.log('%c*****START DEBUG PRINT*****', 'background: black; color: white;');
   
+  console.info('layeredTileHashesDisplay:');
   console.table(layeredTileHashesDisplay);
   
   console.info('mapWidth: ' + mapTileEditorData.mapWidth + '\n');

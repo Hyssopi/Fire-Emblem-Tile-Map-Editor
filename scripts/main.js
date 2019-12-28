@@ -108,7 +108,7 @@ export const BackgroundColor =
 
 /* TODO:
 
-8) Weakness if calibrate top left
+8) Fix calibrateTileHashes(...), don't delete if can't refill (all invalid)
 
 6) Fix map extractor last ',' in Unity
 
