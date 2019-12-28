@@ -3,7 +3,7 @@ import * as mapTileEditorEventHandler from '../scripts/mapTileEditorEventHandler
 import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
 
 
-const SHOW_PRINT_LOG_BUTTON = false;
+const SHOW_PRINT_LOG_BUTTON = true;
 
 export const TILE_WIDTH = 16;
 export const TILE_HEIGHT = 16;
@@ -19,10 +19,10 @@ export const EMPTY_TILE_HASH = '73ad52b71d47ee4d45315c6f0da022ac';
 
 export const Direction =
 {
-  "NORTH": "north",
-  "EAST": "east",
-  "SOUTH": "south",
-  "WEST": "west"
+  'NORTH': 'north',
+  'EAST': 'east',
+  'SOUTH': 'south',
+  'WEST': 'west'
 };
 
 export const Ids =
@@ -108,16 +108,7 @@ export const BackgroundColor =
 
 /* TODO:
 
-2) Clean up code
-* Do not pass mapTileEditorData, pass individual parameters
-* Reorder functions
-* Fix utilities
-
-3) Fix Print Debug
-
-4) Add documentation
-
-5) Fix Help
+8) Weakness if calibrate top left
 
 6) Fix map extractor last ',' in Unity
 
@@ -135,13 +126,11 @@ Webpage:
   images: 13,148 files
 
 
-**Add shortcuts for up/down calibrate
 
 
 known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
 known issue: sometimes with generate animation enabled, calibrate skips filling as it goes
 
-rename exportAsTileHashesButton
 
 
 91) Higher chance for getFileTile if same TYPE

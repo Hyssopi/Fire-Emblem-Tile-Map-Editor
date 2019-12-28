@@ -862,7 +862,7 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
     {
       if (fillTileQueue.length <= 0)
       {
-        console.log('fillMapSupplement(...), Stopping interval');
+        console.log('fillMapSupplement(...), strictness = ' + strictness + ', Stopping interval');
         clearInterval(interval);
         return;
       }
@@ -876,7 +876,7 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
     {
       if (fillTileQueue.length <= 0)
       {
-        console.log('fillMapSupplement(...), Stopping loop');
+        console.log('fillMapSupplement(...), strictness = ' + strictness + ', Stopping loop');
         break;
       }
       
@@ -1456,28 +1456,11 @@ export function redrawSearchPane(mapTileEditorData)
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Print debug information to console.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function printDebug(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1486,23 +1469,12 @@ export function printDebug(mapTileEditorData)
   let userActionHistory = mapTileEditorData.userActionHistory;
   
   console.log('\n\n');
-  console.info("*****DEBUG PRINT START*****");
+  console.log('%c*****START DEBUG PRINT*****', 'background: black; color: white;');
   
-  console.info('tileLookup:');
-  console.log(tileLookup);
-  console.log('\n');
+  console.table(layeredTileHashesDisplay);
   
-  console.info('mapWidth:');
-  console.log(mapTileEditorData.mapWidth);
-  console.log('\n');
-  
-  console.info('mapHeight:');
-  console.log(mapTileEditorData.mapHeight);
-  console.log('\n');
-  
-  console.info('layeredTileHashesDisplay:');
-  console.log(layeredTileHashesDisplay);
-  console.log('\n');
+  console.info('mapWidth: ' + mapTileEditorData.mapWidth + '\n');
+  console.info('mapHeight: ' + mapTileEditorData.mapHeight + '\n');
   
   console.info('cursor:');
   console.log(cursor);
@@ -1512,13 +1484,12 @@ export function printDebug(mapTileEditorData)
   console.log(layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]);
   console.log('\n');
   
-  console.info('getTileNeighborSum:');
-  console.log(getTileNeighborSum(tileLookup, layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]));
-  console.log('\n');
+  console.info('getTileNeighborSum(...): ' + getTileNeighborSum(tileLookup, layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX]) + '\n');
   
   console.info('userActionHistory:');
   console.log(userActionHistory);
   console.log('\n');
   
-  console.log("*****DEBUG PRINT END*****");
+  console.log('%c*****END DEBUG PRINT*****', 'background: black; color: white;');
+  console.log('\n\n');
 }
