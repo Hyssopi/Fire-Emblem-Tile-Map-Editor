@@ -705,13 +705,13 @@ export function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).addEventListener('change',
     function()
     {
-      mapTileEditorUtilities.resizeMap(mapTileEditorData);
+      mapTileEditorUtilities.resizeMap(mapTileEditorData, true);
     });
   
   document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).addEventListener('change',
     function()
     {
-      mapTileEditorUtilities.resizeMap(mapTileEditorData);
+      mapTileEditorUtilities.resizeMap(mapTileEditorData, true);
     });
   
   document.getElementById(Ids.toolbar.mapControlBlock.newButton).addEventListener('click',
@@ -758,7 +758,7 @@ export function setupUIEventListeners(mapTileEditorData)
       let tileLookup = mapTileEditorData.tileLookup;
       let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
       
-      mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay);
+      mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map);
     });
   
   document.getElementById(Ids.toolbar.editBlock.undoButton).addEventListener('click',
