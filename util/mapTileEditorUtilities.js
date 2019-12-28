@@ -554,7 +554,7 @@ export function getFillTileHashes(possibleTileHashLists, strictness)
   
   if (possibleTileHashLists.length != 4)
   {
-    console.warn('getFillTileHashes, possibleTileHashLists is not length 4, something must be wrong');
+    console.warn('getFillTileHashes(...), possibleTileHashLists is not length 4, something must be wrong');
   }
   
   // Count up the number of invalid neighbor lists
@@ -593,7 +593,7 @@ export function getFillTileHashesSplit(possibleTileHashLists)
   
   if (possibleTileHashLists.length != 4)
   {
-    console.warn('getFillTileHashesSplit, possibleTileHashLists is not length 4, something must be wrong');
+    console.warn('getFillTileHashesSplit(...), possibleTileHashLists is not length 4, something must be wrong');
   }
   
   let fillTileHashesSplit = [];
@@ -611,30 +611,29 @@ export function getFillTileHashesSplit(possibleTileHashLists)
   return fillTileHashesSplit;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Calibrate the area of tiles by deleting and then refilling them. Calibration starts at the origin position with a radius of a given range in a square.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param originX Horizontal tile origin position, starting from the left (0)
+ * @param originY Vertical tile origin position, starting from the top (0)
+ * @param minimumStrictness Minimum strictness used in the calculations
+ * @param calibrateRange Range of the calibration, radius from the origin in a square
+ * @param isAnimate Whether to animate the generation or not
+ */
 export function calibrateTileHashes(mapTileEditorData, originX, originY, minimumStrictness, calibrateRange, isAnimate)
 {
-  let inputFillTileQueue = [];
+  let cursor = mapTileEditorData.cursor;
   
   if (!calibrateRange || calibrateRange < 0)
   {
-    console.warn('calibrateRange is not valid');
+    console.warn('calibrateTileHashes(...), calibrateRange is not valid');
     calibrateRange = 0;
   }
   
+  let inputFillTileQueue = [];
+  
+  // Starting from the top left of the square to calibrate
   for (let y = originY - calibrateRange; y <= originY + calibrateRange; y++)
   {
     for (let x = originX - calibrateRange; x <= originX + calibrateRange; x++)
@@ -652,11 +651,25 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
     fillMapSupplement(mapTileEditorData, i, isAnimate, inputFillTileQueue);
   }
   
-  mapTileEditorData.cursor.tileX = originX;
-  mapTileEditorData.cursor.tileY = originY;
+  cursor.tileX = originX;
+  cursor.tileY = originY;
   
   redrawAll(mapTileEditorData);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
