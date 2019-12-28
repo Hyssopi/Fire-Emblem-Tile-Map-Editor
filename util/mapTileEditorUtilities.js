@@ -730,7 +730,7 @@ export function fillMap(mapTileEditorData, x, y, minimumStrictness, isAnimate)
           fillMapSupplement(mapTileEditorData, i, isAnimate);
         }
         console.log('Stopping loop');
-        clearHoverTile(layeredTileHashesDisplay);
+        clearHoverTiles(layeredTileHashesDisplay);
         redrawNeighborPanes(mapTileEditorData);
         redrawAll(mapTileEditorData);
         break;
@@ -770,7 +770,7 @@ function fillMapProcessNextFillTileQueue(mapTileEditorData, fillTileQueue, isAni
   
   if (isAnimate)
   {
-    clearHoverTile(layeredTileHashesDisplay);
+    clearHoverTiles(layeredTileHashesDisplay);
     redrawAll(mapTileEditorData);
   }
   
@@ -854,7 +854,7 @@ export function fillMapSupplement(mapTileEditorData, strictness, isAnimate, inpu
       if (fillTileQueue.length <= 0)
       {
         console.log('Stopping loop');
-        clearHoverTile(layeredTileHashesDisplay);
+        clearHoverTiles(layeredTileHashesDisplay);
         redrawNeighborPanes(mapTileEditorData);
         redrawAll(mapTileEditorData);
         break;
@@ -893,7 +893,7 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
   
   if (isAnimate)
   {
-    clearHoverTile(layeredTileHashesDisplay);
+    clearHoverTiles(layeredTileHashesDisplay);
     redrawAll(mapTileEditorData);
   }
   
@@ -926,6 +926,16 @@ function fillMapSupplementProcessNextFillTileQueue(mapTileEditorData, fillTileQu
 
 
 
+/**
+ * Set given tile hash to the input coordinate in the map 2D array.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param x Horizontal tile position, starting from the left (0)
+ * @param y Vertical tile position, starting from the top (0)
+ * @param tileHash Tile hash, used as key for the tileLookup to obtain the tile's data
+ * @param direction Direction from the input coordinate
+ * @param isLog Whether to log the action to the userActionHistory
+ */
 export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isLog = true)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -960,7 +970,7 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   {
     if (isLog)
     {
-      logUserActionTile(userActionHistory, layeredTileHashesDisplay, modifiedX, modifiedY, tileHash);
+      logUserActionTile(userActionHistory, layeredTileHashesDisplay.map, modifiedX, modifiedY, tileHash);
     }
     layeredTileHashesDisplay.map[modifiedY][modifiedX] = tileHash;
   }
@@ -970,13 +980,23 @@ export function setTile(mapTileEditorData, x, y, tileHash, direction = null, isL
   }
 }
 
+/**
+ * Set given tile hash to the input coordinate in the hover 2D array.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param x Horizontal tile position, starting from the left (0)
+ * @param y Vertical tile position, starting from the top (0)
+ * @param tileHash Tile hash, used as key for the tileLookup to obtain the tile's data
+ * @param direction Direction from the input coordinate
+ */
 export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null)
 {
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
   let cursor = mapTileEditorData.cursor;
   
-  x = x ? x : cursor.tileX;
-  y = y ? y : cursor.tileY;
+  // Use cursor's position if x or y are null
+  x = (x != null) ? x : cursor.tileX;
+  y = (y != null) ? y : cursor.tileY;
   
   let modifiedX = x;
   let modifiedY = y;
@@ -1008,7 +1028,12 @@ export function setHoverTile(mapTileEditorData, x, y, tileHash, direction = null
   }
 }
 
-export function clearHoverTile(layeredTileHashesDisplay)
+/**
+ * Clear the hover 2D array.
+ * 
+ * @param layeredTileHashesDisplay Contains the 2D array for map (mapTileHashesDisplay) and 2D array for hover
+ */
+export function clearHoverTiles(layeredTileHashesDisplay)
 {
   for (let y = 0; y < layeredTileHashesDisplay.hover.length; y++)
   {
@@ -1019,11 +1044,13 @@ export function clearHoverTile(layeredTileHashesDisplay)
   }
 }
 
-
-
-
-
-
+/**
+ * Log resize action to the userActionHistory.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param newMapWidth New tile width of the map
+ * @param newMapHeight New tile height of the map
+ */
 export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight)
 {
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -1053,9 +1080,18 @@ export function logUserActionResize(mapTileEditorData, newMapWidth, newMapHeight
   updateUndoRedoButtonStates(userActionHistory);
 }
 
-export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x, y, tileHash)
+/**
+ * Log map tile change action to the userActionHistory.
+ * 
+ * @param userActionHistory List of history of the user actions
+ * @param mapTileHashesDisplay 2D array containing tile hashes representing the tiles on the map
+ * @param x Horizontal tile position, starting from the left (0)
+ * @param y Vertical tile position, starting from the top (0)
+ * @param tileHash Tile hash, used as key for the tileLookup to obtain the tile's data
+ */
+export function logUserActionTile(userActionHistory, mapTileHashesDisplay, x, y, tileHash)
 {
-  if (layeredTileHashesDisplay.map[y][x] === tileHash)
+  if (mapTileHashesDisplay[y][x] === tileHash)
   {
     console.warn('Will not log user action tile, same old/new tile hash: ' + tileHash);
     return;
@@ -1067,7 +1103,7 @@ export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x
   {
     x: x,
     y: y,
-    oldTileHash: layeredTileHashesDisplay.map[y][x],
+    oldTileHash: mapTileHashesDisplay[y][x],
     newTileHash: tileHash
   };
   
@@ -1080,6 +1116,11 @@ export function logUserActionTile(userActionHistory, layeredTileHashesDisplay, x
   updateUndoRedoButtonStates(userActionHistory);
 }
 
+/**
+ * Undo one action listed in the userActionHistory.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function undo(mapTileEditorData)
 {
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -1099,7 +1140,7 @@ export function undo(mapTileEditorData)
   }
   else if (userAction.oldMapWidth && userAction.oldMapHeight)
   {
-    // TODO: Check if newMapWidth/newMapHeight
+    // TODO: Check if newMapWidth/newMapHeight matches correctly
     document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber = userAction.oldMapWidth;
     document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber = userAction.oldMapHeight;
     
@@ -1111,6 +1152,11 @@ export function undo(mapTileEditorData)
   updateUndoRedoButtonStates(userActionHistory);
 }
 
+/**
+ * Redo one action listed in the userActionHistory.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function redo(mapTileEditorData)
 {
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -1130,7 +1176,7 @@ export function redo(mapTileEditorData)
   }
   else if (userAction.newMapWidth && userAction.newMapHeight)
   {
-    // TODO: Check if oldMapWidth/oldMapHeight
+    // TODO: Check if oldMapWidth/oldMapHeight matches correctly
     document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).valueAsNumber = userAction.newMapWidth;
     document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).valueAsNumber = userAction.newMapHeight;
     
@@ -1142,16 +1188,22 @@ export function redo(mapTileEditorData)
   updateUndoRedoButtonStates(userActionHistory);
 }
 
+/**
+ * Update the undo and redo button states. Grey out the buttons if it cannot undo / redo anymore.
+ * 
+ * @param userActionHistory List of history of the user actions
+ */
 export function updateUndoRedoButtonStates(userActionHistory)
 {
   document.getElementById(Ids.toolbar.editBlock.undoButton).disabled = userActionHistory.counter < 0;
   document.getElementById(Ids.toolbar.editBlock.redoButton).disabled = userActionHistory.counter + 1 >= userActionHistory.logs.length;
 }
 
-
-
-
-
+/**
+ * Redraw all the GUI.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function redrawAll(mapTileEditorData)
 {
   let userActionHistory = mapTileEditorData.userActionHistory;
@@ -1159,10 +1211,15 @@ export function redrawAll(mapTileEditorData)
   redrawMap(mapTileEditorData);
   redrawNeighborPanes(mapTileEditorData);
   redrawIntersectionPanes(mapTileEditorData);
-  updateInformationDisplayTile(mapTileEditorData);
+  updateCursorInformationDisplay(mapTileEditorData);
   updateUndoRedoButtonStates(userActionHistory);
 }
 
+/**
+ * Redraw the map.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function redrawMap(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1194,6 +1251,11 @@ export function redrawMap(mapTileEditorData)
   context.drawImage(cursor.image, cursor.tileX * TILE_WIDTH, cursor.tileY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
 }
 
+/**
+ * Redraw the neighbor panes.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function redrawNeighborPanes(mapTileEditorData)
 {
   redrawNeighborPane(mapTileEditorData, Direction.NORTH);
@@ -1202,6 +1264,12 @@ export function redrawNeighborPanes(mapTileEditorData)
   redrawNeighborPane(mapTileEditorData, Direction.WEST);
 }
 
+/**
+ * Redraw the neighbor pane for a direction.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param direction Direction of pane
+ */
 export function redrawNeighborPane(mapTileEditorData, direction)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1233,7 +1301,7 @@ export function redrawNeighborPane(mapTileEditorData, direction)
     neighborTileImage.addEventListener('mouseout',
       function()
       {
-        clearHoverTile(layeredTileHashesDisplay);
+        clearHoverTiles(layeredTileHashesDisplay);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -1244,6 +1312,11 @@ export function redrawNeighborPane(mapTileEditorData, direction)
   document.getElementById(Ids.sidebar.neighborPane[direction]).parentElement.style.backgroundColor = cursorDirectionNeighborList && cursorDirectionNeighborList.length > 0 ? BackgroundColor.valid : BackgroundColor.invalid;
 }
 
+/**
+ * Redraw the intersection panes.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function redrawIntersectionPanes(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1267,6 +1340,13 @@ export function redrawIntersectionPanes(mapTileEditorData)
   redrawIntersectionPane(mapTileEditorData, fillTileHashesSplit[1], 1);
 }
 
+/**
+ * Redraw the intersection pane for a strictness.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ * @param fillTileHashes A list of tile hashes
+ * @param strictness Strictness used in the calculations
+ */
 export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strictness)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1296,7 +1376,7 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
     intersectedTileImage.addEventListener('mouseout',
       function()
       {
-        clearHoverTile(layeredTileHashesDisplay);
+        clearHoverTiles(layeredTileHashesDisplay);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -1307,7 +1387,12 @@ export function redrawIntersectionPane(mapTileEditorData, fillTileHashes, strict
   document.getElementById(Ids.sidebar.intersectionPane[strictness]).parentElement.style.backgroundColor = fillTileHashes && fillTileHashes.length <= 0 ? BackgroundColor.invalid : BackgroundColor.valid;
 }
 
-export function updateInformationDisplayTile(mapTileEditorData)
+/**
+ * Update the cursor information display.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
+export function updateCursorInformationDisplay(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
   let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
@@ -1315,12 +1400,17 @@ export function updateInformationDisplayTile(mapTileEditorData)
   
   let tileHash = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX];
   
-  document.getElementById(Ids.toolbar.cursorBlock.tileType).textContent = tileLookup[tileHash].group;
   document.getElementById(Ids.toolbar.cursorBlock.cursorPositionX).textContent = cursor.tileX + 1;
   document.getElementById(Ids.toolbar.cursorBlock.cursorPositionY).textContent = cursor.tileY + 1;
+  document.getElementById(Ids.toolbar.cursorBlock.tileType).textContent = tileLookup[tileHash].group;
   document.getElementById(Ids.toolbar.cursorBlock.tileDescription).textContent = tileLookup[tileHash].description;
 }
 
+/**
+ * Redraw the search pane.
+ * 
+ * @param mapTileEditorData Contains the data used by the editor
+ */
 export function redrawSearchPane(mapTileEditorData)
 {
   let tileLookup = mapTileEditorData.tileLookup;
@@ -1353,7 +1443,7 @@ export function redrawSearchPane(mapTileEditorData)
       tileImage.addEventListener('mouseout',
       function()
       {
-        clearHoverTile(layeredTileHashesDisplay);
+        clearHoverTiles(layeredTileHashesDisplay);
         
         redrawMap(mapTileEditorData);
       }, false);
@@ -1362,6 +1452,14 @@ export function redrawSearchPane(mapTileEditorData)
     searchTileResultsUnorderedList.appendChild(listItem);
   }
 }
+
+
+
+
+
+
+
+
 
 
 

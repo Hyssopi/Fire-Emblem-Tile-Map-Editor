@@ -597,7 +597,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       isPreviouslyMoved.right = false;
     }
     
-    mapTileEditorUtilities.clearHoverTile(layeredTileHashesDisplay);
+    mapTileEditorUtilities.clearHoverTiles(layeredTileHashesDisplay);
     mapTileEditorUtilities.redrawAll(mapTileEditorData);
   }
   
