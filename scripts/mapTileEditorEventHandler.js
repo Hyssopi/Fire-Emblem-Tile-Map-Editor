@@ -546,7 +546,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       return;
     }
     
-    eventKeyMap[event.key] = event.type == 'keydown';
+    eventKeyMap[event.key] = event.type === 'keydown';
     console.log(eventKeyMap);
     
     if (event.ctrlKey)

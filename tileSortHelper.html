@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html>
+  <link href="styles/fontawesome-free-5.11.2-web/css/all.css" rel="stylesheet">
+  <link href="styles/styles.css" rel="stylesheet"/>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>Tile Sort Helper</title>
+  </head>
+  
+  <body>
+    <div class="flexBoxColumn">
+      <div class="flexBoxRow">
+        <div class="containerRow" style="height: 2300px; border: black 1px solid;">
+          <ul id="leftDisplayId"></ul>
+        </div>
+        <div class="containerRow" style="height: 2300px; border: black 1px solid;">
+          <ul id="rightDisplayId"></ul>
+        </div>
+      </div>
+      <div class="flexBoxColumn" style="text-align: start;">
+        <div>Move indexes from RIGHT to LEFT</div>
+        <div class="flexBoxRow">
+          <div>
+            Start Index: <input id="startIndexTextboxId" type="number" min="0" max="9999" value="0" placeholder="S" style="width: 4em; text-align: center; font-size: 20px;">
+          </div>
+          <div>
+            , End Index: <input id="endIndexTextboxId" type="number" min="0" max="9999" value="0" placeholder="E" style="width: 4em; text-align: center; font-size: 20px;">
+          </div>
+          <div>
+            <button id="moveButtonId" class="font-awesome-icons" title="Move" style="width: 30px; height: 30px;">
+              <i class="fa fa-angle-double-left" style="font-size: 20px;"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          TILE_TYPE: <input id="tileTypeTextboxId" type="text" style="width: 7em; text-align: center; font-size: 20px;">
+        </div>
+        <div>
+          <textarea id="moveScriptOutputId" style="width: 100%;">
+          </textarea>
+        </div>
+      </div>
+    </div>
+  </body>
+  
+  <script>
+    let leftTileHashes = [];
+    let rightTileHashes = [
+      "008a1e3babfccd59f6036cf189a13132",
+      "0312a4f47c42bc3c234efccb289230ac",
+      "07312d0d645db1e34599ecbc5e3f8840",
+      "0ddbc83a4a38d46093b8e47f67f2ba03",
+      "1276249f625185f42b06caadc24e250d",
+      "1d729dd96a37540ff1219ec70e2c2312",
+      "23ae994764c51842f089a321f1f27b30",
+      "2642f49c374adc95ab9204fa5fac1183",
+      "2af4cac8b4cc1f0fa5bb683590baabc9",
+      "2f64efece3060d11e328b02895bf8e91",
+      "389cd795a79f5f1a25ffd70739bef1b9",
+      "3e77071fbe1a3e4bd06be1e25f6f0dd2",
+      "40c6f187cfb02ad426ecd383cf2dbdf7",
+      "46d6dd6cbe53d35ed67a767d0ad1e770",
+      "4ac2896b80ea259e8a97be4396656e14",
+      "4c8cdb13ae30303f6ec30beba906b360",
+      "507d12056b2593a6d07e1901033844b5",
+      "572809b91cef062bdb69d49642e5fbeb",
+      "58d3fb4a34000e1b9b9e02f8e21a6e6e",
+      "5dde9e70fedbf67faae2de2e1c2b5db2",
+      "5fa35c9479c13b4c6a62d0984d470e27",
+      "612891bc7212fbcdfb8001e0c1bc2c42",
+      "6358db3220b1afb99b6dd798a8f73da2",
+      "6a55e5a16606507c1bd586d564b5c2b6",
+      "6a755fe6f69debf2a51f6e6001a56083",
+      "719e19d9224597aad1fbc928f48b8f1a",
+      "760a56e76a3403e82a47ffea4e0529d5",
+      "7cdd95e95253ee0086f087a7535aa449",
+      "7ed1f1ff506d04b7d2589060563dfb54",
+      "836cada5d8886be2065eb6119df0d430",
+      "8537bd2d773b34901dd9ff5858a88b9f",
+      "871089a22294a8b2ace90a0897a6f29c",
+      "8a1ba4ca1b0896075850b5380d21818c",
+      "8bc288f450ac362572d6ea1190499475",
+      "8ea9082494d13d7c457a492ec48fba0a",
+      "9434110c60543425a42a1c18f5a1c971",
+      "967483675c6d45b5c524361f723b641b",
+      "984cd95ff5a90617d9f64ba54dd60c30",
+      "987dd296642353f957ee977169e6b3d8",
+      "9aa1001f3e8b7bf80f7763bab2700e2a",
+      "9b1adef5ce9fae2071dd5650d2bdb213",
+      "9d9fc26e609306ed8f658be08bcbafe8",
+      "a30f72f2890ebdf8c81b5f1b7a7cada9",
+      "a7f209bbc535a756f3c3969c3390a164",
+      "ad65a59734d3414ad97848471c8393f5",
+      "af5cdb96cd5d519711a2f04bea66bf93",
+      "b2125878918ef462f21e96cdfbf622cb",
+      "b3fcfa6a095b7407a121c0f20ab3d9d5",
+      "b7cb80ae26fb293b0e8da1b36bfd70ca",
+      "be8f786589cea134ecc8731b3f209139",
+      "c1663d6fb4ac5682599c8738eb5b172e",
+      "c940a18d65fd7eaf8eaf2bf5a3f92de4",
+      "cd761acb645efc822ebcebfbc3a2e214",
+      "d11d00df7f231e1e70f5a50e75dcfd14",
+      "d1a36023f2a80657a577b57cdf555f1e",
+      "d25013217b48958918b78ae1bddc7d16",
+      "d46db06e54f13540b21ee2c59e6f8a1c",
+      "e0aaddf1dd74205893b1e11f7560add4",
+      "f830a1a43b43e92b6c0323e7388d5936",
+      "fc63b96e468dbe6721b5b41ed82757bb",
+      "feee25a05e8bf9cbc4a664e33581ad68"
+    ];
+    
+    leftTileHashes.sort();
+    rightTileHashes.sort();
+    
+    const Ids =
+    {
+      leftDisplay: 'leftDisplayId',
+      rightDisplay: 'rightDisplayId',
+      startIndexTextbox: 'startIndexTextboxId',
+      endIndexTextbox: 'endIndexTextboxId',
+      moveButton: 'moveButtonId',
+      tileTypeTextbox: 'tileTypeTextboxId',
+      moveScriptOutput: 'moveScriptOutputId'
+    };
+    
+    const BASE_IMAGE_DIRECTORY_PATH = 'C:\\Users\\t\\Desktop\\temp9\\tiles\\images';
+    
+    const TILE_WIDTH = 16;
+    const TILE_HEIGHT = 16;
+    
+    const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
+    const IMAGES_OUTPUT_FOLDER_NAME = 'images';
+    const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
+    
+    // Reading tile reference JSON file
+    let tileReferencesJsonFilePath = BASE_OUTPUT_DIRECTORY_PATH + '/' + TILE_REFERENCES_JSON_FILE_NAME;
+    console.info('Reading: \'' + tileReferencesJsonFilePath + '\'');
+    fetch(tileReferencesJsonFilePath)
+      .then(response =>
+      {
+        if (response.ok)
+        {
+          return response.json();
+        }
+        else
+        {
+          console.error('Configuration was not ok.');
+        }
+      })
+      .then(tileReferencesJson =>
+      {
+        console.info('Successfully read tile references:');
+        //console.log(tileReferencesJson);
+        
+        // Setting up the tileLookup from reading the data from the tile reference JSON file
+        let tileLookup = {};
+        for (let i = 0; i < tileReferencesJson.length; i++)
+        {
+          if (!tileLookup[tileReferencesJson[i].tileHash])
+          {
+            tileLookup[tileReferencesJson[i].tileHash] = {};
+          }
+          tileLookup[tileReferencesJson[i].tileHash].group = tileReferencesJson[i].group;
+          tileLookup[tileReferencesJson[i].tileHash].description = tileReferencesJson[i].tileHash;
+          
+          let tileImage = new Image();
+          tileImage.src = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + tileReferencesJson[i].group + '/' + tileReferencesJson[i].tileHash + '.png';
+          tileLookup[tileReferencesJson[i].tileHash].image = tileImage;
+        }
+        
+        updateAll(tileLookup);
+        
+        // Setup listeners
+        document.getElementById(Ids.moveButton).addEventListener('click',
+          function()
+          {
+            let startIndex = document.getElementById(Ids.startIndexTextbox).valueAsNumber;
+            let endIndex = document.getElementById(Ids.endIndexTextbox).valueAsNumber;
+            
+            if (startIndex === null || endIndex === null)
+            {
+              console.warn('startIndexTextbox or endIndexTextbox is empty');
+              return;
+            }
+            
+            if (startIndex >= rightTileHashes.length || endIndex >= rightTileHashes.length)
+            {
+              console.warn('startIndex or endIndex greater than rightTileHashes.length');
+              return;
+            }
+            
+            for (let i = endIndex; i >= startIndex; i--)
+            {
+              moveToOther(Ids.rightDisplay, i);
+            }
+            updateAll(tileLookup);
+          });
+        
+        document.getElementById(Ids.tileTypeTextbox).addEventListener('change',
+          function()
+          {
+            updateAll(tileLookup);
+          });
+      })
+      .catch (function(error)
+      {
+        console.error('Error in fetching: ' + error);
+      })
+    
+    /**
+     * Prevent non-numerical event response.
+     * 
+     * @param event event
+     */
+    function preventNonNumericalResponse(event)
+    {
+      // Between 0 and 9
+      if (event.which < 48 || event.which > 57)
+      {
+        event.preventDefault();
+      }
+    }
+    document.getElementById(Ids.startIndexTextbox).addEventListener('keypress', preventNonNumericalResponse, false);
+    document.getElementById(Ids.endIndexTextbox).addEventListener('keypress', preventNonNumericalResponse, false);
+    
+    /**
+     * Moves the tile hash based on the index from one side to the other.
+     * 
+     * @param originDisplayId Origin display ID
+     * @param index Index of tile hash to move
+     */
+    function moveToOther(originDisplayId, index)
+    {
+      if (originDisplayId === Ids.leftDisplay)
+      {
+        let tileHash = leftTileHashes.splice(index, 1);
+        rightTileHashes.push(tileHash);
+        rightTileHashes.sort();
+      }
+      else if (originDisplayId === Ids.rightDisplay)
+      {
+        let tileHash = rightTileHashes.splice(index, 1);
+        leftTileHashes.push(tileHash);
+        leftTileHashes.sort();
+      }
+    }
+    
+    /**
+     * Update / redraw GUI.
+     * 
+     * @param tileLookup Contains the data for all tiles, tile hash is the key
+     */
+    function updateAll(tileLookup)
+    {
+      redrawDisplay(tileLookup, Ids.leftDisplay, leftTileHashes);
+      redrawDisplay(tileLookup, Ids.rightDisplay, rightTileHashes);
+      
+      updateMoveScriptOutput();
+    }
+    
+    /**
+     * Redraw the tile display.
+     * 
+     * @param tileLookup Contains the data for all tiles, tile hash is the key
+     * @param displayId Display ID, either left or right
+     * @param tileHashes List of tile hashes to display
+     */
+    function redrawDisplay(tileLookup, displayId, tileHashes)
+    {
+      let unorderedList = document.getElementById(displayId);
+      unorderedList.innerHTML = '';
+      
+      for (let i = 0; i < tileHashes.length; i++)
+      {
+        let tileHash = tileHashes[i];
+        
+        let listItem = document.createElement('li');
+        listItem.title = i;
+        
+        let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
+        tileImage.src = tileLookup[tileHash].image.src;
+        tileImage.addEventListener('click',
+          function()
+          {
+            moveToOther(displayId, i);
+            
+            updateAll(tileLookup);
+          }, false);
+        listItem.appendChild(tileImage);
+        
+        unorderedList.appendChild(listItem);
+      }
+    }
+    
+    /**
+     * Update move script output text area. Commands to copy and paste as a batch script to mass move tile images from UNDEFINED to the specified TILE TYPE.
+     */
+    function updateMoveScriptOutput()
+    {
+      let tileType = document.getElementById(Ids.tileTypeTextbox).value;
+      
+      let moveScriptOutput = '';
+      moveScriptOutput += 'cd ' + BASE_IMAGE_DIRECTORY_PATH + '\n';
+      for (let tileHash of leftTileHashes)
+      {
+        let moveScriptCommand =
+          'move'
+          + ' ' + 'UNDEFINED\\' + tileHash + '.png'
+          + ' ' + tileType;
+        moveScriptOutput += moveScriptCommand + '\n';
+      }
+      document.getElementById(Ids.moveScriptOutput).value = moveScriptOutput;
+    }
+  </script>
+</html>
