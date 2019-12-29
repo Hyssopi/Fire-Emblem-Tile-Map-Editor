@@ -661,16 +661,23 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
     }
   };
   
-  // Clear the tiles first to prevent it from affecting isValidStart checks
+  // Save a copy of the pre-calibration tiles to restore later
+  // Clear the tiles to prevent it from affecting isValidStart checks
+  let preCalibrationTileHashes = [];
   for (let y = positions.topLeft.y; y <= positions.bottomRight.y; y++)
   {
+    let preCalibrationTileHashesRow = [];
     for (let x = positions.topLeft.x; x <= positions.bottomRight.x; x++)
     {
       if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
       {
-        setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+        let tileHash = getTileHash(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, x, y);
+        preCalibrationTileHashesRow.push(tileHash);
+        
+        setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH, null, false);
       }
     }
+    preCalibrationTileHashes.push(preCalibrationTileHashesRow);
   }
   
   positions.topLeft.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.topLeft.x, positions.topLeft.y, minimumStrictness) != EMPTY_TILE_HASH;
@@ -680,6 +687,15 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
   positions.bottomLeft.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.bottomLeft.x, positions.bottomLeft.y, minimumStrictness) != EMPTY_TILE_HASH;
   
   positions.bottomRight.isValidStart = getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, positions.bottomRight.x, positions.bottomRight.y, minimumStrictness) != EMPTY_TILE_HASH;
+  
+  // Restore pre-calibration tiles
+  for (let y = 0; y < preCalibrationTileHashes.length; y++)
+  {
+    for (let x = 0; x < preCalibrationTileHashes[y].length; x++)
+    {
+      setTile(mapTileEditorData, positions.topLeft.x + x, positions.topLeft.y + y, preCalibrationTileHashes[y][x], null, false);
+    }
+  }
   
   let inputFillTileQueue = [];
   
@@ -692,7 +708,7 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
       {
         if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
         {
-          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
           inputFillTileQueue.push({x: x, y: y});
         }
       }
@@ -707,7 +723,7 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
       {
         if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
         {
-          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
           inputFillTileQueue.push({x: x, y: y});
         }
       }
@@ -722,7 +738,7 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
       {
         if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
         {
-          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
           inputFillTileQueue.push({x: x, y: y});
         }
       }
@@ -737,7 +753,7 @@ export function calibrateTileHashes(mapTileEditorData, originX, originY, minimum
       {
         if (isValidTileCoordinate(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, x, y))
         {
-          //setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
+          setTile(mapTileEditorData, x, y, EMPTY_TILE_HASH);
           inputFillTileQueue.push({x: x, y: y});
         }
       }
