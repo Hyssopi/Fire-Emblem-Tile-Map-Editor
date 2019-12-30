@@ -8,7 +8,7 @@ import {SCALE_FACTOR, HELP_FILE_PATH, EMPTY_TILE_HASH, Ids} from './main.js';
 /**
  * Setup mouse event listeners.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 export function setupMouseEventListeners(tileMapEditorData)
 {
@@ -89,8 +89,8 @@ export function setupMouseEventListeners(tileMapEditorData)
 /**
  * Move up cursor response.
  * 
- * @param tileMapEditorData tileMapEditorData
- * @param isCtrlKeyDown isCtrlKeyDown
+ * @param tileMapEditorData Contains the data used by the editor
+ * @param isCtrlKeyDown Is the Ctrl Key down
  */
 function cursorMoveUpResponse(tileMapEditorData, isCtrlKeyDown)
 {
@@ -146,8 +146,8 @@ function cursorMoveUpResponse(tileMapEditorData, isCtrlKeyDown)
 /**
  * Move down cursor response.
  * 
- * @param tileMapEditorData tileMapEditorData
- * @param isCtrlKeyDown isCtrlKeyDown
+ * @param tileMapEditorData Contains the data used by the editor
+ * @param isCtrlKeyDown Is the Ctrl Key down
  */
 function cursorMoveDownResponse(tileMapEditorData, isCtrlKeyDown)
 {
@@ -203,8 +203,8 @@ function cursorMoveDownResponse(tileMapEditorData, isCtrlKeyDown)
 /**
  * Move left cursor response.
  * 
- * @param tileMapEditorData tileMapEditorData
- * @param isCtrlKeyDown isCtrlKeyDown
+ * @param tileMapEditorData Contains the data used by the editor
+ * @param isCtrlKeyDown Is the Ctrl Key down
  */
 function cursorMoveLeftResponse(tileMapEditorData, isCtrlKeyDown)
 {
@@ -260,8 +260,8 @@ function cursorMoveLeftResponse(tileMapEditorData, isCtrlKeyDown)
 /**
  * Move right cursor response.
  * 
- * @param tileMapEditorData tileMapEditorData
- * @param isCtrlKeyDown isCtrlKeyDown
+ * @param tileMapEditorData Contains the data used by the editor
+ * @param isCtrlKeyDown Is the Ctrl Key down
  */
 function cursorMoveRightResponse(tileMapEditorData, isCtrlKeyDown)
 {
@@ -317,7 +317,7 @@ function cursorMoveRightResponse(tileMapEditorData, isCtrlKeyDown)
 /**
  * Undo response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function undoResponse(tileMapEditorData)
 {
@@ -329,7 +329,7 @@ function undoResponse(tileMapEditorData)
 /**
  * Redo response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function redoResponse(tileMapEditorData)
 {
@@ -341,7 +341,7 @@ function redoResponse(tileMapEditorData)
 /**
  * Delete tile response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function deleteTileResponse(tileMapEditorData)
 {
@@ -355,7 +355,7 @@ function deleteTileResponse(tileMapEditorData)
 /**
  * Random tile response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function randomTileResponse(tileMapEditorData)
 {
@@ -371,7 +371,7 @@ function randomTileResponse(tileMapEditorData)
 /**
  * Fill tile response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function fillTileResponse(tileMapEditorData)
 {
@@ -390,7 +390,7 @@ function fillTileResponse(tileMapEditorData)
 /**
  * Calibrate tile response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function calibrateTileResponse(tileMapEditorData)
 {
@@ -407,7 +407,7 @@ function calibrateTileResponse(tileMapEditorData)
 /**
  * Generate map response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function generateMapResponse(tileMapEditorData)
 {
@@ -423,7 +423,7 @@ function generateMapResponse(tileMapEditorData)
  * Auto generate map response.
  * Auto generate map based on recommended generation steps.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function autoGenerateMapResponse(tileMapEditorData)
 {
@@ -482,7 +482,7 @@ function autoGenerateMapResponse(tileMapEditorData)
 /**
  * Print debug response.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 function printDebugResponse(tileMapEditorData)
 {
@@ -500,7 +500,7 @@ function helpResponse()
 /**
  * Prevent non-numerical event response.
  * 
- * @param event event
+ * @param event Event
  */
 function preventNonNumericalResponse(event)
 {
@@ -514,7 +514,7 @@ function preventNonNumericalResponse(event)
 /**
  * Setup keyboard event listeners.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 export function setupKeyboardEventListeners(tileMapEditorData)
 {
@@ -698,7 +698,7 @@ export function setupKeyboardEventListeners(tileMapEditorData)
 /**
  * Setup UI event listeners.
  * 
- * @param tileMapEditorData tileMapEditorData
+ * @param tileMapEditorData Contains the data used by the editor
  */
 export function setupUIEventListeners(tileMapEditorData)
 {

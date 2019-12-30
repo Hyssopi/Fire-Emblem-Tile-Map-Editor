@@ -108,10 +108,6 @@ export const BackgroundColor =
 
 /* TODO:
 
-) Rename tileMapEditor as tileMapEditor?
-)Fix documentation for eventhandler file
-
-
 7) Move tile images to folders as TYPE
 Webpage:
   Get list of tile hashes in undefined, simple list delimited by new line
