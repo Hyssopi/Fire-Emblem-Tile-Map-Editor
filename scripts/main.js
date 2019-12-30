@@ -14,7 +14,7 @@ const IMAGES_OUTPUT_FOLDER_NAME = 'images';
 const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
 export const HELP_FILE_PATH = 'help/index.html';
 
-export const CURSOR_TILE_HASH = 'a8ebd11f8e75365d496d85d28cde54b7';
+export const CURSOR_TILE_HASH = '72a3301acaccb36ec48b9830a4cc5174';
 export const EMPTY_TILE_HASH = '73ad52b71d47ee4d45315c6f0da022ac';
 
 export const Direction =
@@ -64,7 +64,7 @@ export const Ids =
     },
     cursorBlock:
     {
-      tileType: 'tileTypeId',
+      tileGroup: 'tileGroupId',
       cursorPositionX: 'cursorPositionXId',
       cursorPositionY: 'cursorPositionYId',
       tileDescription: 'tileDescriptionId'
@@ -108,9 +108,9 @@ export const BackgroundColor =
 
 /* TODO:
 
-8) Fix calibrateTileHashes(...), don't delete if can't refill (all invalid)
+) Rename mapTileEditor as tileMapEditor?
+) Redo sample maps
 
-6) Fix map extractor last ',' in Unity
 
 7) Move tile images to folders as TYPE
 Webpage:
@@ -133,7 +133,7 @@ known issue: sometimes with generate animation enabled, calibrate skips filling 
 
 
 
-91) Higher chance for getFileTile if same TYPE
+91) Higher chance for getFileTile if same TYPE/GROUP
 92) Add zoom boundaries
 93) Multi-select
 

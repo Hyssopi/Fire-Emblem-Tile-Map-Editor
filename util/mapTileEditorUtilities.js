@@ -1526,7 +1526,7 @@ export function updateCursorInformationDisplay(mapTileEditorData)
   
   document.getElementById(Ids.toolbar.cursorBlock.cursorPositionX).textContent = cursor.tileX + 1;
   document.getElementById(Ids.toolbar.cursorBlock.cursorPositionY).textContent = cursor.tileY + 1;
-  document.getElementById(Ids.toolbar.cursorBlock.tileType).textContent = tileLookup[tileHash].group;
+  document.getElementById(Ids.toolbar.cursorBlock.tileGroup).textContent = tileLookup[tileHash].group;
   document.getElementById(Ids.toolbar.cursorBlock.tileDescription).textContent = tileLookup[tileHash].description;
 }
 
@@ -1546,7 +1546,7 @@ export function redrawSearchPane(mapTileEditorData)
   for (let tileHash in tileLookup)
   {
     let listItem = document.createElement('li');
-    listItem.title = 'HashID: ' + tileHash + '\nType: ' + tileLookup[tileHash].group;
+    listItem.title = 'HashID: ' + tileHash + '\nGroup: ' + tileLookup[tileHash].group;
     
     let tileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
     tileImage.src = tileLookup[tileHash].image.src;

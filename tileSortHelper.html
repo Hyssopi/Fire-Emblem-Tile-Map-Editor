@@ -35,7 +35,7 @@
           </div>
         </div>
         <div>
-          TILE_TYPE: <input id="tileTypeTextboxId" type="text" style="width: 7em; text-align: center; font-size: 20px;">
+          TILE_GROUP: <input id="tileGroupTextboxId" type="text" style="width: 7em; text-align: center; font-size: 20px;">
         </div>
         <div>
           <textarea id="moveScriptOutputId" style="width: 100%;">
@@ -121,7 +121,7 @@
       startIndexTextbox: 'startIndexTextboxId',
       endIndexTextbox: 'endIndexTextboxId',
       moveButton: 'moveButtonId',
-      tileTypeTextbox: 'tileTypeTextboxId',
+      tileGroupTextbox: 'tileGroupTextboxId',
       moveScriptOutput: 'moveScriptOutputId'
     };
     
@@ -198,7 +198,7 @@
             updateAll(tileLookup);
           });
         
-        document.getElementById(Ids.tileTypeTextbox).addEventListener('change',
+        document.getElementById(Ids.tileGroupTextbox).addEventListener('change',
           function()
           {
             updateAll(tileLookup);
@@ -295,11 +295,11 @@
     }
     
     /**
-     * Update move script output text area. Commands to copy and paste as a batch script to mass move tile images from UNDEFINED to the specified TILE TYPE.
+     * Update move script output text area. Commands to copy and paste as a batch script to mass move tile images from UNDEFINED to the specified TILE GROUP.
      */
     function updateMoveScriptOutput()
     {
-      let tileType = document.getElementById(Ids.tileTypeTextbox).value;
+      let tileGroup = document.getElementById(Ids.tileGroupTextbox).value;
       
       let moveScriptOutput = '';
       moveScriptOutput += 'cd ' + BASE_IMAGE_DIRECTORY_PATH + '\n';
@@ -308,7 +308,7 @@
         let moveScriptCommand =
           'move'
           + ' ' + 'UNDEFINED\\' + tileHash + '.png'
-          + ' ' + tileType;
+          + ' ' + tileGroup;
         moveScriptOutput += moveScriptCommand + '\n';
       }
       document.getElementById(Ids.moveScriptOutput).value = moveScriptOutput;

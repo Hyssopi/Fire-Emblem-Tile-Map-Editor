@@ -11,8 +11,7 @@
   
   <body>
     <div id="loadingScreenId" class="loadingScreen">
-      <img src="tiles/images/CURSOR/a8ebd11f8e75365d496d85d28cde54b7.png">
-      <div style="font-size: 60px; background-color: darkgrey;">NOW LOADING...</div>
+      <div style="font-size: 60px; background-color: darkgrey; margin-top: 1.5em;">NOW LOADING...</div>
     </div>
     <div class="flexBoxRow">
       <div class="flexBoxColumn">
@@ -135,10 +134,10 @@
               
               <tr>
                 <td nowrap style="padding: 0px 10px 0px 0px; text-align: right;">
-                  <b>Type<span>:</span></b>
+                  <b>Group<span>:</span></b>
                 </td>
                 <td nowrap style="padding: 0px; text-align: left;">
-                  <label id="tileTypeId">TILE_TYPE</label>
+                  <label id="tileGroupId">TILE_GROUP</label>
                 </td>
               </tr>
               
@@ -168,7 +167,7 @@
           </div>
           
           <div class="flexBoxColumn">
-            <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. type or hash">
+            <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. group or hash">
             <div class="containerRow" style="height: 77px;">
               <ul id="searchTileResultsId"></ul>
             </div>
