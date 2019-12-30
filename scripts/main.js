@@ -1,6 +1,6 @@
 
-import * as mapTileEditorEventHandler from '../scripts/mapTileEditorEventHandler.js';
-import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
+import * as tileMapEditorEventHandler from '../scripts/tileMapEditorEventHandler.js';
+import * as tileMapEditorUtilities from '../util/tileMapEditorUtilities.js';
 
 
 const SHOW_PRINT_LOG_BUTTON = true;
@@ -108,8 +108,8 @@ export const BackgroundColor =
 
 /* TODO:
 
-) Rename mapTileEditor as tileMapEditor?
-) Redo sample maps
+) Rename tileMapEditor as tileMapEditor?
+)Fix documentation for eventhandler file
 
 
 7) Move tile images to folders as TYPE
@@ -219,8 +219,8 @@ function setup(tileLookup)
     document.getElementById(Ids.toolbar.helpBlock.printLogButton).style.display = 'none';
   }
   
-  // Setup the mapTileEditorData, containing the information passed around in the editor
-  let mapTileEditorData =
+  // Setup the tileMapEditorData, containing the information passed around in the editor
+  let tileMapEditorData =
   {
     tileLookup: tileLookup,
     canvas: canvas,
@@ -231,17 +231,17 @@ function setup(tileLookup)
     userActionHistory: null
   };
   
-  mapTileEditorUtilities.resetMap(mapTileEditorData);
+  tileMapEditorUtilities.resetMap(tileMapEditorData);
   
   // Setup the event listeners
-  mapTileEditorEventHandler.setupMouseEventListeners(mapTileEditorData);
+  tileMapEditorEventHandler.setupMouseEventListeners(tileMapEditorData);
   
-  mapTileEditorEventHandler.setupKeyboardEventListeners(mapTileEditorData);
+  tileMapEditorEventHandler.setupKeyboardEventListeners(tileMapEditorData);
   
-  mapTileEditorEventHandler.setupUIEventListeners(mapTileEditorData);
+  tileMapEditorEventHandler.setupUIEventListeners(tileMapEditorData);
   
   // Draw the search pane
-  mapTileEditorUtilities.redrawSearchPane(mapTileEditorData);
+  tileMapEditorUtilities.redrawSearchPane(tileMapEditorData);
 }
 
 /**

@@ -1,6 +1,6 @@
 
 import * as utilities from '../util/utilities.js';
-import * as mapTileEditorUtilities from '../util/mapTileEditorUtilities.js';
+import * as tileMapEditorUtilities from '../util/tileMapEditorUtilities.js';
 
 import {SCALE_FACTOR, HELP_FILE_PATH, EMPTY_TILE_HASH, Ids} from './main.js';
 
@@ -8,11 +8,11 @@ import {SCALE_FACTOR, HELP_FILE_PATH, EMPTY_TILE_HASH, Ids} from './main.js';
 /**
  * Setup mouse event listeners.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-export function setupMouseEventListeners(mapTileEditorData)
+export function setupMouseEventListeners(tileMapEditorData)
 {
-  let canvas = mapTileEditorData.canvas;
+  let canvas = tileMapEditorData.canvas;
   let context = canvas.getContext('2d');
   
   let lastX = canvas.width / 2;
@@ -28,7 +28,7 @@ export function setupMouseEventListeners(mapTileEditorData)
     context.scale(factor, factor);
     context.translate(-point.x, -point.y);
     
-    mapTileEditorUtilities.redrawMap(mapTileEditorData);
+    tileMapEditorUtilities.redrawMap(tileMapEditorData);
   };
   
   let handleScroll = function(event)
@@ -65,7 +65,7 @@ export function setupMouseEventListeners(mapTileEditorData)
       let point = context.transformedPoint(lastX, lastY);
       context.translate(point.x - dragStart.x, point.y - dragStart.y);
       
-      mapTileEditorUtilities.redrawMap(mapTileEditorData);
+      tileMapEditorUtilities.redrawMap(tileMapEditorData);
     }
   }, false);
   
@@ -89,13 +89,13 @@ export function setupMouseEventListeners(mapTileEditorData)
 /**
  * Move up cursor response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
  */
-function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
+function cursorMoveUpResponse(tileMapEditorData, isCtrlKeyDown)
 {
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
+  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
+  let cursor = tileMapEditorData.cursor;
   
   if (isCtrlKeyDown)
   {
@@ -146,24 +146,24 @@ function cursorMoveUpResponse(mapTileEditorData, isCtrlKeyDown)
 /**
  * Move down cursor response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
  */
-function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
+function cursorMoveDownResponse(tileMapEditorData, isCtrlKeyDown)
 {
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
+  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
+  let cursor = tileMapEditorData.cursor;
   
   if (isCtrlKeyDown)
   {
     let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
     let isNextEmpty = null;
-    if (cursor.tileY + 1 < mapTileEditorData.mapHeight)
+    if (cursor.tileY + 1 < tileMapEditorData.mapHeight)
     {
       isNextEmpty = layeredTileHashesDisplay.map[cursor.tileY + 1][cursor.tileX] === EMPTY_TILE_HASH;
     }
     
-    while (cursor.tileY + 1 < mapTileEditorData.mapHeight)
+    while (cursor.tileY + 1 < tileMapEditorData.mapHeight)
     {
       let nextTile = layeredTileHashesDisplay.map[cursor.tileY + 1][cursor.tileX];
       if (isStartEmpty && nextTile === EMPTY_TILE_HASH)
@@ -196,20 +196,20 @@ function cursorMoveDownResponse(mapTileEditorData, isCtrlKeyDown)
   }
   else
   {
-    cursor.tileY = (cursor.tileY + 1 < mapTileEditorData.mapHeight) ? (cursor.tileY + 1) : (mapTileEditorData.mapHeight - 1);
+    cursor.tileY = (cursor.tileY + 1 < tileMapEditorData.mapHeight) ? (cursor.tileY + 1) : (tileMapEditorData.mapHeight - 1);
   }
 }
 
 /**
  * Move left cursor response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
  */
-function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
+function cursorMoveLeftResponse(tileMapEditorData, isCtrlKeyDown)
 {
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
+  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
+  let cursor = tileMapEditorData.cursor;
   
   if (isCtrlKeyDown)
   {
@@ -260,24 +260,24 @@ function cursorMoveLeftResponse(mapTileEditorData, isCtrlKeyDown)
 /**
  * Move right cursor response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  * @param isCtrlKeyDown isCtrlKeyDown
  */
-function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
+function cursorMoveRightResponse(tileMapEditorData, isCtrlKeyDown)
 {
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
+  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
+  let cursor = tileMapEditorData.cursor;
   
   if (isCtrlKeyDown)
   {
     let isStartEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX] === EMPTY_TILE_HASH;
     let isNextEmpty = null;
-    if (cursor.tileX + 1 < mapTileEditorData.mapWidth)
+    if (cursor.tileX + 1 < tileMapEditorData.mapWidth)
     {
       isNextEmpty = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX + 1] === EMPTY_TILE_HASH;
     }
     
-    while (cursor.tileX + 1 < mapTileEditorData.mapWidth)
+    while (cursor.tileX + 1 < tileMapEditorData.mapWidth)
     {
       let nextTile = layeredTileHashesDisplay.map[cursor.tileY][cursor.tileX + 1];
       if (isStartEmpty && nextTile === EMPTY_TILE_HASH)
@@ -310,183 +310,183 @@ function cursorMoveRightResponse(mapTileEditorData, isCtrlKeyDown)
   }
   else
   {
-    cursor.tileX = (cursor.tileX + 1 < mapTileEditorData.mapWidth) ? (cursor.tileX + 1) : (mapTileEditorData.mapWidth - 1);
+    cursor.tileX = (cursor.tileX + 1 < tileMapEditorData.mapWidth) ? (cursor.tileX + 1) : (tileMapEditorData.mapWidth - 1);
   }
 }
 
 /**
  * Undo response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function undoResponse(mapTileEditorData)
+function undoResponse(tileMapEditorData)
 {
-  mapTileEditorUtilities.undo(mapTileEditorData);
+  tileMapEditorUtilities.undo(tileMapEditorData);
   
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  tileMapEditorUtilities.redrawAll(tileMapEditorData);
 }
 
 /**
  * Redo response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function redoResponse(mapTileEditorData)
+function redoResponse(tileMapEditorData)
 {
-  mapTileEditorUtilities.redo(mapTileEditorData);
+  tileMapEditorUtilities.redo(tileMapEditorData);
   
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  tileMapEditorUtilities.redrawAll(tileMapEditorData);
 }
 
 /**
  * Delete tile response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function deleteTileResponse(mapTileEditorData)
+function deleteTileResponse(tileMapEditorData)
 {
-  let cursor = mapTileEditorData.cursor;
+  let cursor = tileMapEditorData.cursor;
   
-  mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, EMPTY_TILE_HASH);
+  tileMapEditorUtilities.setTile(tileMapEditorData, cursor.tileX, cursor.tileY, EMPTY_TILE_HASH);
   
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  tileMapEditorUtilities.redrawAll(tileMapEditorData);
 }
 
 /**
  * Random tile response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function randomTileResponse(mapTileEditorData)
+function randomTileResponse(tileMapEditorData)
 {
-  let tileLookup = mapTileEditorData.tileLookup;
-  let cursor = mapTileEditorData.cursor;
+  let tileLookup = tileMapEditorData.tileLookup;
+  let cursor = tileMapEditorData.cursor;
   
-  let randomTileHash = mapTileEditorUtilities.getRandomTileHash(tileLookup);
-  mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, randomTileHash);
+  let randomTileHash = tileMapEditorUtilities.getRandomTileHash(tileLookup);
+  tileMapEditorUtilities.setTile(tileMapEditorData, cursor.tileX, cursor.tileY, randomTileHash);
   
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  tileMapEditorUtilities.redrawAll(tileMapEditorData);
 }
 
 /**
  * Fill tile response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function fillTileResponse(mapTileEditorData)
+function fillTileResponse(tileMapEditorData)
 {
-  let tileLookup = mapTileEditorData.tileLookup;
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
+  let tileLookup = tileMapEditorData.tileLookup;
+  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
+  let cursor = tileMapEditorData.cursor;
   
   let strictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
   
-  let fillTileHash = mapTileEditorUtilities.getFillTileHash(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
-  mapTileEditorUtilities.setTile(mapTileEditorData, cursor.tileX, cursor.tileY, fillTileHash);
+  let fillTileHash = tileMapEditorUtilities.getFillTileHash(tileLookup, tileMapEditorData.mapWidth, tileMapEditorData.mapHeight, layeredTileHashesDisplay.map, cursor.tileX, cursor.tileY, strictness);
+  tileMapEditorUtilities.setTile(tileMapEditorData, cursor.tileX, cursor.tileY, fillTileHash);
   
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  tileMapEditorUtilities.redrawAll(tileMapEditorData);
 }
 
 /**
  * Calibrate tile response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function calibrateTileResponse(mapTileEditorData)
+function calibrateTileResponse(tileMapEditorData)
 {
-  let cursor = mapTileEditorData.cursor;
+  let cursor = tileMapEditorData.cursor;
   
   let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
   let calibrateRange = document.getElementById(Ids.toolbar.functionBlock.calibrateRangeTextbox).valueAsNumber;
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
-  mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
-  mapTileEditorUtilities.redrawAll(mapTileEditorData);
+  tileMapEditorUtilities.calibrateTileHashes(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+  tileMapEditorUtilities.redrawAll(tileMapEditorData);
 }
 
 /**
  * Generate map response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function generateMapResponse(mapTileEditorData)
+function generateMapResponse(tileMapEditorData)
 {
-  let cursor = mapTileEditorData.cursor;
+  let cursor = tileMapEditorData.cursor;
   
   let minimumStrictness = document.getElementById(Ids.toolbar.functionBlock.strictnessComboBox).value;
   let isAnimate = document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).classList.contains('fa-toggle-on');
   
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  tileMapEditorUtilities.fillMap(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
 }
 
 /**
  * Auto generate map response.
  * Auto generate map based on recommended generation steps.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function autoGenerateMapResponse(mapTileEditorData)
+function autoGenerateMapResponse(tileMapEditorData)
 {
-  let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
-  let cursor = mapTileEditorData.cursor;
+  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
+  let cursor = tileMapEditorData.cursor;
   
   let isAnimate = false;
   
   let minimumStrictness = 4;
   let calibrateRange = 1;
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
-  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
+  tileMapEditorUtilities.fillMap(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  for (let y = 0; y < tileMapEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
+    for (let x = 0; x < tileMapEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
-        mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+        tileMapEditorUtilities.calibrateTileHashes(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
       }
     }
   }
   
   minimumStrictness = 3;
   calibrateRange = 2;
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
-  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
+  tileMapEditorUtilities.fillMap(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  for (let y = 0; y < tileMapEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
+    for (let x = 0; x < tileMapEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
-        mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+        tileMapEditorUtilities.calibrateTileHashes(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
       }
     }
   }
   
   minimumStrictness = 2;
   calibrateRange = 1;
-  mapTileEditorUtilities.fillMap(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
-  for (let y = 0; y < mapTileEditorData.mapHeight; y++)
+  tileMapEditorUtilities.fillMap(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, isAnimate);
+  for (let y = 0; y < tileMapEditorData.mapHeight; y++)
   {
-    for (let x = 0; x < mapTileEditorData.mapWidth; x++)
+    for (let x = 0; x < tileMapEditorData.mapWidth; x++)
     {
       if (layeredTileHashesDisplay.map[y][x] === EMPTY_TILE_HASH)
       {
-        mapTileEditorUtilities.calibrateTileHashes(mapTileEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
+        tileMapEditorUtilities.calibrateTileHashes(tileMapEditorData, cursor.tileX, cursor.tileY, minimumStrictness, calibrateRange, isAnimate);
       }
     }
   }
   
   minimumStrictness = 1;
   calibrateRange = 1;
-  mapTileEditorUtilities.fillMapSupplement(mapTileEditorData, 1, isAnimate);
+  tileMapEditorUtilities.fillMapSupplement(tileMapEditorData, 1, isAnimate);
 }
 
 /**
  * Print debug response.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-function printDebugResponse(mapTileEditorData)
+function printDebugResponse(tileMapEditorData)
 {
-  mapTileEditorUtilities.printDebug(mapTileEditorData);
+  tileMapEditorUtilities.printDebug(tileMapEditorData);
 }
 
 /**
@@ -514,9 +514,9 @@ function preventNonNumericalResponse(event)
 /**
  * Setup keyboard event listeners.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-export function setupKeyboardEventListeners(mapTileEditorData)
+export function setupKeyboardEventListeners(tileMapEditorData)
 {
   // Prevent Ctrl + W from closing the window/tab
   window.onbeforeunload = function(event)
@@ -538,7 +538,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
   
   onkeydown = onkeyup = function(event)
   {
-    let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+    let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
     
     // Focus should be not INPUT, for example BODY or BUTTON
     if (document.activeElement.tagName === 'INPUT')
@@ -559,7 +559,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     if (!isPreviouslyMoved.up && (eventKeyMap['w'] || eventKeyMap['ArrowUp']))
     {
       // 'w' or arrow up button pressed
-      cursorMoveUpResponse(mapTileEditorData, event.ctrlKey);
+      cursorMoveUpResponse(tileMapEditorData, event.ctrlKey);
       isPreviouslyMoved.up = true;
     }
     else
@@ -569,7 +569,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     if (!isPreviouslyMoved.down && (eventKeyMap['s'] || eventKeyMap['ArrowDown']))
     {
       // 's' or arrow down button pressed
-      cursorMoveDownResponse(mapTileEditorData, event.ctrlKey);
+      cursorMoveDownResponse(tileMapEditorData, event.ctrlKey);
       isPreviouslyMoved.down = true;
     }
     else
@@ -579,7 +579,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     if (!isPreviouslyMoved.left && (eventKeyMap['a'] || eventKeyMap['ArrowLeft']))
     {
       // 'a' or arrow left button pressed
-      cursorMoveLeftResponse(mapTileEditorData, event.ctrlKey);
+      cursorMoveLeftResponse(tileMapEditorData, event.ctrlKey);
       isPreviouslyMoved.left = true;
     }
     else
@@ -589,7 +589,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     if (!isPreviouslyMoved.right && (eventKeyMap['d'] || eventKeyMap['ArrowRight']))
     {
       // 'd' or arrow right button pressed
-      cursorMoveRightResponse(mapTileEditorData, event.ctrlKey);
+      cursorMoveRightResponse(tileMapEditorData, event.ctrlKey);
       isPreviouslyMoved.right = true;
     }
     else
@@ -597,8 +597,8 @@ export function setupKeyboardEventListeners(mapTileEditorData)
       isPreviouslyMoved.right = false;
     }
     
-    mapTileEditorUtilities.clearHoverTiles(layeredTileHashesDisplay);
-    mapTileEditorUtilities.redrawAll(mapTileEditorData);
+    tileMapEditorUtilities.clearHoverTiles(layeredTileHashesDisplay);
+    tileMapEditorUtilities.redrawAll(tileMapEditorData);
   }
   
   // Key down response
@@ -614,19 +614,19 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     
     if (event.key === 'z')
     {
-      undoResponse(mapTileEditorData);
+      undoResponse(tileMapEditorData);
     }
     else if (event.key === 'y')
     {
-      redoResponse(mapTileEditorData);
+      redoResponse(tileMapEditorData);
     }
     if (event.key === 'Delete')
     {
-      deleteTileResponse(mapTileEditorData);
+      deleteTileResponse(tileMapEditorData);
     }
     if (event.key === 'r')
     {
-      randomTileResponse(mapTileEditorData);
+      randomTileResponse(tileMapEditorData);
     }
     if (event.key === 'PageDown')
     {
@@ -646,7 +646,7 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === 'f' && !event.ctrlKey)
     {
-      fillTileResponse(mapTileEditorData);
+      fillTileResponse(tileMapEditorData);
     }
     if (event.key === '[')
     {
@@ -666,19 +666,19 @@ export function setupKeyboardEventListeners(mapTileEditorData)
     }
     if (event.key === 'c')
     {
-      calibrateTileResponse(mapTileEditorData);
+      calibrateTileResponse(tileMapEditorData);
     }
     if (event.key === 'g')
     {
-      generateMapResponse(mapTileEditorData);
+      generateMapResponse(tileMapEditorData);
     }
     if (event.key === 'o')
     {
-      autoGenerateMapResponse(mapTileEditorData);
+      autoGenerateMapResponse(tileMapEditorData);
     }
     if (event.key === 'p')
     {
-      printDebugResponse(mapTileEditorData);
+      printDebugResponse(tileMapEditorData);
     }
     if (event.key === 'f' && event.ctrlKey)
     {
@@ -698,26 +698,26 @@ export function setupKeyboardEventListeners(mapTileEditorData)
 /**
  * Setup UI event listeners.
  * 
- * @param mapTileEditorData mapTileEditorData
+ * @param tileMapEditorData tileMapEditorData
  */
-export function setupUIEventListeners(mapTileEditorData)
+export function setupUIEventListeners(tileMapEditorData)
 {
   document.getElementById(Ids.toolbar.mapControlBlock.mapWidthTextbox).addEventListener('change',
     function()
     {
-      mapTileEditorUtilities.resizeMap(mapTileEditorData, true);
+      tileMapEditorUtilities.resizeMap(tileMapEditorData, true);
     });
   
   document.getElementById(Ids.toolbar.mapControlBlock.mapHeightTextbox).addEventListener('change',
     function()
     {
-      mapTileEditorUtilities.resizeMap(mapTileEditorData, true);
+      tileMapEditorUtilities.resizeMap(tileMapEditorData, true);
     });
   
   document.getElementById(Ids.toolbar.mapControlBlock.newButton).addEventListener('click',
     function()
     {
-      mapTileEditorUtilities.resetMap(mapTileEditorData);
+      tileMapEditorUtilities.resetMap(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.mapControlBlock.importButton).addEventListener('click',
@@ -738,7 +738,7 @@ export function setupUIEventListeners(mapTileEditorData)
         let fileContent = readerEvent.target.result;
         let mapJson = JSON.parse(fileContent);
         //console.log(mapJson);
-        mapTileEditorUtilities.loadMapJson(mapTileEditorData, mapJson);
+        tileMapEditorUtilities.loadMapJson(tileMapEditorData, mapJson);
         
         console.log('\"' + utilities.getFilenameWithoutExtension(file.name) + '\" map has been loaded.');
       }
@@ -747,60 +747,60 @@ export function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.toolbar.mapControlBlock.exportAsTileHashesButton).addEventListener('click',
     function()
     {
-      let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+      let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
       
-      mapTileEditorUtilities.exportMapAsTileHashes(mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map);
+      tileMapEditorUtilities.exportMapAsTileHashes(tileMapEditorData.mapWidth, tileMapEditorData.mapHeight, layeredTileHashesDisplay.map);
     });
   
   document.getElementById(Ids.toolbar.mapControlBlock.exportAsImageButton).addEventListener('click',
     function()
     {
-      let tileLookup = mapTileEditorData.tileLookup;
-      let layeredTileHashesDisplay = mapTileEditorData.layeredTileHashesDisplay;
+      let tileLookup = tileMapEditorData.tileLookup;
+      let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
       
-      mapTileEditorUtilities.exportMapAsImage(tileLookup, mapTileEditorData.mapWidth, mapTileEditorData.mapHeight, layeredTileHashesDisplay.map);
+      tileMapEditorUtilities.exportMapAsImage(tileLookup, tileMapEditorData.mapWidth, tileMapEditorData.mapHeight, layeredTileHashesDisplay.map);
     });
   
   document.getElementById(Ids.toolbar.editBlock.undoButton).addEventListener('click',
     function()
     {
-      undoResponse(mapTileEditorData);
+      undoResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.editBlock.redoButton).addEventListener('click',
     function()
     {
-      redoResponse(mapTileEditorData);
+      redoResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.editBlock.clearTileButton).addEventListener('click',
     function()
     {
-      deleteTileResponse(mapTileEditorData);
+      deleteTileResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.functionBlock.randomTileButton).addEventListener('click',
     function()
     {
-      randomTileResponse(mapTileEditorData);
+      randomTileResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.functionBlock.fillTileButton).addEventListener('click',
     function()
     {
-      fillTileResponse(mapTileEditorData);
+      fillTileResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.functionBlock.calibrateTileButton).addEventListener('click',
     function()
     {
-      calibrateTileResponse(mapTileEditorData);
+      calibrateTileResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.functionBlock.generateMapButton).addEventListener('click',
     function()
     {
-      generateMapResponse(mapTileEditorData);
+      generateMapResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.functionBlock.isAnimateGeneration).addEventListener('click',
@@ -823,7 +823,7 @@ export function setupUIEventListeners(mapTileEditorData)
   document.getElementById(Ids.toolbar.helpBlock.printLogButton).addEventListener('click',
     function()
     {
-      printDebugResponse(mapTileEditorData);
+      printDebugResponse(tileMapEditorData);
     });
   
   document.getElementById(Ids.toolbar.helpBlock.helpButton).addEventListener('click',
