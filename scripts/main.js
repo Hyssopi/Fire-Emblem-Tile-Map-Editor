@@ -14,7 +14,7 @@ const IMAGES_OUTPUT_FOLDER_NAME = 'images';
 const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
 export const HELP_FILE_PATH = 'help/index.html';
 
-export const CURSOR_TILE_HASH = '72a3301acaccb36ec48b9830a4cc5174';
+export const CURSOR_TILE_HASH = '5689f626217c50c9a21804dd4fe81931';
 export const EMPTY_TILE_HASH = '73ad52b71d47ee4d45315c6f0da022ac';
 
 export const Direction =
@@ -121,7 +121,7 @@ Webpage:
   
   images: 13,148 files
 
-
+only output in undefined
 
 
 known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
