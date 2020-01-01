@@ -253,6 +253,12 @@ public class MapExtractor : MonoBehaviour
     Dictionary<string, Color> tileAveragedColors = new Dictionary<string, Color>();
     foreach (KeyValuePair<string, TileData> tileDataEntry in AllUniqueTileData)
     {
+      // Skip if tile group is already set, we only want UNDEFINED so we may categorize it to something other than UNDEFINED
+      if (tileDataEntry.Value.Group != UNDEFINED_GROUP_OUTPUT_FOLDER_NAME)
+      {
+        continue;
+      }
+
       Texture2D tileImage = tileDataEntry.Value.TileImage;
 
       // Average all the pixel colors of the tile
