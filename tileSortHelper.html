@@ -13216,6 +13216,12 @@
     const IMAGES_OUTPUT_FOLDER_NAME = 'images';
     const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
     
+    const BackgroundColor =
+    {
+      valid: 'white',
+      invalid: 'red'
+    };
+    
     // Reading tile reference JSON file
     let tileReferencesJsonFilePath = BASE_OUTPUT_DIRECTORY_PATH + '/' + TILE_REFERENCES_JSON_FILE_NAME;
     console.info('Reading: \'' + tileReferencesJsonFilePath + '\'');
@@ -13393,6 +13399,9 @@
     function updateMoveScriptOutput()
     {
       let tileGroup = document.getElementById(Ids.tileGroupTextbox).value;
+      
+      document.getElementById(Ids.tileGroupTextbox).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
+      document.getElementById(Ids.moveScriptOutput).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
       
       let moveScriptOutput = '';
       moveScriptOutput += 'cd ' + BASE_IMAGE_DIRECTORY_PATH + '\n';
