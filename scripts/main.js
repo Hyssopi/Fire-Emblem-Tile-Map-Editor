@@ -109,24 +109,11 @@ export const BackgroundColor =
 /* TODO:
 
 7) Move tile images to folders as TYPE
-Webpage:
-  Get list of tile hashes in undefined, simple list delimited by new line
-  Webpage loads that simple list
-  Left side: list
-  Right side: list of inputted tile hash
-  Clicking tile on right moves it to left
-  Text field for left side shows its list's tile hashes
-  https://stackoverflow.com/questions/43216971/moving-file-using-cmd/43219429
-  Copy that and move it to spreadsheet: move "" ""
-  
-  images: 13,148 files
-
-only output in undefined
+images: 13,148 files
 
 
 known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
 known issue: sometimes with generate animation enabled, calibrate skips filling as it goes
-
 
 
 91) Higher chance for getFileTile if same TYPE/GROUP
