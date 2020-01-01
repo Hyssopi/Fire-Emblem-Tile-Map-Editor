@@ -13378,6 +13378,7 @@
             
             // Note: Redrawing on every tile click is too laggy if there are too many tiles shown
             // A solution is to move the tile on click in the data arrays in the code, but not redraw it until the user clicks the refresh/redraw button/key
+            // This means the user should only click tiles "backwards" since the data is stored in arrays and clicking a tile removes it from the array but the GUI still shows the old indexes until it redraws
             //updateAll(tileLookup);
           }, false);
         listItem.appendChild(tileImage);
