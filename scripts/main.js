@@ -111,6 +111,13 @@ export const BackgroundColor =
 7) Move tile images to folders as TYPE
 images: 13,148 files
 
+8) Maybe improve this by not having to remake a new Image every redraw:
+let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
+tileImage.src = tileImagesReference[tileHash].src;
+tileImage.addEventListener('click',
+
+
+
 
 known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
 known issue: sometimes with generate animation enabled, calibrate skips filling as it goes

@@ -479,3 +479,18 @@ export function getFilenameWithoutExtension(filename)
 {
   return filename.substr(0, filename.lastIndexOf('.')) || filename;
 }
+
+/**
+ * Try and load an image given the source.
+ * If the image exists, then it returns the image in the callback. Otherwise it returns null in the callback.
+ *
+ * @param url Input source, for example: path to an image file on computer
+ * @param callback Callback function used to get the return image
+ */
+export function getImage(url, callback)
+{
+  let image = new Image();
+  image.onload = function() { callback(image); };
+  image.onerror = function() { callback(null); };
+  image.src = url;
+}
