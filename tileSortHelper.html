@@ -13285,6 +13285,16 @@
           {
             updateAll(tileLookup);
           });
+        
+        document.addEventListener('keydown',
+          function(event)
+          {
+            // Redraw/update the left and right displays when user presses 'r' or 'u'
+            if (event.key === 'r' || event.key === 'u')
+            {
+              updateAll(tileLookup);
+            }
+          });
       })
       .catch (function(error)
       {
@@ -13366,7 +13376,9 @@
           {
             moveToOther(displayId, i);
             
-            updateAll(tileLookup);
+            // Note: Redrawing on every tile click is too laggy if there are too many tiles shown
+            // A solution is to move the tile on click in the data arrays in the code, but not redraw it until the user clicks the refresh/redraw button/key
+            //updateAll(tileLookup);
           }, false);
         listItem.appendChild(tileImage);
         
