@@ -13520,20 +13520,20 @@
      */
     function updateMoveScriptOutput()
     {
-      let tileGroup = document.getElementById(Ids.tileGroupOutputTextbox).value;
+      let inputTileGroup = document.getElementById(Ids.tileGroupInputDropDown).value;
+      let outputTileGroup = document.getElementById(Ids.tileGroupOutputTextbox).value;
       
-      document.getElementById(Ids.tileGroupOutputTextbox).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
-      document.getElementById(Ids.moveScriptOutput).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
+      document.getElementById(Ids.tileGroupOutputTextbox).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
+      document.getElementById(Ids.moveScriptOutput).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
       
       let moveScriptOutput = '';
       moveScriptOutput += 'cd ' + BASE_IMAGE_DIRECTORY_PATH + '\n';
       for (let tileHash of leftTileHashes)
       {
-        // TODO: Make groupFolderName not global, maybe have an "INPUT GROUP FOLDER NAME"
         let moveScriptCommand =
           'move'
-          + ' ' + groupFolderName + '\\' + tileHash + '.png'
-          + ' ' + tileGroup;
+          + ' ' + inputTileGroup + '\\' + tileHash + '.png'
+          + ' ' + outputTileGroup;
         moveScriptOutput += moveScriptCommand + '\n';
       }
       document.getElementById(Ids.moveScriptOutput).value = moveScriptOutput;
