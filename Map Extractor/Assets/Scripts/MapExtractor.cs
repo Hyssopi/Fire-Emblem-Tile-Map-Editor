@@ -122,11 +122,11 @@ public class MapExtractor : MonoBehaviour
     Util.ConfigureTextureImporterDirectory("Assets/Resources/Images");
 
     // Read the input map images (for example, Fire Emblem maps) and extract the tile images and neighbor data
-    List<FileInfo> mapImageFilePaths = Util.GetFileList(Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME), "png");
-    foreach (FileInfo mapImageFilePath in mapImageFilePaths)
+    List<FileInfo> mapImageFileList = Util.GetFileList(Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME), "png");
+    foreach (FileInfo mapImageFile in mapImageFileList)
     {
       // Load the chapter map image
-      Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, Path.GetFileNameWithoutExtension(mapImageFilePath.Name))) as Texture2D);
+      Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, Path.GetFileNameWithoutExtension(mapImageFile.Name))) as Texture2D);
 
       UnityEngine.Assertions.Assert.IsTrue(mapImage.width % TILE_WIDTH_PIXEL == 0);
       UnityEngine.Assertions.Assert.IsTrue(mapImage.height % TILE_HEIGHT_PIXEL == 0);
@@ -150,11 +150,11 @@ public class MapExtractor : MonoBehaviour
           }
 
           // Print out Cursor and Empty tileHashes for reference
-          if (mapImageFilePath.Name.Equals(CURSOR_TILE_FILE_NAME, StringComparison.OrdinalIgnoreCase))
+          if (mapImageFile.Name.Equals(CURSOR_TILE_FILE_NAME, StringComparison.OrdinalIgnoreCase))
           {
             Debug.Log("Cursor TileHash: " + tileImageHash);
           }
-          if (mapImageFilePath.Name.Equals(EMPTY_TILE_FILE_NAME, StringComparison.OrdinalIgnoreCase))
+          if (mapImageFile.Name.Equals(EMPTY_TILE_FILE_NAME, StringComparison.OrdinalIgnoreCase))
           {
             Debug.Log("Empty TileHash: " + tileImageHash);
           }
@@ -281,6 +281,34 @@ public class MapExtractor : MonoBehaviour
     }
 
     Util.WriteTextFile(TILE_SORT_HELPER_OUTPUT_FILE_PATH, tileHashesSortedByColorOutput.ToString());
+
+    // Get the unique tile hashes for a particular input map image, then create a batch script (user has to run the script) to move it from UNDEFINED folder to TEMP folder to separate it and make it easier to determine where a tile is from and from which map image
+    string mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\0.png";
+    List<string> tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    StringBuilder scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
+
+    Debug.Log(scriptOutput);
+
+
+
+
+
+    // TODO: TEMP remove. Used to get list of Directories
+    Util.PrintList(Directory.GetDirectories("C:\\Users\\t\\Desktop\\temp9\\tiles\\images").Select(path => "\"" + Path.GetFileName(path) + "\","));
+
+
+
+
+
   }
 
   /// <summary>
@@ -317,5 +345,34 @@ public class MapExtractor : MonoBehaviour
 
     return modifiedY >= 0 && modifiedY < mapHeight
       && modifiedX >= 0 && modifiedX < mapWidth;
+  }
+
+  /// <summary>
+  ///   Gets the list of unique tile hashes for the given input map image.
+  /// </summary>
+  /// <param name="mapImageFilePath">Map image file path</param>
+  /// <returns>List of unique tile hashes for the given input map image</returns>
+  public static List<string> GetTileHashesFromMapImage(string mapImageFilePath)
+  {
+    // Load the chapter map image
+    Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, Path.GetFileNameWithoutExtension(mapImageFilePath))) as Texture2D);
+
+    UnityEngine.Assertions.Assert.IsTrue(mapImage.width % TILE_WIDTH_PIXEL == 0);
+    UnityEngine.Assertions.Assert.IsTrue(mapImage.height % TILE_HEIGHT_PIXEL == 0);
+
+    HashSet<string> uniqueTileHashes = new HashSet<string>();
+
+    // Go through each tile in the map and get a unique hashset of image tile hashes
+    for (int y = 0; y < mapImage.height / TILE_HEIGHT_PIXEL; y++)
+    {
+      for (int x = 0; x < mapImage.width / TILE_WIDTH_PIXEL; x++)
+      {
+        Texture2D tileImage = Util.GetSubTexture(mapImage, x * TILE_WIDTH_PIXEL, y * TILE_HEIGHT_PIXEL, TILE_WIDTH_PIXEL, TILE_HEIGHT_PIXEL);
+        string tileImageHash = Util.GetTextureHash(tileImage);
+        uniqueTileHashes.Add(tileImageHash);
+      }
+    }
+
+    return uniqueTileHashes.ToList();
   }
 }

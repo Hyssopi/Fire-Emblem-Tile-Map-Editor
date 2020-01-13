@@ -20,6 +20,10 @@
         </div>
       </div>
       <div class="flexBoxColumn" style="text-align: start;">
+        <div>
+          INPUT TILE GROUP FOLDER: <select id="tileGroupInputDropDownId" style="width: 7em; text-align: center; font-size: 20px;"></select>
+          NOTE: Press the update ('u' or 'r') after selecting a tile group and letting it load to reload again (not all tiles may have loaded the first time)
+        </div>
         <div>Move indexes from RIGHT to LEFT</div>
         <div class="flexBoxRow">
           <div>
@@ -35,7 +39,7 @@
           </div>
         </div>
         <div>
-          TILE GROUP: <input id="tileGroupTextboxId" type="text" style="width: 7em; text-align: center; font-size: 20px;">
+          OUTPUT TILE GROUP: <input id="tileGroupOutputTextboxId" type="text" style="width: 7em; text-align: center; font-size: 20px;">
         </div>
         <div>
           <textarea id="moveScriptOutputId" style="width: 100%;" readonly>
@@ -13202,10 +13206,11 @@
     {
       leftDisplay: 'leftDisplayId',
       rightDisplay: 'rightDisplayId',
+      tileGroupInputDropDown: 'tileGroupInputDropDownId',
       startIndexTextbox: 'startIndexTextboxId',
       endIndexTextbox: 'endIndexTextboxId',
       moveButton: 'moveButtonId',
-      tileGroupTextbox: 'tileGroupTextboxId',
+      tileGroupOutputTextbox: 'tileGroupOutputTextboxId',
       moveScriptOutput: 'moveScriptOutputId'
     };
     
@@ -13223,31 +13228,89 @@
       invalid: 'red'
     };
     
+    const DEFAULT_GROUP_FOLDER_NAME = 'UNDEFINED';
+
+    const TILE_GROUP_INPUT_OPTIONS =
+    [
+      "ARENA",
+      "ARMORY",
+      "BARREL",
+      "BRACE",
+      "BRIDGE",
+      "CHEST",
+      "CLIFF",
+      "CURSOR",
+      "DECK",
+      "DEEPS",
+      "DOOR",
+      "EMPTY",
+      "FENCE",
+      "FLOOR",
+      "FOREST",
+      "FORT",
+      "GATE",
+      "GUNNEL",
+      "HOUSE",
+      "LAKE",
+      "MAST",
+      "MOUNTAIN",
+      "PEAK",
+      "PILLAR",
+      "PLAIN",
+      "RIVER",
+      "ROAD",
+      "ROOF",
+      "RUINS",
+      "SAND",
+      "SEA",
+      "SNAG",
+      "STAIRS",
+      "TEMP",
+      "THRONE",
+      "UNDEFINED",
+      "VENDOR",
+      "VILLAGE",
+      "WALL",
+    ];
+
+    // Contains the tile images with the assumption that it is in the specified group, tile hash is the key
+    let tileImagesReference = [];
+
     let leftTileHashes = [];
     let rightTileHashes = [];
     
-    start();
+
+    setupEventListeners(tileImagesReference);
+    setupUI();
     
+
     /**
      * Start the editor.
+     * 
+     * @param groupFolderName Folder name of the tile group to read from
      */
-    function start()
+    function start(groupFolderName)
     {
-      // Create a reference of all the tile images from the input tileHashes
-      let tileImagesReference = [];
+      // Resets data
+      tileImagesReference.splice(0, tileImagesReference.length);
+      leftTileHashes.splice(0, leftTileHashes.length);
+      rightTileHashes.splice(0, rightTileHashes.length);
+      
+      // Setup for a specific tile group
       let allTileImagesLoaded = false;
       for (let i = 0; i < ALL_TILE_HASHES.length; i++)
       {
-        // We only care about tile images in the UNDEFINED folder, tile images that are in valid group folders are already sorted
-        // Make the assumption that it is in the UNDEFINED folder
-        let tileImageSource = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + 'UNDEFINED' + '/' + ALL_TILE_HASHES[i] + '.png';
+        // Tile images that are in valid group folders are already sorted (not in UNDEFINED)
+        // We only care about tile images in the specified group folder
+        // Make the assumption that the tiles are in the specified group folder
+        let tileImageSource = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + groupFolderName + '/' + ALL_TILE_HASHES[i] + '.png';
         
         getImage(tileImageSource, function(tileImage)
         {
           console.log('Tile Image exists: ' + (tileImage !== null));
           if (tileImage !== null)
           {
-            // Only add to the reference and the right display if the tile image exists in UNDEFINED folder
+            // Only add to the reference and the right display if the tile image exists in the specified group folder
             tileImagesReference[ALL_TILE_HASHES[i]] = tileImage;
             rightTileHashes.push(ALL_TILE_HASHES[i]);
           }
@@ -13284,17 +13347,23 @@
           clearInterval(interval);
         }
       }, 100);
-      
-      setupEventListeners(tileImagesReference);
     }
     
     /**
      * Setup event listeners.
      * 
-     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the specified group, tile hash is the key
      */
     function setupEventListeners(tileImagesReference)
     {
+      document.getElementById(Ids.tileGroupInputDropDown).addEventListener('change',
+        function()
+        {
+          let tileGroup = document.getElementById(Ids.tileGroupInputDropDown).value;
+          console.log(tileGroup + " selected");
+          start(tileGroup);
+        });
+      
       document.getElementById(Ids.moveButton).addEventListener('click',
         function()
         {
@@ -13320,7 +13389,7 @@
           updateAll(tileImagesReference);
         });
       
-      document.getElementById(Ids.tileGroupTextbox).addEventListener('change',
+      document.getElementById(Ids.tileGroupOutputTextbox).addEventListener('change',
         function()
         {
           updateAll(tileImagesReference);
@@ -13355,6 +13424,23 @@
     }
     
     /**
+     * Setup any additional UI.
+     */
+    function setupUI()
+    {
+      // Fill out the input tile group drop-down list with tile group options
+      let select = document.getElementById(Ids.tileGroupInputDropDown);
+      for (let tileGroup of TILE_GROUP_INPUT_OPTIONS)
+      {
+        let option = document.createElement('option');
+        option.text = tileGroup;
+        select.add(option);
+      }
+      select.value = DEFAULT_GROUP_FOLDER_NAME;
+      start(select.value);
+    }
+
+    /**
      * Moves the tile hash based on the index from one side to the other.
      * 
      * @param originDisplayId Origin display ID
@@ -13377,7 +13463,7 @@
     /**
      * Update / redraw GUI.
      * 
-     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the specified group, tile hash is the key
      */
     function updateAll(tileImagesReference)
     {
@@ -13395,7 +13481,7 @@
     /**
      * Redraw the tile display.
      * 
-     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the specified group, tile hash is the key
      * @param displayId Display ID, either left or right
      * @param tileHashes List of tile hashes to display
      */
@@ -13430,22 +13516,23 @@
     }
     
     /**
-     * Update move script output text area. Commands to copy and paste as a batch script to mass move tile images from UNDEFINED to the specified TILE GROUP.
+     * Update move script output text area. Commands to copy and paste as a batch script to mass move tile images from input specified group to the output specified TILE GROUP.
      */
     function updateMoveScriptOutput()
     {
-      let tileGroup = document.getElementById(Ids.tileGroupTextbox).value;
+      let tileGroup = document.getElementById(Ids.tileGroupOutputTextbox).value;
       
-      document.getElementById(Ids.tileGroupTextbox).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
+      document.getElementById(Ids.tileGroupOutputTextbox).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
       document.getElementById(Ids.moveScriptOutput).style.backgroundColor = tileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
       
       let moveScriptOutput = '';
       moveScriptOutput += 'cd ' + BASE_IMAGE_DIRECTORY_PATH + '\n';
       for (let tileHash of leftTileHashes)
       {
+        // TODO: Make groupFolderName not global, maybe have an "INPUT GROUP FOLDER NAME"
         let moveScriptCommand =
           'move'
-          + ' ' + 'UNDEFINED\\' + tileHash + '.png'
+          + ' ' + groupFolderName + '\\' + tileHash + '.png'
           + ' ' + tileGroup;
         moveScriptOutput += moveScriptCommand + '\n';
       }

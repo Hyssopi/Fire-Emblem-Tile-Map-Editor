@@ -225,4 +225,18 @@ public class Util
     return 0;
   }
 
+  /// <summary>
+  ///   Prints list to Unity console.
+  /// </summary>
+  /// <typeparam name="T">Type</typeparam>
+  /// <param name="list">List</param>
+  public static void PrintList<T>(IEnumerable<T> list)
+  {
+    StringBuilder output = new StringBuilder();
+    foreach (var item in list)
+    {
+      output.AppendLine(item.ToString());
+    }
+    Debug.Log(output);
+  }
 }

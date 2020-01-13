@@ -116,6 +116,7 @@ let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
 tileImage.src = tileImagesReference[tileHash].src;
 tileImage.addEventListener('click',
 
+9) Tile Sort Helper: After selecting from dropdown, not all images are redrawn, have to press update (u or r)
 
 
 
