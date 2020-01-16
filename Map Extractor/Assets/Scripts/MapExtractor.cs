@@ -283,7 +283,7 @@ public class MapExtractor : MonoBehaviour
     Util.WriteTextFile(TILE_SORT_HELPER_OUTPUT_FILE_PATH, tileHashesSortedByColorOutput.ToString());
 
     // Get the unique tile hashes for a particular input map image, then create a batch script (user has to run the script) to move it from UNDEFINED folder to TEMP folder to separate it and make it easier to determine where a tile is from and from which map image
-    string mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_06_Chapter.png";
+    string mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_07_Chapter.png";
     List<string> tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
     StringBuilder scriptOutput = new StringBuilder();
     scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
@@ -296,6 +296,93 @@ public class MapExtractor : MonoBehaviour
       scriptOutput.AppendLine(scriptLine);
     }
 
+    Debug.Log(scriptOutput);
+
+
+
+    // TODO: TEMP extra remove, just make it easier for me to get tiles without having to rerun it many times
+    mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_08_Chapter.png";
+    tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
+    Debug.Log(scriptOutput);
+    // TODO: TEMP extra remove, just make it easier for me to get tiles without having to rerun it many times
+    mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_09_Chapter.png";
+    tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
+    Debug.Log(scriptOutput);
+    // TODO: TEMP extra remove, just make it easier for me to get tiles without having to rerun it many times
+    mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_10_Chapter.png";
+    tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
+    Debug.Log(scriptOutput);
+    // TODO: TEMP extra remove, just make it easier for me to get tiles without having to rerun it many times
+    mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_11_Chapter.png";
+    tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
+    Debug.Log(scriptOutput);
+    // TODO: TEMP extra remove, just make it easier for me to get tiles without having to rerun it many times
+    mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_07X_Chapter.png";
+    tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
+    Debug.Log(scriptOutput);
+    // TODO: TEMP extra remove, just make it easier for me to get tiles without having to rerun it many times
+    mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_11H_Chapter.png";
+    tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
+    scriptOutput = new StringBuilder();
+    scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
+    foreach (string tileHash in tileHashesFromMapImage)
+    {
+      string scriptLine =
+          "move"
+          + " " + UNDEFINED_GROUP_OUTPUT_FOLDER_NAME + "\\" + tileHash + ".png"
+          + " " + "TEMP";
+      scriptOutput.AppendLine(scriptLine);
+    }
     Debug.Log(scriptOutput);
 
 
