@@ -24,7 +24,11 @@
           INPUT TILE GROUP FOLDER: <select id="tileGroupInputDropDownId" style="width: 7em; text-align: center; font-size: 20px;"></select>
           NOTE: Press the update ('u' or 'r') after selecting a tile group and letting it load to reload again (not all tiles may have loaded the first time)
         </div>
-        <div>Move indexes from RIGHT to LEFT</div>
+        <div>
+          <button id="leftToRightMoveButtonId" class="font-awesome-icons" title="Move all tiles from LEFT to RIGHT" style="width: 30px; height: 30px;">
+            <i class="fa fa-angle-double-right" style="font-size: 20px;"></i>
+          </button>
+        </div>
         <div class="flexBoxRow">
           <div>
             Start Index: <input id="startIndexTextboxId" type="number" min="0" value="0" placeholder="S" style="width: 4em; text-align: center; font-size: 20px;">
@@ -33,7 +37,7 @@
             , End Index: <input id="endIndexTextboxId" type="number" min="0" value="0" placeholder="E" style="width: 4em; text-align: center; font-size: 20px;">
           </div>
           <div>
-            <button id="moveButtonId" class="font-awesome-icons" title="Move" style="width: 30px; height: 30px;">
+            <button id="rightToLeftMoveButtonId" class="font-awesome-icons" title="Move tiles from specified indexes from RIGHT to LEFT" style="width: 30px; height: 30px;">
               <i class="fa fa-angle-double-left" style="font-size: 20px;"></i>
             </button>
           </div>
@@ -13233,7 +13237,8 @@
       tileGroupInputDropDown: 'tileGroupInputDropDownId',
       startIndexTextbox: 'startIndexTextboxId',
       endIndexTextbox: 'endIndexTextboxId',
-      moveButton: 'moveButtonId',
+      leftToRightMoveButton: 'leftToRightMoveButtonId',
+      rightToLeftMoveButton: 'rightToLeftMoveButtonId',
       tileGroupOutputTextbox: 'tileGroupOutputTextboxId',
       moveScriptOutput: 'moveScriptOutputId'
     };
@@ -13399,7 +13404,17 @@
           start(tileGroup);
         });
       
-      document.getElementById(Ids.moveButton).addEventListener('click',
+      document.getElementById(Ids.leftToRightMoveButton).addEventListener('click',
+        function()
+        {
+          for (let i = leftTileHashes.length - 1; i >= 0; i--)
+          {
+            moveToOther(Ids.leftDisplay, i);
+          }
+          updateAll(tileImagesReference);
+        });
+      
+      document.getElementById(Ids.rightToLeftMoveButton).addEventListener('click',
         function()
         {
           let startIndex = document.getElementById(Ids.startIndexTextbox).valueAsNumber;
