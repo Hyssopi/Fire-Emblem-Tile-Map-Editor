@@ -13433,10 +13433,16 @@
       document.addEventListener('keydown',
         function(event)
         {
-          // Redraw/update the left and right displays when user presses 'r' or 'u'
-          if (event.key === 'r' || event.key === 'u')
+          // Redraw/update the left and right displays when user presses 'u'
+          if (event.key === 'u')
           {
             updateAll(tileImagesReference);
+          }
+
+          // Reload editor with the current INPUT tile group when user presses 'r'
+          if (event.key === 'r')
+          {
+            start(document.getElementById(Ids.tileGroupInputDropDown).value);
           }
         });
       

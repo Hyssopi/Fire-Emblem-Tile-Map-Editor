@@ -283,7 +283,7 @@ public class MapExtractor : MonoBehaviour
     Util.WriteTextFile(TILE_SORT_HELPER_OUTPUT_FILE_PATH, tileHashesSortedByColorOutput.ToString());
 
     // Get the unique tile hashes for a particular input map image, then create a batch script (user has to run the script) to move it from UNDEFINED folder to TEMP folder to separate it and make it easier to determine where a tile is from and from which map image
-    string mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_00_Prologue.png";
+    string mapImageFilePath = "C:\\Users\\t\\Desktop\\temp9\\Map Extractor\\Assets\\Resources\\Images\\FireEmblem7_02_Chapter.png";
     List<string> tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
     StringBuilder scriptOutput = new StringBuilder();
     scriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
