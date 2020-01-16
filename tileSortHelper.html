@@ -24,10 +24,17 @@
           INPUT TILE GROUP FOLDER: <select id="tileGroupInputDropDownId" style="width: 7em; text-align: center; font-size: 20px;"></select>
           NOTE: Press the update ('u' or 'r') after selecting a tile group and letting it load to reload again (not all tiles may have loaded the first time)
         </div>
-        <div>
-          <button id="leftToRightMoveButtonId" class="font-awesome-icons" title="Move all tiles from LEFT to RIGHT" style="width: 30px; height: 30px;">
-            <i class="fa fa-angle-double-right" style="font-size: 20px;"></i>
-          </button>
+        <div class="flexBoxRow">
+          <div>
+            <button id="leftRemoveButtonId" class="font-awesome-icons" title="Remove all tiles from LEFT" style="width: 30px; height: 30px;">
+              <i class="fa fa-angle-double-down" style="font-size: 20px;"></i>
+            </button>
+          </div>
+          <div>
+            <button id="leftToRightMoveButtonId" class="font-awesome-icons" title="Move all tiles from LEFT to RIGHT" style="width: 30px; height: 30px;">
+              <i class="fa fa-angle-double-right" style="font-size: 20px;"></i>
+            </button>
+          </div>
         </div>
         <div class="flexBoxRow">
           <div>
@@ -13237,6 +13244,7 @@
       tileGroupInputDropDown: 'tileGroupInputDropDownId',
       startIndexTextbox: 'startIndexTextboxId',
       endIndexTextbox: 'endIndexTextboxId',
+      leftRemoveButton: 'leftRemoveButtonId',
       leftToRightMoveButton: 'leftToRightMoveButtonId',
       rightToLeftMoveButton: 'rightToLeftMoveButtonId',
       tileGroupOutputTextbox: 'tileGroupOutputTextboxId',
@@ -13402,6 +13410,13 @@
           let tileGroup = document.getElementById(Ids.tileGroupInputDropDown).value;
           console.log(tileGroup + " selected");
           start(tileGroup);
+        });
+      
+      document.getElementById(Ids.leftRemoveButton).addEventListener('click',
+        function()
+        {
+          leftTileHashes.splice(0, leftTileHashes.length);
+          updateAll(tileImagesReference);
         });
       
       document.getElementById(Ids.leftToRightMoveButton).addEventListener('click',
