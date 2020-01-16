@@ -13417,6 +13417,9 @@
         {
           leftTileHashes.splice(0, leftTileHashes.length);
           updateAll(tileImagesReference);
+          // Clear the tile group output textbox
+          document.getElementById(Ids.tileGroupOutputTextbox).value = '';
+          updateMoveScriptOutput();
         });
       
       document.getElementById(Ids.leftToRightMoveButton).addEventListener('click',
