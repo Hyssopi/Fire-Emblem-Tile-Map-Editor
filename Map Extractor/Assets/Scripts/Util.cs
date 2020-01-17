@@ -153,6 +153,7 @@ public class Util
     return true;
   }
 
+  /*
   public static string CombinePaths(string path1, params string[] paths)
   {
     if (path1 == null)
@@ -166,6 +167,7 @@ public class Util
 
     return paths.Aggregate(path1, (acc, p) => Path.Combine(acc, p));
   }
+  */
 
   public static string GetTextureHash(Texture2D texture)
   {
