@@ -25,6 +25,7 @@ public class MapExtractor : MonoBehaviour
     public HashSet<string> SouthNeighbors { get; private set; }
     public HashSet<string> WestNeighbors { get; private set; }
     public Texture2D TileImage { get; private set; }
+    public HashSet<string> OriginFileNames { get; private set; }
 
     /// <summary>
     ///   TileData constructor.
@@ -40,6 +41,7 @@ public class MapExtractor : MonoBehaviour
       SouthNeighbors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
       WestNeighbors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
       TileImage = tileImage;
+      OriginFileNames = new HashSet<string>();
     }
 
     /// <summary>
@@ -57,7 +59,9 @@ public class MapExtractor : MonoBehaviour
       jsonOutput.AppendLine("    \"north\": [" + string.Join(",", (NorthNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "],");
       jsonOutput.AppendLine("    \"east\": [" + string.Join(",", (EastNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "],");
       jsonOutput.AppendLine("    \"south\": [" + string.Join(",", (SouthNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "],");
-      jsonOutput.AppendLine("    \"west\": [" + string.Join(",", (WestNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "]");
+      jsonOutput.AppendLine("    \"west\": [" + string.Join(",", (WestNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "],");
+
+      jsonOutput.AppendLine("    \"originFileNames\": [" + string.Join(",", (OriginFileNames.Select(s => "\"" + s + "\"")).ToArray()) + "]");
 
       jsonOutput.Append("  }");
       return jsonOutput.ToString();
@@ -149,6 +153,9 @@ public class MapExtractor : MonoBehaviour
           {
             AllUniqueTileData.Add(tileImageHash, new TileData(tileImageHash, tileImage));
           }
+
+          // Keep a list of which map images the tile comes from
+          AllUniqueTileData[tileImageHash].OriginFileNames.Add(Path.GetFileNameWithoutExtension(mapImageFile.Name));
 
           // Print out Cursor and Empty tileHashes for reference
           if (mapImageFile.Name.Equals(CURSOR_TILE_FILE_NAME, StringComparison.OrdinalIgnoreCase))
