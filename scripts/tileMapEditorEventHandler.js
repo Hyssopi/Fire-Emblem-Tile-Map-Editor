@@ -844,13 +844,26 @@ export function setupUIEventListeners(tileMapEditorData)
       let input = document.getElementById(Ids.sidebar.searchBlock.searchTileInput);
       let searchTileResultsUnorderedList = document.getElementById(Ids.sidebar.searchBlock.searchTileResults);
       let listItems = searchTileResultsUnorderedList.getElementsByTagName('li');
-      let filter = input.value.toUpperCase();
+      // Filters delimited by '&' for AND
+      let filters = input.value.toUpperCase().split('&');
       
       // Loop through all list items, and hide those that don't match the search query
       for (let listItem of listItems)
       {
         let textValue = listItem.title.toUpperCase();
-        if (textValue.indexOf(filter) > -1)
+
+        // Check that it matches for all filter values
+        let isDisplayTile = true;
+        for (let filter of filters)
+        {
+          if (textValue.indexOf(filter) <= -1)
+          {
+            isDisplayTile = false;
+            break;
+          }
+        }
+        
+        if (isDisplayTile)
         {
           listItem.style.display = '';
         }

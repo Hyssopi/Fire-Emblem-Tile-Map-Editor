@@ -1546,7 +1546,7 @@ export function redrawSearchPane(tileMapEditorData)
   for (let tileHash in tileLookup)
   {
     let listItem = document.createElement('li');
-    listItem.title = 'HashID: ' + tileHash + '\nGroup: ' + tileLookup[tileHash].group + '\nOrigin: ' + tileLookup[tileHash].originFileNames;
+    listItem.title = 'HashID: ' + tileHash + '\nGroup: ' + tileLookup[tileHash].group + '\nOrigin: ' + tileLookup[tileHash].originFileNames.join(', ');
     
     let tileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
     tileImage.src = tileLookup[tileHash].image.src;
