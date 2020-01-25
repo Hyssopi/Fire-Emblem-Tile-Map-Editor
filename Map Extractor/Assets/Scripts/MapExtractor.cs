@@ -217,7 +217,7 @@ public class MapExtractor : MonoBehaviour
       {
         //List<string> allUniqueTileDataKeys = AllUniqueTileData.Keys.ToList();
         //List<TileData> allUniqueTileDataValues = AllUniqueTileData.Values.ToList();
-        Debug.LogError(tileImageFilePath.FullName + " exists but its tileHash does not exist in AllUniqueTileData. The tileHash should exist and be read from the input maps.");
+        Debug.LogError(tileImageFilePath.FullName + " tile image exists in the tile image folder, but its tileHash does not exist in AllUniqueTileData. The tileHash should have been read from the input maps but seems to have not.");
         return;
       }
 
