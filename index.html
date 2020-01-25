@@ -121,7 +121,7 @@
             <div class="ribbonGroupTitleHorizontal">HELP</div>
           </div>
           
-          <div class="flexBoxColumn toolbarBlock cursorBlock">
+          <div id="cursorBlockContainerId" class="flexBoxColumn toolbarBlock cursorBlock">
             <table class="innerToolbarBlock" style="font-size: 12px; border-collapse: collapse; user-select: text;">
               <tr>
                 <td nowrap style="padding: 0px 10px 0px 0px; text-align: right;">
@@ -161,15 +161,16 @@
       <div class="sidebar">
         <div class="flexBoxRow sidebarBlock searchBlock">
           <div class="ribbonGroupTitleVerticalWrapper">
-            <div class="ribbonGroupTitleVertical">
+            <div id="searchTitleId" class="ribbonGroupTitleVertical">
               <p>SEARCH</p>
             </div>
           </div>
           
           <div class="flexBoxColumn">
-            <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. group or hash">
-            <div class="containerRow" style="height: 77px;">
-              <ul id="searchTileResultsId"></ul>
+            <input id="searchTileInputId" type="text" placeholder="Search for tiles, ie. hash ID, tile group, and/or origin">
+            <!-- The height of the searchTileResultsWrapper is handled in the event handler -->
+            <div id="searchTileResultsWrapperId" class="containerRow" style="min-height: 103px; max-height: 103px;">
+              <ul id="searchTileResultsId" style="padding: 0px 0px 0px 1px; margin: 0px;"></ul>
             </div>
           </div>
         </div>

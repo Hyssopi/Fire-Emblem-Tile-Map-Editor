@@ -64,6 +64,7 @@ export const Ids =
     },
     cursorBlock:
     {
+      cursorBlockContainer: 'cursorBlockContainerId',
       tileGroup: 'tileGroupId',
       cursorPositionX: 'cursorPositionXId',
       cursorPositionY: 'cursorPositionYId',
@@ -74,7 +75,9 @@ export const Ids =
   {
     searchBlock:
     {
+      searchTitle: 'searchTitleId',
       searchTileInput: 'searchTileInputId',
+      searchTileResultsWrapper: 'searchTileResultsWrapperId',
       searchTileResults: 'searchTileResultsId'
     },
     neighborPane: {},

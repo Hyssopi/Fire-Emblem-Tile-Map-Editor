@@ -1528,6 +1528,8 @@ export function updateCursorInformationDisplay(tileMapEditorData)
   document.getElementById(Ids.toolbar.cursorBlock.cursorPositionY).textContent = cursor.tileY + 1;
   document.getElementById(Ids.toolbar.cursorBlock.tileGroup).textContent = tileLookup[tileHash].group;
   document.getElementById(Ids.toolbar.cursorBlock.tileDescription).textContent = tileLookup[tileHash].description;
+
+  document.getElementById(Ids.toolbar.cursorBlock.cursorBlockContainer).title = 'Origin:\n' + tileLookup[tileHash].originFileNames.join('\n');
 }
 
 /**
@@ -1548,7 +1550,7 @@ export function redrawSearchPane(tileMapEditorData)
     let listItem = document.createElement('li');
     listItem.title = 'HashID: ' + tileHash + '\nGroup: ' + tileLookup[tileHash].group + '\nOrigin: ' + tileLookup[tileHash].originFileNames.join(', ');
     
-    let tileImage = new Image(TILE_WIDTH * 2, TILE_HEIGHT * 2);
+    let tileImage = new Image(TILE_WIDTH * 2.5, TILE_HEIGHT * 2.5);
     tileImage.src = tileLookup[tileHash].image.src;
     tileImage.addEventListener('click',
       function()

@@ -49,13 +49,13 @@ canvas
 img
 {
   image-rendering: crisp-edges;
-  margin: 5px;
+  margin: 4px;
 }
 
 img:hover
 {
   margin: 0px;
-  border: 5px #ADD8E6 solid;
+  border: 4px #ADD8E6 solid;
 }
 
 .flexBoxColumn
@@ -74,7 +74,7 @@ img:hover
 {
   min-width: 134px;
   max-width: 134px;
-  height: 540px;
+  height: 500px;
   overflow: auto;
   justify-content: center;
   align-items: center;

@@ -832,6 +832,25 @@ export function setupUIEventListeners(tileMapEditorData)
       helpResponse();
     });
   
+  document.getElementById(Ids.sidebar.searchBlock.searchTitle).addEventListener('click',
+    function()
+    {
+      // Get the default height from 'max-height'
+      let defaultHeight = document.getElementById(Ids.sidebar.searchBlock.searchTileResultsWrapper).style.maxHeight;
+      let extendedHeight = '890px';
+
+      // Alternate the height of the search results wrapper by modifying the 'min-height'
+      // The effective height is 'min-height' even if 'min-height' is greater than 'max-height'
+      if (document.getElementById(Ids.sidebar.searchBlock.searchTileResultsWrapper).style.minHeight === defaultHeight)
+      {
+        document.getElementById(Ids.sidebar.searchBlock.searchTileResultsWrapper).style.minHeight = extendedHeight;
+      }
+      else
+      {
+        document.getElementById(Ids.sidebar.searchBlock.searchTileResultsWrapper).style.minHeight = defaultHeight;
+      }
+    });
+  
   document.getElementById(Ids.sidebar.searchBlock.searchTileInput).addEventListener('keyup',
     function()
     {
