@@ -25,7 +25,7 @@ public class MapExtractor : MonoBehaviour
     public HashSet<string> SouthNeighbors { get; private set; }
     public HashSet<string> WestNeighbors { get; private set; }
     public Texture2D TileImage { get; private set; }
-    public HashSet<string> OriginFileNames { get; private set; }
+    public HashSet<string> OriginFilePaths { get; private set; }
 
     /// <summary>
     ///   TileData constructor.
@@ -41,7 +41,7 @@ public class MapExtractor : MonoBehaviour
       SouthNeighbors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
       WestNeighbors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
       TileImage = tileImage;
-      OriginFileNames = new HashSet<string>();
+      OriginFilePaths = new HashSet<string>();
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ public class MapExtractor : MonoBehaviour
       jsonOutput.AppendLine("    \"south\": [" + string.Join(",", (SouthNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "],");
       jsonOutput.AppendLine("    \"west\": [" + string.Join(",", (WestNeighbors.Select(s => "\"" + s + "\"")).ToArray()) + "],");
 
-      jsonOutput.AppendLine("    \"originFileNames\": [" + string.Join(",", (OriginFileNames.Select(s => "\"" + s + "\"")).ToArray()) + "]");
+      jsonOutput.AppendLine("    \"originFilePaths\": [" + string.Join(",", (OriginFilePaths.Select(s => "\"" + s + "\"")).ToArray()) + "]");
 
       jsonOutput.Append("  }");
       return jsonOutput.ToString();
@@ -126,12 +126,23 @@ public class MapExtractor : MonoBehaviour
   {
     Util.ConfigureTextureImporterDirectory("Assets/Resources/Images");
 
+    string resourceImagesPath = Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME).Replace('/', Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+
     // Read the input map images (for example, Fire Emblem maps) and extract the tile images and neighbor data
     List<FileInfo> mapImageFileList = Util.GetFileList(Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME), "png");
     foreach (FileInfo mapImageFile in mapImageFileList)
     {
+      // Get the directory path after the Resources/Images, without the filename
+      string originSubDirectoryPath = string.Empty;
+      if (mapImageFile.DirectoryName.Length > resourceImagesPath.Length)
+      {
+        originSubDirectoryPath = mapImageFile.DirectoryName.Substring(resourceImagesPath.Length);
+      }
+
+      string originFilePath = Path.Combine(originSubDirectoryPath, Path.GetFileNameWithoutExtension(mapImageFile.Name));
+
       // Load the chapter map image
-      Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, Path.GetFileNameWithoutExtension(mapImageFile.Name))) as Texture2D);
+      Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, originFilePath)) as Texture2D);
 
       UnityEngine.Assertions.Assert.IsTrue(mapImage.width % TILE_WIDTH_PIXEL == 0);
       UnityEngine.Assertions.Assert.IsTrue(mapImage.height % TILE_HEIGHT_PIXEL == 0);
@@ -155,7 +166,7 @@ public class MapExtractor : MonoBehaviour
           }
 
           // Keep a list of which map images the tile comes from
-          AllUniqueTileData[tileImageHash].OriginFileNames.Add(Path.GetFileNameWithoutExtension(mapImageFile.Name));
+          AllUniqueTileData[tileImageHash].OriginFilePaths.Add(originFilePath.Replace('\\', '/'));
 
           // Print out Cursor and Empty tileHashes for reference
           if (mapImageFile.Name.Equals(CURSOR_TILE_FILE_NAME, StringComparison.OrdinalIgnoreCase))
@@ -294,9 +305,8 @@ public class MapExtractor : MonoBehaviour
     StringBuilder tileHashesByMapScriptOutput = new StringBuilder();
     foreach (FileInfo mapImageFile in mapImageFileList)
     {
-      string mapImageFilePath = Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME, mapImageFile.Name);
-      List<string> tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFilePath);
-      tileHashesByMapScriptOutput.AppendLine("\nrem " + mapImageFilePath);
+      List<string> tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFile);
+      tileHashesByMapScriptOutput.AppendLine("\nrem " + mapImageFile.FullName);
       tileHashesByMapScriptOutput.AppendLine("cd " + Path.Combine(BASE_OUTPUT_DIRECTORY_PATH, IMAGES_OUTPUT_FOLDER_NAME));
       foreach (string tileHash in tileHashesFromMapImage)
       {
@@ -309,16 +319,8 @@ public class MapExtractor : MonoBehaviour
     }
     Util.WriteTextFile(TILE_HASHES_BY_MAP_SCRIPT_FILE_PATH, tileHashesByMapScriptOutput.ToString());
 
-
-
-
-
-    // TODO: TEMP remove. Used to get list of Directories
+    // TODO: TEMP, used to get list of Directories
     Util.PrintList(Directory.GetDirectories("C:\\Users\\t\\Desktop\\temp9\\tiles\\images").Select(path => "\"" + Path.GetFileName(path) + "\","));
-
-
-
-
 
   }
 
@@ -359,14 +361,25 @@ public class MapExtractor : MonoBehaviour
   }
 
   /// <summary>
-  ///   Gets the list of unique tile hashes for the given input map image.
+  ///   Gets the list of unique tile hashes for the given input map image in Resources.
   /// </summary>
-  /// <param name="mapImageFilePath">Map image file path</param>
+  /// <param name="mapImageFile">Map image file</param>
   /// <returns>List of unique tile hashes for the given input map image</returns>
-  public static List<string> GetTileHashesFromMapImage(string mapImageFilePath)
+  public static List<string> GetTileHashesFromMapImage(FileInfo mapImageFile)
   {
+    string resourceImagesPath = Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME).Replace('/', Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+
+    // Get the directory path after the Resources/Images, without the filename
+    string originSubDirectoryPath = string.Empty;
+    if (mapImageFile.DirectoryName.Length > resourceImagesPath.Length)
+    {
+      originSubDirectoryPath = mapImageFile.DirectoryName.Substring(resourceImagesPath.Length);
+    }
+
+    string originFilePath = Path.Combine(originSubDirectoryPath, Path.GetFileNameWithoutExtension(mapImageFile.Name));
+
     // Load the chapter map image
-    Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, Path.GetFileNameWithoutExtension(mapImageFilePath))) as Texture2D);
+    Texture2D mapImage = Util.DuplicateTexture(Resources.Load(Path.Combine(MAP_INPUT_FOLDER_NAME, originFilePath)) as Texture2D);
 
     UnityEngine.Assertions.Assert.IsTrue(mapImage.width % TILE_WIDTH_PIXEL == 0);
     UnityEngine.Assertions.Assert.IsTrue(mapImage.height % TILE_HEIGHT_PIXEL == 0);

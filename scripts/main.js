@@ -178,7 +178,7 @@ fetch(tileReferencesJsonFilePath)
       tileImage.src = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + tileReferencesJson[i].group + '/' + tileReferencesJson[i].tileHash + '.png';
       tileLookup[tileReferencesJson[i].tileHash].image = tileImage;
 
-      tileLookup[tileReferencesJson[i].tileHash].originFileNames = tileReferencesJson[i].originFileNames;
+      tileLookup[tileReferencesJson[i].tileHash].originFilePaths = tileReferencesJson[i].originFilePaths;
     }
     
     setup(tileLookup);
