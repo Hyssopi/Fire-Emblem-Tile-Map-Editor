@@ -47,7 +47,7 @@ public class Util
   }
 
   // Recursively get list of files from main project relative path, ie. "Assets/Resources/Images"
-  // TODO: Check if "png" is case sensitive?
+  // TODO: but also for absolute paths
   public static List<FileInfo> GetFileList(string relativePath, string fileExtensionFilter = "*")
   {
     DirectoryInfo directoryInfo = new DirectoryInfo(relativePath);
@@ -63,21 +63,21 @@ public class Util
   // https://support.unity3d.com/hc/en-us/articles/206486626-How-can-I-get-pixels-from-unreadable-textures-
   public static Texture2D DuplicateTexture(Texture2D source)
   {
-    RenderTexture renderTex = RenderTexture.GetTemporary(
+    RenderTexture renderTexure = RenderTexture.GetTemporary(
       source.width,
       source.height,
       0,
       RenderTextureFormat.Default,
       RenderTextureReadWrite.Linear
     );
-    Graphics.Blit(source, renderTex);
+    Graphics.Blit(source, renderTexure);
     RenderTexture previous = RenderTexture.active;
-    RenderTexture.active = renderTex;
+    RenderTexture.active = renderTexure;
     Texture2D readableText = new Texture2D(source.width, source.height);
-    readableText.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+    readableText.ReadPixels(new Rect(0, 0, renderTexure.width, renderTexure.height), 0, 0);
     readableText.Apply();
     RenderTexture.active = previous;
-    RenderTexture.ReleaseTemporary(renderTex);
+    RenderTexture.ReleaseTemporary(renderTexure);
     return readableText;
   }
 
@@ -101,12 +101,39 @@ public class Util
     return readableText;
   }
 
-  public static void SaveTextureAsPNG(Texture2D texture, string fullFilePath)
+  public static void SaveTextureAsPNG(Texture2D texture, string filePath)
   {
     byte[] bytes = texture.EncodeToPNG();
-    System.IO.File.WriteAllBytes(fullFilePath, bytes);
-    //Debug.Log(bytes.Length/1024  + "Kb was saved as: " + fullFilePath);
+    System.IO.File.WriteAllBytes(filePath, bytes);
+    //Debug.Log(bytes.Length/1024  + "Kb was saved as: " + filePath);
   }
+
+
+  public static Texture2D Get15BitTexture(Texture2D texture)
+  {
+    Texture2D texture15Bit = DuplicateTexture(texture);
+
+    Color32[] colors = texture15Bit.GetPixels32();
+
+    for (int i = 0; i < colors.Length; i++)
+    {
+      colors[i].r &= 0xF8;
+      colors[i].g &= 0xF8;
+      colors[i].b &= 0xF8;
+    }
+
+    texture15Bit.SetPixels32(colors);
+    texture15Bit.Apply();
+
+    return texture15Bit;
+  }
+
+
+
+
+
+
+
 
   public static void ConfigureTextureImporterFile(string relativeTextureFilePath)
   {
@@ -152,22 +179,6 @@ public class Util
     }
     return true;
   }
-
-  /*
-  public static string CombinePaths(string path1, params string[] paths)
-  {
-    if (path1 == null)
-    {
-      throw new ArgumentNullException("path1");
-    }
-    if (paths == null)
-    {
-      throw new ArgumentNullException("paths");
-    }
-
-    return paths.Aggregate(path1, (acc, p) => Path.Combine(acc, p));
-  }
-  */
 
   public static string GetTextureHash(Texture2D texture)
   {

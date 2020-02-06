@@ -126,6 +126,7 @@ public class MapExtractor : MonoBehaviour
   {
     Util.ConfigureTextureImporterDirectory("Assets/Resources/Images");
 
+    /*
     string resourceImagesPath = Path.Combine(RESOURCE_DIRECTORY_PATH, MAP_INPUT_FOLDER_NAME).Replace('/', Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
     // Read the input map images (for example, Fire Emblem maps) and extract the tile images and neighbor data
@@ -321,7 +322,26 @@ public class MapExtractor : MonoBehaviour
 
     // TODO: TEMP, used to get list of Directories
     Util.PrintList(Directory.GetDirectories("C:\\Users\\t\\Desktop\\temp9\\tiles\\images").Select(path => "\"" + Path.GetFileName(path) + "\","));
+    */
 
+
+    // Loop through all the folders
+
+
+
+    List<FileInfo> mapImageFileList = Util.GetFileList(@"C:\Users\t\Desktop\temp9\References\Images (24-bit Color Depth)", "Png");
+    foreach (FileInfo mapImageFile in mapImageFileList)
+    {
+      Texture2D mapImageTexture = new Texture2D(100, 100);
+      byte[] fileData = File.ReadAllBytes(mapImageFile.FullName);
+
+      mapImageTexture.LoadImage(fileData);
+
+      string outputFullPath = mapImageFile.FullName.Replace("\\temp9\\References\\Images (24-bit Color Depth)\\", "\\testoutput\\");
+      Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
+
+      Util.SaveTextureAsPNG(Util.Get15BitTexture(mapImageTexture), outputFullPath);
+    }
   }
 
   /// <summary>
