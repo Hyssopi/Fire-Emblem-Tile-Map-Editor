@@ -329,7 +329,7 @@ public class MapExtractor : MonoBehaviour
 
 
 
-    List<FileInfo> mapImageFileList = Util.GetFileList(@"C:\Users\t\Desktop\temp9\References\Images (24-bit Color Depth)", "Png");
+    List<FileInfo> mapImageFileList = Util.GetFileList(@"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)", "png");
     foreach (FileInfo mapImageFile in mapImageFileList)
     {
       Texture2D mapImageTexture = new Texture2D(100, 100);
@@ -337,7 +337,7 @@ public class MapExtractor : MonoBehaviour
 
       mapImageTexture.LoadImage(fileData);
 
-      string outputFullPath = mapImageFile.FullName.Replace("\\temp9\\References\\Images (24-bit Color Depth)\\", "\\testoutput\\");
+      string outputFullPath = mapImageFile.FullName.Replace("\\temp9\\References\\Images (24-Bit Color Depth)\\", "\\testoutput\\");
       Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
 
       Util.SaveTextureAsPNG(Util.Get15BitTexture(mapImageTexture), outputFullPath);
