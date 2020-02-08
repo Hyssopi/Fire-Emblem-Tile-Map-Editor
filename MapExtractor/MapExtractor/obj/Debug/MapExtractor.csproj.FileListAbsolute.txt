@@ -1,0 +1,6 @@
+C:\Users\t\Desktop\MapExtractor\MapExtractor\bin\Debug\MapExtractor.exe.config
+C:\Users\t\Desktop\MapExtractor\MapExtractor\bin\Debug\MapExtractor.exe
+C:\Users\t\Desktop\MapExtractor\MapExtractor\bin\Debug\MapExtractor.pdb
+C:\Users\t\Desktop\MapExtractor\MapExtractor\obj\Debug\MapExtractor.csprojAssemblyReference.cache
+C:\Users\t\Desktop\MapExtractor\MapExtractor\obj\Debug\MapExtractor.exe
+C:\Users\t\Desktop\MapExtractor\MapExtractor\obj\Debug\MapExtractor.pdb
