@@ -144,6 +144,22 @@ public class Util
     }
   }
 
+  public static void Convert24BitTo15BitPngImages(string inputDirectoryPath, string outputDirectoryPath)
+  {
+    List<FileInfo> imageFileList = GetFileList(inputDirectoryPath, "png");
+    foreach (FileInfo imageFile in imageFileList)
+    {
+      Bitmap image = ReadBitmap(imageFile);
+
+      string subPath = imageFile.FullName.Replace(inputDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
+
+      string outputFullPath = Path.Combine(outputDirectoryPath, subPath);
+      Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
+
+      Get15BitTexture(image).Save(outputFullPath);
+    }
+  }
+
   public static bool IsEqualColor(Color color1, Color color2)
   {
     return color1.R == color2.R && color1.G == color2.G && color1.B == color2.B && color1.A == color2.A;

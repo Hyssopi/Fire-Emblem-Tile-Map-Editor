@@ -10,9 +10,7 @@ namespace MapExtractor.source
     public static void Main(string[] args)
     {
 
-      /*
-      SortedDictionary<string, TileData> AllUniqueTileData { get; private set; } = new SortedDictionary<string, TileData>(StringComparer.OrdinalIgnoreCase);
-      */
+      SortedDictionary<string, TileData> allUniqueTileData = new SortedDictionary<string, TileData>(StringComparer.OrdinalIgnoreCase);
 
 
       /*
@@ -33,13 +31,14 @@ namespace MapExtractor.source
       string imageHash = Util.GetBitmapHash(testImage);
       */
 
+      /*
       Util.Convert15BitTo24BitPngImages(
         @"C:\Users\t\Desktop\SF FE8 TEST",
         @"C:\Users\t\Desktop\SF FE8 TEST OUTPUT",
         true);
+      */
 
-
-
+      MapExtractor.FillAllUniqueTileData(allUniqueTileData, @"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)");
 
       Console.WriteLine("END");
     }
