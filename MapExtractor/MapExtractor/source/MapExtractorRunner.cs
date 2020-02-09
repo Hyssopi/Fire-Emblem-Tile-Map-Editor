@@ -19,14 +19,12 @@ namespace MapExtractor.source
 
     public static void Main(string[] args)
     {
-
       SortedDictionary<string, TileData> allUniqueTileData = new SortedDictionary<string, TileData>(StringComparer.OrdinalIgnoreCase);
 
       string map24BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)";
       string map15BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
       Directory.Delete(map15BitDirectoryPath, true);
       Util.Convert24BitTo15BitPngImages(map24BitDirectoryPath, map15BitDirectoryPath);
-
 
       string mapDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
       string tileImagesDirectoryPath = @"C:\Users\t\Desktop\temp9\tiles\images";
@@ -46,7 +44,8 @@ namespace MapExtractor.source
         tileImagesDirectoryPath,
         batchMoveScriptHelperDirectoryPath);
 
-      MapExtractor.PrintDebugInformation(tileImagesDirectoryPath);
+      IEnumerable<string> debugInformation = MapExtractor.GetDebugInformation(tileImagesDirectoryPath);
+      Util.PrintList(debugInformation);
 
       Console.WriteLine("CheckTileHashesMatchImages: " + MapExtractor.CheckTileHashesMatchImages(tileImagesDirectoryPath));
 

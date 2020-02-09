@@ -295,10 +295,10 @@ namespace MapExtractor.source
       Util.WriteTextFile(Path.Combine(outputBatchMoveScriptHelperDirectoryPath, TILE_HASHES_BY_MAP_SCRIPT_FILE_NAME), tileHashesByMapScriptOutput.ToString());
     }
 
-    public static void PrintDebugInformation(string tileImagesDirectoryPath)
+    public static IEnumerable<string> GetDebugInformation(string tileImagesDirectoryPath)
     {
       // Get list of Directories
-      Util.PrintList(Directory.GetDirectories(tileImagesDirectoryPath).Select(path => "\"" + Path.GetFileName(path) + "\","));
+      return Directory.GetDirectories(tileImagesDirectoryPath).Select(path => "\"" + Path.GetFileName(path) + "\",");
     }
 
     public static bool CheckTileHashesMatchImages(string tileImagesDirectoryPath)
