@@ -14,8 +14,8 @@ const IMAGES_OUTPUT_FOLDER_NAME = 'images';
 const TILE_REFERENCES_JSON_FILE_NAME = 'tileReferences.json';
 export const HELP_FILE_PATH = 'help/index.html';
 
-export const CURSOR_TILE_HASH = '5689f626217c50c9a21804dd4fe81931';
-export const EMPTY_TILE_HASH = '73ad52b71d47ee4d45315c6f0da022ac';
+export const CURSOR_TILE_HASH = 'ef44bdef0982775ba6f0e0e9f7dfa04f';
+export const EMPTY_TILE_HASH = 'b96808283004c0f124a18b2b9670d1c0';
 
 export const Direction =
 {

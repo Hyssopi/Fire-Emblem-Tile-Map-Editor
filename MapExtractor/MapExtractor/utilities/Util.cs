@@ -65,11 +65,12 @@ public class Util
       {
         Color originalColor = originalBitmap.GetPixel(x, y);
 
+        int newAlpha = originalColor.A;
         int newRed = originalColor.R & 0b1111_1000;
         int newGreen = originalColor.G & 0b1111_1000;
         int newBlue = originalColor.B & 0b1111_1000;
 
-        Color modifiedColor = Color.FromArgb(newRed, newGreen, newBlue);
+        Color modifiedColor = Color.FromArgb(newAlpha, newRed, newGreen, newBlue);
 
         modifiedBitmap.SetPixel(x, y, modifiedColor);
       }
@@ -92,11 +93,12 @@ public class Util
         int greenMostSignificantBits = (originalColor.G >> 5) & 0b0111;
         int blueMostSignificantBits = (originalColor.B >> 5) & 0b0111;
 
+        int newAlpha = originalColor.A;
         int newRed = originalColor.R | redMostSignificantBits;
         int newGreen = originalColor.G | greenMostSignificantBits;
         int newBlue = originalColor.B | blueMostSignificantBits;
 
-        Color modifiedColor = Color.FromArgb(newRed, newGreen, newBlue);
+        Color modifiedColor = Color.FromArgb(newAlpha, newRed, newGreen, newBlue);
 
         modifiedBitmap.SetPixel(x, y, modifiedColor);
       }
