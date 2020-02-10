@@ -50,7 +50,7 @@
           </div>
         </div>
         <div>
-          OUTPUT TILE GROUP: <input id="tileGroupOutputTextboxId" type="text" style="width: 7em; text-align: center; font-size: 20px;">
+          OUTPUT TILE GROUP: <select id="tileGroupOutputDropDownId" style="width: 7em; text-align: center; font-size: 20px;"></select>
         </div>
         <div>
           <textarea id="moveScriptOutputId" style="width: 100%;" readonly>
@@ -4189,7 +4189,7 @@
       leftRemoveButton: 'leftRemoveButtonId',
       leftToRightMoveButton: 'leftToRightMoveButtonId',
       rightToLeftMoveButton: 'rightToLeftMoveButtonId',
-      tileGroupOutputTextbox: 'tileGroupOutputTextboxId',
+      tileGroupOutputDropDown: 'tileGroupOutputDropDownId',
       moveScriptOutput: 'moveScriptOutputId'
     };
     
@@ -4207,9 +4207,9 @@
       invalid: 'red'
     };
     
-    //const DEFAULT_GROUP_FOLDER_NAME = 'UNDEFINED';
-    const DEFAULT_GROUP_FOLDER_NAME = 'TEMP';
-
+    const DEFAULT_INPUT_GROUP_FOLDER_NAME = 'TEMP';
+    const DEFAULT_OUTPUT_GROUP_FOLDER_NAME = 'UNDEFINED';
+    
     const TILE_GROUP_INPUT_OPTIONS =
     [
       "ARENA",
@@ -4374,7 +4374,7 @@
           leftTileHashes.splice(0, leftTileHashes.length);
           updateAll(tileImagesReference);
           // Clear the tile group output textbox
-          document.getElementById(Ids.tileGroupOutputTextbox).value = '';
+          document.getElementById(Ids.tileGroupOutputDropDown).value = '';
           updateMoveScriptOutput();
         });
       
@@ -4413,7 +4413,7 @@
           updateAll(tileImagesReference);
         });
       
-      document.getElementById(Ids.tileGroupOutputTextbox).addEventListener('change',
+      document.getElementById(Ids.tileGroupOutputDropDown).addEventListener('change',
         function()
         {
           updateAll(tileImagesReference);
@@ -4452,16 +4452,21 @@
      */
     function setupUI()
     {
-      // Fill out the input tile group drop-down list with tile group options
-      let select = document.getElementById(Ids.tileGroupInputDropDown);
+      // Fill out the input/output tile group drop-down list with tile group options
+      let tileGroupInputSelect = document.getElementById(Ids.tileGroupInputDropDown);
+      let tileGroupOutputSelect = document.getElementById(Ids.tileGroupOutputDropDown);
       for (let tileGroup of TILE_GROUP_INPUT_OPTIONS)
       {
-        let option = document.createElement('option');
-        option.text = tileGroup;
-        select.add(option);
+        let optionInput = document.createElement('option');
+        optionInput.text = tileGroup;
+        tileGroupInputSelect.add(optionInput);
+        let optionOutput = document.createElement('option');
+        optionOutput.text = tileGroup;
+        tileGroupOutputSelect.add(optionOutput);
       }
-      select.value = DEFAULT_GROUP_FOLDER_NAME;
-      start(select.value);
+      tileGroupInputSelect.value = DEFAULT_INPUT_GROUP_FOLDER_NAME;
+      tileGroupOutputSelect.value = DEFAULT_OUTPUT_GROUP_FOLDER_NAME;
+      start(tileGroupInputSelect.value);
     }
 
     /**
@@ -4568,9 +4573,9 @@
     function updateMoveScriptOutput()
     {
       let inputTileGroup = document.getElementById(Ids.tileGroupInputDropDown).value;
-      let outputTileGroup = document.getElementById(Ids.tileGroupOutputTextbox).value;
+      let outputTileGroup = document.getElementById(Ids.tileGroupOutputDropDown).value;
       
-      document.getElementById(Ids.tileGroupOutputTextbox).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
+      document.getElementById(Ids.tileGroupOutputDropDown).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
       document.getElementById(Ids.moveScriptOutput).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
       
       let moveScriptOutput = '';
