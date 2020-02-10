@@ -4208,7 +4208,6 @@
     };
     
     const DEFAULT_INPUT_GROUP_FOLDER_NAME = 'TEMP';
-    const DEFAULT_OUTPUT_GROUP_FOLDER_NAME = 'UNDEFINED';
     
     const TILE_GROUP_INPUT_OPTIONS =
     [
@@ -4465,7 +4464,7 @@
         tileGroupOutputSelect.add(optionOutput);
       }
       tileGroupInputSelect.value = DEFAULT_INPUT_GROUP_FOLDER_NAME;
-      tileGroupOutputSelect.value = DEFAULT_OUTPUT_GROUP_FOLDER_NAME;
+      tileGroupOutputSelect.value = '';
       start(tileGroupInputSelect.value);
     }
 
