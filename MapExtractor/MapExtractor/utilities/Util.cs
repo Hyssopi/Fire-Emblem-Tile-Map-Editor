@@ -151,15 +151,44 @@ public class Util
     List<FileInfo> imageFileList = GetFileList(inputDirectoryPath, "png");
     foreach (FileInfo imageFile in imageFileList)
     {
-      Bitmap image = ReadBitmap(imageFile);
+      Bitmap bitmap = ReadBitmap(imageFile);
 
       string subPath = imageFile.FullName.Replace(inputDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
 
       string outputFullPath = Path.Combine(outputDirectoryPath, subPath);
       Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
 
-      Get15BitTexture(image).Save(outputFullPath);
+      Get15BitTexture(bitmap).Save(outputFullPath);
     }
+  }
+
+  public static bool CheckPngImagesAre15Bit(string directoryPath)
+  {
+    List<FileInfo> imageFileList = GetFileList(directoryPath, "png");
+    foreach (FileInfo imageFile in imageFileList)
+    {
+      Bitmap bitmap = ReadBitmap(imageFile);
+
+      for (int y = 0; y < bitmap.Height; y++)
+      {
+        for (int x = 0; x < bitmap.Width; x++)
+        {
+          Color color = bitmap.GetPixel(x, y);
+
+          int redLeastSignificantBits = color.R & 0b0111;
+          int greenLeastSignificantBits = color.G & 0b0111;
+          int blueLeastSignificantBits = color.B & 0b0111;
+
+          if (redLeastSignificantBits != 0
+            || greenLeastSignificantBits != 0
+            || blueLeastSignificantBits != 0)
+          {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 
   public static bool IsEqualColor(Color color1, Color color2)

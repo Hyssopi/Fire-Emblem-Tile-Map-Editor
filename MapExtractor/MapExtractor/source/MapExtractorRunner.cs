@@ -48,6 +48,10 @@ namespace MapExtractor.source
 
       Console.WriteLine("CheckTileHashesMatchImages: " + MapExtractor.CheckTileHashesMatchImages(tileImagesDirectoryPath));
 
+      Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(mapDirectoryPath));
+
+      Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(tileImagesDirectoryPath));
+      
       Console.WriteLine("END");
     }
   }
