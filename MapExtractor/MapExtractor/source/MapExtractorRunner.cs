@@ -22,24 +22,34 @@ namespace MapExtractor.source
 
       string map24BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)";
       string map15BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
-      Directory.Delete(map15BitDirectoryPath, true);
+      if (Directory.Exists(map15BitDirectoryPath))
+      {
+        Directory.Delete(map15BitDirectoryPath, true);
+      }
       Util.Convert24BitTo15BitPngImages(map24BitDirectoryPath, map15BitDirectoryPath);
 
-      string mapDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
+      string mapImagesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
       string tileImagesDirectoryPath = @"C:\Users\t\Desktop\temp9\tiles\images";
-      MapExtractor.FillAllUniqueTileData(allUniqueTileData, mapDirectoryPath, tileImagesDirectoryPath);
+      MapExtractor.FillAllUniqueTileData(allUniqueTileData, mapImagesDirectoryPath, tileImagesDirectoryPath);
 
       MapExtractor.OutputTileImages(allUniqueTileData, tileImagesDirectoryPath);
 
       string tileReferencesJsonDirectoryPath = @"C:\Users\t\Desktop\temp9\tiles";
       MapExtractor.OutputTileReferencesJson(allUniqueTileData, tileReferencesJsonDirectoryPath);
+      
+      string mapJsonFilesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Fire Emblem Map JSON Files";
+      if (Directory.Exists(mapJsonFilesDirectoryPath))
+      {
+        Directory.Delete(mapJsonFilesDirectoryPath, true);
+      }
+      MapExtractor.GenerateSourceMapJsonFiles(mapImagesDirectoryPath, mapJsonFilesDirectoryPath);
 
       string tileSortHelperDirectoryPath = @"C:\Users\t\Desktop";
       MapExtractor.OutputTileSortHelper(allUniqueTileData, tileSortHelperDirectoryPath);
 
       string batchMoveScriptHelperDirectoryPath = @"C:\Users\t\Desktop";
       MapExtractor.OutputBatchMoveScriptHelper(
-        mapDirectoryPath,
+        mapImagesDirectoryPath,
         tileImagesDirectoryPath,
         batchMoveScriptHelperDirectoryPath);
 
@@ -48,10 +58,10 @@ namespace MapExtractor.source
 
       Console.WriteLine("CheckTileHashesMatchImages: " + MapExtractor.CheckTileHashesMatchImages(tileImagesDirectoryPath));
 
-      Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(mapDirectoryPath));
+      Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(mapImagesDirectoryPath));
 
       Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(tileImagesDirectoryPath));
-      
+
       Console.WriteLine("END");
     }
   }

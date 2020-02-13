@@ -293,6 +293,33 @@ public class Util
     return hexadecimalHashResult.ToString();
   }
 
+  public static string JaggedListToJson(List<List<string>> jaggedList)
+  {
+    StringBuilder jsonOutput = new StringBuilder();
+
+    jsonOutput.AppendLine("[");
+
+    for (int i = 0; i < jaggedList.Count; i++)
+    {
+      jsonOutput.Append("  [");
+
+      jsonOutput.Append("\"" + string.Join("\", \"", jaggedList[i]) + "\"");
+
+      if (i == jaggedList.Count - 1)
+      {
+        jsonOutput.AppendLine("]");
+      }
+      else
+      {
+        jsonOutput.AppendLine("],");
+      }
+    }
+
+    jsonOutput.AppendLine("]");
+
+    return jsonOutput.ToString();
+  }
+
   /// <summary>
   ///   Prints list to console.
   /// </summary>

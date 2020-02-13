@@ -209,6 +209,34 @@ namespace MapExtractor.source
       Util.WriteTextFile(Path.Combine(outputTileReferencesJsonDirectoryPath, TILE_REFERENCES_JSON_FILE_NAME), outputJsonLines.ToString());
     }
 
+    public static void GenerateSourceMapJsonFiles(string inputMapImagesDirectoryPath, string outputMapJsonFilesDirectoryPath)
+    {
+      List<FileInfo> imageFileList = Util.GetFileList(inputMapImagesDirectoryPath, "png");
+      foreach (FileInfo imageFile in imageFileList)
+      {
+        Bitmap mapImage = Util.ReadBitmap(imageFile);
+
+        List<List<string>> tileHashesMap = new List<List<string>>();
+        for (int y = 0; y < mapImage.Height / TILE_HEIGHT_PIXEL; y++)
+        {
+          tileHashesMap.Add(new List<string>());
+          for (int x = 0; x < mapImage.Width / TILE_WIDTH_PIXEL; x++)
+          {
+            Bitmap tileImage = Util.GetSubBitmap(mapImage, x * TILE_WIDTH_PIXEL, y * TILE_HEIGHT_PIXEL, TILE_WIDTH_PIXEL, TILE_HEIGHT_PIXEL);
+            string tileImageHash = Util.GetBitmapHash(tileImage);
+            tileHashesMap[y].Add(tileImageHash);
+          }
+        }
+
+        string subPath = imageFile.FullName.Replace(inputMapImagesDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
+
+        string outputFullPath = Path.Combine(outputMapJsonFilesDirectoryPath, subPath + ".json");
+        Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
+
+        Util.WriteTextFile(outputFullPath, Util.JaggedListToJson(tileHashesMap));
+      }
+    }
+
     public static void OutputTileSortHelper(
       SortedDictionary<string, TileData> allUniqueTileData,
       string outputTileSortHelperDirectoryPath)
