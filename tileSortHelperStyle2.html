@@ -420,6 +420,12 @@
                 }, false);
             }
 
+            if (!tileImagesReference[tileHash])
+            {
+              console.warn('tileImagesReference[tileHash] is undefined, might be initial load up');
+              return;
+            }
+
             tileImage.src = tileImagesReference[tileHash].src;
             
             let newDiv = document.createElement('div');
