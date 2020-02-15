@@ -47,12 +47,14 @@
     */
     img
     {
-      margin: 1px;
+      padding: 0px;
+      margin: 0px;
     }
     img:hover
     {
-      margin: 1px;
       border: 0px #ADD8E6 solid;
+      padding: 0px;
+      margin: 0px;
     }
 
     label
@@ -430,6 +432,10 @@
             
             let newDiv = document.createElement('div');
             newDiv.appendChild(tileImage);
+
+            newDiv.style.padding = '0px';
+            newDiv.style.margin = '0px';
+            newDiv.style.height = TILE_HEIGHT * 4 + 'px';
 
             newDivRow.appendChild(newDiv);
           }
