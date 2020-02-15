@@ -54,6 +54,15 @@
       margin: 1px;
       border: 0px #ADD8E6 solid;
     }
+
+    label
+    {
+      font-size: 30px;
+      border: 2px yellow solid;
+      background-color: blue;
+      padding: 5px 20px;
+      margin: 0px;
+    }
   </style>
 
   <script>
@@ -72,6 +81,11 @@
     const TILE_WIDTH = 16;
     const TILE_HEIGHT = 16;
     
+    const EMPTY_GROUP_NAME = 'EMPTY';
+    const EMPTY_TILE_HASH = 'b96808283004c0f124a18b2b9670d1c0';
+
+    const TILE_GROUP_RADIO_BUTTON_NAME = 'TILE_GROUP';
+
     const BASE_OUTPUT_DIRECTORY_PATH = 'tiles';
     const IMAGES_OUTPUT_FOLDER_NAME = 'images';
     
@@ -139,16 +153,6 @@
       "WATER"
     ];
 
-    const LOAD_MAP_AMOUNT = 3;
-
-    const INPUT_MAP_FILE_PATHS =
-    [
-      "C:\\Users\\t\\Desktop\\temp9\\References\\Fire Emblem Map JSON Files\\Fire Emblem 8\\Chapters\\01\\001.png.json",
-      "C:\\Users\\t\\Desktop\\temp9\\References\\Fire Emblem Map JSON Files\\Fire Emblem 8\\Chapters\\02\\001.png.json",
-      "C:\\Users\\t\\Desktop\\temp9\\References\\Fire Emblem Map JSON Files\\Fire Emblem 8\\Chapters\\03\\001.png.json",
-      "C:\\Users\\t\\Desktop\\temp9\\References\\Fire Emblem Map JSON Files\\Fire Emblem 8\\Chapters\\04\\001.png.json"
-    ];
-
     let tileImagesReference = [];
     let doNotShowTileHashes = [];
 
@@ -170,10 +174,10 @@
       bottomTileHashes.splice(0, bottomTileHashes.length);
 
       // Add Empty Tile to reference
-      let tileEmptyImageSource = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + 'EMPTY' + '/' + 'b96808283004c0f124a18b2b9670d1c0' + '.png';
+      let tileEmptyImageSource = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + EMPTY_GROUP_NAME + '/' + EMPTY_TILE_HASH + '.png';
       let emptyTileImage = new Image();
       emptyTileImage.src = tileEmptyImageSource;
-      tileImagesReference['b96808283004c0f124a18b2b9670d1c0'] = emptyTileImage;
+      tileImagesReference[EMPTY_TILE_HASH] = emptyTileImage;
 
       setupEventListeners(tileImagesReference);
       setupUI();
@@ -203,6 +207,19 @@
           {
             updateAll(tileImagesReference);
           }
+          if (event.key === 'c' || event.key === 'n')
+          {
+            bottomTileHashes.splice(0, bottomTileHashes.length);
+
+            let outputRadioButtonInput = document.querySelector('input[name="' + TILE_GROUP_RADIO_BUTTON_NAME + '"]:checked');
+            
+            if (outputRadioButtonInput !== null)
+            {
+              outputRadioButtonInput.checked = false;
+            }
+
+            updateAll(tileImagesReference);
+          }
         });
 
       document.getElementById(Ids.importMapFileButton).addEventListener('click',
@@ -226,11 +243,16 @@
 
             addMapJsonToTop(tileImagesReference, topTileHashes, mapJson);
             updateAll(tileImagesReference);
-            // Maybe copy to clipboard?
             
             console.log('\"' + file.name + '\" map has been loaded.');
           }
         }
+
+      document.getElementById(Ids.outputTileGroupBlock).addEventListener('click',
+        function()
+        {
+          updateAll(tileImagesReference);
+        });
     }
     
     /**
@@ -238,8 +260,32 @@
      */
     function setupUI()
     {
-      // TODO: Add tile group buttons
+      // Add tile group radio buttons
+      let outputTileGroupBlock = document.getElementById(Ids.outputTileGroupBlock);
+
+      for (let tileGroup of TILE_GROUP_INPUT_OPTIONS)
+      {
+        let radioButton = createRadioButtonWithTextLabel(TILE_GROUP_RADIO_BUTTON_NAME, tileGroup, tileGroup);
+
+        outputTileGroupBlock.appendChild(radioButton);
+      }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     function addMapJsonToTop(tileImagesReference, topTileHashes, mapJson)
     {
@@ -297,21 +343,18 @@
 
 
 
-    /*
-    function moveToOther(originDisplayId, x, y)
+    
+    function moveTopToBottom(x, y)
     {
-      if (originDisplayId === Ids.bottomDisplay)
-      {
-        let tileHash = leftTileHashes.splice(index, 1);
-        rightTileHashes.push(tileHash);
-      }
-      else if (originDisplayId === Ids.topDisplay)
-      {
-        let tileHash = rightTileHashes.splice(index, 1);
-        leftTileHashes.push(tileHash);
-      }
+      doNotShowTileHashes.push(topTileHashes[y][x]);
+      bottomTileHashes.push(topTileHashes[y][x]);
     }
-    */
+
+    function moveBottomToOut(index)
+    {
+      bottomTileHashes.splice(index, 1);
+    }
+    
     
     /**
      * Update / redraw GUI.
@@ -322,11 +365,6 @@
     {
       redrawDisplay(tileImagesReference, Ids.topDisplay, topTileHashes);
       redrawDisplay(tileImagesReference, Ids.bottomDisplay, bottomTileHashes);
-      
-      console.log('\n');
-      //console.log('TOP has: ' + topTileHashes.length + ' tiles');
-      console.log('BOTTOM has: ' + bottomTileHashes.length + ' tiles');
-      console.log('\n');
       
       updateMoveScriptOutput();
     }
@@ -350,22 +388,7 @@
         {
           let newDivRow = document.createElement('div');
           newDivRow.classList.add('flexBoxRow');
-          let newDivRowReference = [];
-          for (let x = 0; x < tileHashes[y].length; x++)
-          {
-            let newDiv = document.createElement('div');
-            newDiv.id = 'tile:' + x + ',' + y;
 
-            newDivRow.appendChild(newDiv);
-            newDivRowReference.push(newDiv);
-          }
-          displayDiv.appendChild(newDivRow);
-          newDivGridReference.push(newDivRowReference);
-        }
-
-        
-        for (let y = 0; y < tileHashes.length; y++)
-        {
           for (let x = 0; x < tileHashes[y].length; x++)
           {
             let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
@@ -373,20 +396,20 @@
 
             if (doNotShowTileHashes.includes(tileHashes[y][x]))
             {
-              tileHash = 'b96808283004c0f124a18b2b9670d1c0';
+              tileHash = EMPTY_TILE_HASH;
             }
             else
             {
               tileHash = tileHashes[y][x];
 
-              /*
               tileImage.addEventListener('mouseup',
                 function(event)
                 {
                   if (event.button === 0)
                   {
                     // Left mouse click
-                    moveToOther(displayId, i);
+                    moveTopToBottom(x, y);
+                    updateAll(tileImagesReference);
                   }
                 }, false);
               tileImage.addEventListener('contextmenu',
@@ -395,58 +418,54 @@
                   // Right click, prevent context menu from showing
                   event.preventDefault();
                 }, false);
-              */
             }
 
             tileImage.src = tileImagesReference[tileHash].src;
             
-            newDivGridReference[y][x].appendChild(tileImage);
-            //document.getElementById('tile:' + x + ',' + y).appendChild(tileImage);
+            let newDiv = document.createElement('div');
+            newDiv.appendChild(tileImage);
+
+            newDivRow.appendChild(newDiv);
           }
+          displayDiv.appendChild(newDivRow);
         }
       }
       else if (displayId == Ids.bottomDisplay)
       {
-
-      }
-
-
-
-
-      /*
-      let unorderedList = document.getElementById(displayId);
-      unorderedList.innerHTML = '';
-      
-      for (let i = 0; i < tileHashes.length; i++)
-      {
-        let tileHash = tileHashes[i];
+        let unorderedList = document.getElementById(displayId);
+        unorderedList.innerHTML = '';
         
-        let listItem = document.createElement('li');
-        listItem.title = i;
-        
-        let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
-        tileImage.src = tileImagesReference[tileHash].src;
-        tileImage.addEventListener('mouseup',
-          function(event)
-          {
-            if (event.button === 0)
+        for (let i = 0; i < tileHashes.length; i++)
+        {
+          let tileHash = tileHashes[i];
+          
+          let listItem = document.createElement('li');
+          listItem.title = i;
+          
+          let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
+          tileImage.src = tileImagesReference[tileHash].src;
+          tileImage.addEventListener('mouseup',
+            function(event)
             {
-              // Left mouse click
-              moveToOther(displayId, i);
-            }
-          }, false);
-        tileImage.addEventListener('contextmenu',
-          function(event)
-          {
-            // Right click, prevent context menu from showing
-            event.preventDefault();
-          }, false);
-        
-        listItem.appendChild(tileImage);
-        
-        unorderedList.appendChild(listItem);
+              if (event.button === 0)
+              {
+                // Left mouse click
+                moveBottomToOut(i);
+                updateAll(tileImagesReference);
+              }
+            }, false);
+          tileImage.addEventListener('contextmenu',
+            function(event)
+            {
+              // Right click, prevent context menu from showing
+              event.preventDefault();
+            }, false);
+          
+          listItem.appendChild(tileImage);
+          
+          unorderedList.appendChild(listItem);
+        }
       }
-      */
     }
     
     /**
@@ -454,16 +473,20 @@
      */
     function updateMoveScriptOutput()
     {
-      /*
-      let inputTileGroup = document.getElementById(Ids.tileGroupInputDropDown).value;
-      let outputTileGroup = document.getElementById(Ids.tileGroupOutputDropDown).value;
-      
-      document.getElementById(Ids.tileGroupOutputDropDown).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
-      document.getElementById(Ids.moveScriptOutput).style.backgroundColor = outputTileGroup === '' ? BackgroundColor.invalid : BackgroundColor.valid;
-      */
-      
       let inputTileGroup = 'UNDEFINED';
-      let outputTileGroup = 'TEMP';
+
+      let outputRadioButtonInput = document.querySelector('input[name="' + TILE_GROUP_RADIO_BUTTON_NAME + '"]:checked');
+      let outputTileGroup = inputTileGroup;
+      
+      if (outputRadioButtonInput !== null)
+      {
+        outputTileGroup = outputRadioButtonInput.value;
+        document.getElementById(Ids.moveScriptOutput).style.backgroundColor = BackgroundColor.valid;
+      }
+      else
+      {
+        document.getElementById(Ids.moveScriptOutput).style.backgroundColor = BackgroundColor.invalid;
+      }
 
       let moveScriptOutput = '';
       moveScriptOutput += 'cd ' + BASE_IMAGE_DIRECTORY_PATH + '\n';
@@ -478,6 +501,29 @@
       document.getElementById(Ids.moveScriptOutput).value = moveScriptOutput;
 
       copyTextToClipboard(moveScriptOutput);
+    }
+
+    /**
+     * Create and return a radio button with text label.
+     *
+     * @param name Name of the group, should be the same for the set of radio buttons in the group
+     * @param value Value of the radio button
+     * @param text Text of the label
+     * @return Radio button with text label
+     */
+    function createRadioButtonWithTextLabel(name, value, text)
+    {
+      let label = document.createElement('label');
+      let radioButtonInput = document.createElement('input');
+
+      radioButtonInput.type = 'radio';
+      radioButtonInput.name = name;
+      radioButtonInput.value = value;
+
+      label.appendChild(radioButtonInput);
+      label.appendChild(document.createTextNode(text));
+
+      return label;
     }
 
     /**

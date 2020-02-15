@@ -494,3 +494,26 @@ export function getImage(url, callback)
   image.onerror = function() { callback(null); };
   image.src = url;
 }
+
+/**
+ * Create and return a radio button with text label.
+ *
+ * @param name Name of the group, should be the same for the set of radio buttons in the group
+ * @param value Value of the radio button
+ * @param text Text of the label
+ * @return Radio button with text label
+ */
+export function createRadioButtonWithTextLabel(name, value, text)
+{
+  let label = document.createElement('label');
+  let radioButtonInput = document.createElement('input');
+
+  radioButtonInput.type = 'radio';
+  radioButtonInput.name = name;
+  radioButtonInput.value = value;
+
+  label.appendChild(radioButtonInput);
+  label.appendChild(document.createTextNode(text));
+
+  return label;
+}
