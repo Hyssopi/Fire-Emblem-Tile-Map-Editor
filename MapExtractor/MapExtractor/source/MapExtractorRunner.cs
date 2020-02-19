@@ -6,6 +6,7 @@ namespace MapExtractor.source
 {
   public class MapExtractorRunner
   {
+    /*
     // Used in Tile Map Editor
     private const string BASE_OUTPUT_DIRECTORY_PATH = "C:/Users/t/Desktop/temp9/tiles";
     private const string IMAGES_OUTPUT_FOLDER_NAME = "images";
@@ -15,6 +16,7 @@ namespace MapExtractor.source
     // Used in Tile Sort Helper
     private const string TILE_SORT_HELPER_OUTPUT_FILE_PATH = "C:/Users/t/Desktop/tileHashesSortedByColor.txt";
     private const string TILE_HASHES_BY_MAP_SCRIPT_FILE_PATH = "C:/Users/t/Desktop/tileHashesByMapScript.txt";
+    */
 
     public static void Main(string[] args)
     {
@@ -63,6 +65,24 @@ namespace MapExtractor.source
       Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(tileImagesDirectoryPath));
 
       Console.WriteLine("END");
+
+      /*
+      Console.WriteLine("TEST1");
+      
+      for (int i = 0; i < 10; i++)
+      {
+        try
+        {
+
+        }
+        catch (FileLoadException)
+        {
+          Console.WriteLine("TEST3, waiting 1 second try again, attempt:");
+          System.Threading.Thread.Sleep(1000);
+        }
+      }
+      Console.WriteLine("TEST3");
+      */
     }
   }
 }
