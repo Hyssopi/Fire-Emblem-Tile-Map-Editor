@@ -4552,6 +4552,14 @@
               document.getElementById(Ids.endIndexTextbox).value = i;
             }
           }, false);
+        
+        // Prevent when user tries to drag an image
+        tileImage.addEventListener('dragstart',
+          function(event)
+          {
+            event.preventDefault();
+          }, false);
+        
         tileImage.addEventListener('contextmenu',
           function(event)
           {
