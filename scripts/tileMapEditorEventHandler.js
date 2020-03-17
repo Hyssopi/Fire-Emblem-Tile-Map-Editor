@@ -864,18 +864,22 @@ export function setupUIEventListeners(tileMapEditorData)
       let searchTileResultsUnorderedList = document.getElementById(Ids.sidebar.searchBlock.searchTileResults);
       let listItems = searchTileResultsUnorderedList.getElementsByTagName('li');
       // Filters delimited by '&' for AND
-      let filters = input.value.toUpperCase().split('&');
+      let filterTexts = input.value.toUpperCase().split('&');
       
       // Loop through all list items, and hide those that don't match the search query
       for (let listItem of listItems)
       {
-        let textValue = listItem.title.toUpperCase();
+        let currentListItemText = listItem.title.toUpperCase();
 
-        // Check that it matches for all filter values
+        // Check that it matches for all filter text values
         let isDisplayTile = true;
-        for (let filter of filters)
+        for (let filterText of filterTexts)
         {
-          if (textValue.indexOf(filter) <= -1)
+          let isFilterTextFound = currentListItemText.indexOf(filterText.substring(1)) > -1;
+          let isExcludeFilterText = filterText.charAt(0) === '!';
+
+          // Filter it out if you can't find the filter text (want to include filter text), or you found the filter text (but actually want to exclude it)
+          if ((!isFilterTextFound && !isExcludeFilterText) || (isFilterTextFound && isExcludeFilterText))
           {
             isDisplayTile = false;
             break;
