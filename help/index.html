@@ -127,7 +127,7 @@
           <li class="listItem2"><a href="#function-strictness">Strictness</a></li>
           <li class="listItem2"><a href="#function-fillTile">Fill Tile</a></li>
           <li class="listItem2"><a href="#function-calibrateRange">Calibrate Range</a></li>
-          <li class="listItem2"><a href="#function-calibrateTiles">Calibrate Tile(s)</a></li>
+          <li class="listItem2"><a href="#function-calibrateTiles">Calibrate Tiles</a></li>
           <li class="listItem2"><a href="#function-generateMap">Generate Map</a></li>
           <li class="listItem2"><a href="#function-animateGeneration">Animate Generation</a></li>
           
@@ -193,16 +193,16 @@
           <tr>
             <td nowrap style="font-weight: bold;">c</td>
             <td nowrap>Calibrate tile(s) by re-adjusting adjacent tiles</td>
-            <td rowspan="2" nowrap><a href="#function-calibrateTiles">Calibrate Tile(s)</a></td>
+            <td nowrap><a href="#function-calibrateTiles">Calibrate Tiles</a></td>
           </tr>
           <tr>
             <td nowrap style="font-weight: bold;">[</td>
             <td nowrap>Decrease Calibrate Range</td>
+            <td rowspan="2" nowrap><a href="#function-calibrateRange">Calibrate Range</a></td>
           </tr>
           <tr>
             <td nowrap style="font-weight: bold;">]</td>
             <td nowrap>Increase Calibrate Range</td>
-            <td nowrap><a href="#function-calibrateRange">Calibrate Range</a></td>
           </tr>
           <tr>
             <td nowrap style="font-weight: bold;">g</td>
@@ -368,7 +368,7 @@
           <div class="subSection">
             <img src="images/strictness.png">
             <div>
-              Setting to control how strict the generation for <a href="#function-fillTile">Fill Tile</a>, <a href="#function-calibrateRange">Calibrate Range</a>, and <a href="#function-generateMap">Generate Map</a>.
+              Setting to control how strict the generation is for <a href="#function-fillTile">Fill Tile</a>, <a href="#function-calibrateRange">Calibrate Range</a>, and <a href="#function-generateMap">Generate Map</a>.
               <br>
               The options are:
               <ul style="margin: 0px;">
@@ -403,7 +403,7 @@
           <div class="subSection">
             <img src="images/calibrateRange.png">
             <div>
-              <b>Calibrate Range</b> used in <a href="#function-calibrateTiles">Calibrate Tile(s)</a> feature. It is the radius from the cursor in a square.
+              <b>Calibrate Range</b> used in <a href="#function-calibrateTiles">Calibrate Tiles</a> feature. It is the square radius from the cursor.
               <br>
               Range: 0 - 999
               <br>
@@ -445,7 +445,7 @@
           <div class="subSection">
             <img src="images/animateGeneration.png">
             <div>
-              Toggle to enable or disable <b>animation</b> for <a href="#function-calibrateTiles">Calibrate Tile(s)</a> or <a href="#function-generateMap">Generate Map</a>.
+              Toggle to enable or disable <b>animation</b> for <a href="#function-calibrateTiles">Calibrate Tiles</a> or <a href="#function-generateMap">Generate Map</a>.
             </div>
           </div>
         </div>
@@ -467,7 +467,7 @@
             <div>
               <b>Print debug log</b> information to console.
               <br>
-              Right click webpage -> Inspect -> Console, to view debug information.
+              Right click webpage > Inspect > Console, to view debug information.
               <br>
               Button will be hidden unless enabled in code.
               <br>
@@ -495,6 +495,10 @@
           <img src="images/cursor.png">
           <div>
             Shows details on the tile the cursor is on.
+            <br>
+            <img src="images/cursorTooltip.png">
+            <br>
+            Hovering over the section block will show a tooltip popup showing the origin(s) of the tile image that were extracted from.
           </div>
           <div id="cursor-position">
             <b>Position</b> of the cursor in ( x , y ) format, starting from the top left.
@@ -503,7 +507,7 @@
             <b>Group</b> of the tile at the cursor position.
           </div>
           <div id="cursor-description">
-            <b>Description</b> of the tile at the cursor position. Is the hash ID of the tile.
+            <b>Description</b> of the tile at the cursor position. It is the hash ID of the tile.
           </div>
         </div>
       </div>
@@ -517,9 +521,23 @@
           <div>
             Allows user to <b>search</b> through all the tiles. Search by hash ID, tile group, and/or origin.
             <br>
-            Use '<b>&</b>' to filter with multiple search filter parameters such that results must contain all the input filters. For example: "wall&fireemblem6&fireemblem7" will show search results of tiles that are WALL, FireEmblem6, <u>and</u> FireEmblem7.
             <br>
-            Hovering over a tile will show a preview of the tile on the map as well a tooltip popup showing the tile information.
+            Hovering over a tile will show a preview of the tile on the map as well as a tooltip popup showing the tile information.
+            <br>
+            Clicking a tile will set the tile on the map at the cursor.
+            <br>
+            <br>
+            Clicking on the "SEARCH" title bar on the left of the section block will toggle between expanded and collapsed view.
+            <br>
+            <br>
+            Use '<b>&</b>' to filter with multiple search filter parameters such that results must contain all the input filters.
+            <br>
+            Use '<b>!</b>' to specify that the search results must not contain the input block of text.
+            <br>
+            <br>
+            Example 1: "group: wall&fire emblem 6&fire emblem 7" will show search results of tiles that are in WALL group, Fire Emblem 6, <u>and</u> Fire Emblem 7.
+            <br>
+            Example 2: "emblem 6&emblem 7/cutscenes&!emblem 7/chapters&!group: undefined" will show search results of tiles that are in Fire Emblem 6, are in a cutscene in Fire Emblem 7, but not in a chapter in Fire Emblem 7, and not in the UNDEFINED group.
           </div>
         </div>
       </div>
@@ -533,7 +551,9 @@
           <div>
             The four directional (North, West, East, South) panes representing the possible <b>neighbors</b> of the tile at the cursor position.
             <br>
-            Hovering over a tile will show a preview of the tile on the map.
+            Hovering over a tile will show a preview of the tile on the map at the respective direction from the cursor.
+            <br>
+            Clicking a tile will set the tile on the map at the respective direction from the cursor.
           </div>
         </div>
       </div>
@@ -550,6 +570,8 @@
             Uses the same design as <a href="#function-strictness">Strictness</a>.
             <br>
             Hovering over a tile will show a preview of the tile on the map.
+            <br>
+            Clicking a tile will set the tile on the map at the cursor.
           </div>
         </div>
       </div>
