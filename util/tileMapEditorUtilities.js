@@ -1540,7 +1540,6 @@ export function updateCursorInformationDisplay(tileMapEditorData)
 export function redrawSearchPane(tileMapEditorData)
 {
   let tileLookup = tileMapEditorData.tileLookup;
-  let layeredTileHashesDisplay = tileMapEditorData.layeredTileHashesDisplay;
   
   let searchTileResultsUnorderedList = document.getElementById(Ids.sidebar.searchBlock.searchTileResults);
   searchTileResultsUnorderedList.innerHTML = '';
@@ -1569,7 +1568,7 @@ export function redrawSearchPane(tileMapEditorData)
       tileImage.addEventListener('mouseout',
       function()
       {
-        clearHoverTiles(layeredTileHashesDisplay);
+        clearHoverTiles(tileMapEditorData.layeredTileHashesDisplay);
         
         redrawMap(tileMapEditorData);
       }, false);
