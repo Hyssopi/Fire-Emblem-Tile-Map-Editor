@@ -24,7 +24,11 @@ namespace MapExtractor.source
 
       string map24BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)";
       string map15BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
-      Util.DeleteDirectory(map15BitDirectoryPath, true);
+      if (!Util.DeleteDirectory(map15BitDirectoryPath, true))
+      {
+        Console.WriteLine("Cannot delete directory: " + map15BitDirectoryPath + ". Retry again.");
+        return;
+      }
 
       Util.Convert24BitTo15BitPngImages(map24BitDirectoryPath, map15BitDirectoryPath);
 
@@ -38,7 +42,11 @@ namespace MapExtractor.source
       MapExtractor.OutputTileReferencesJson(allUniqueTileData, tileReferencesJsonDirectoryPath);
       
       string mapJsonFilesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Fire Emblem Map JSON Files";
-      Util.DeleteDirectory(mapJsonFilesDirectoryPath, true);
+      if (!Util.DeleteDirectory(mapJsonFilesDirectoryPath, true))
+      {
+        Console.WriteLine("Cannot delete directory: " + mapJsonFilesDirectoryPath + ". Retry again.");
+        return;
+      }
       MapExtractor.GenerateSourceMapJsonFiles(mapImagesDirectoryPath, mapJsonFilesDirectoryPath);
 
       string tileSortHelperDirectoryPath = @"C:\Users\t\Desktop";
