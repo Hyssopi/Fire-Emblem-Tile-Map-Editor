@@ -337,7 +337,24 @@ public class Util
 
 
 
-
+  public static void DeleteDirectory(string directoryPath, bool recursive, int attempts = 10, int attemptMillisecondsTimeout = 1000)
+  {
+    if (Directory.Exists(directoryPath))
+    {
+      for (int i = 0; i < attempts; i++)
+      {
+        try
+        {
+          Directory.Delete(directoryPath, recursive);
+        }
+        catch (FileLoadException)
+        {
+          System.Threading.Thread.Sleep(attemptMillisecondsTimeout);
+          Console.WriteLine("Error attempting to delete directory: " + directoryPath + ", retry attempt: " + (i + 1));
+        }
+      }
+    }
+  }
 
 
 

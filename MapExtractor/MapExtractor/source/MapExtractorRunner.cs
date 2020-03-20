@@ -24,10 +24,8 @@ namespace MapExtractor.source
 
       string map24BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)";
       string map15BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
-      if (Directory.Exists(map15BitDirectoryPath))
-      {
-        Directory.Delete(map15BitDirectoryPath, true);
-      }
+      Util.DeleteDirectory(map15BitDirectoryPath, true);
+
       Util.Convert24BitTo15BitPngImages(map24BitDirectoryPath, map15BitDirectoryPath);
 
       string mapImagesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
@@ -40,10 +38,7 @@ namespace MapExtractor.source
       MapExtractor.OutputTileReferencesJson(allUniqueTileData, tileReferencesJsonDirectoryPath);
       
       string mapJsonFilesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Fire Emblem Map JSON Files";
-      if (Directory.Exists(mapJsonFilesDirectoryPath))
-      {
-        Directory.Delete(mapJsonFilesDirectoryPath, true);
-      }
+      Util.DeleteDirectory(mapJsonFilesDirectoryPath, true);
       MapExtractor.GenerateSourceMapJsonFiles(mapImagesDirectoryPath, mapJsonFilesDirectoryPath);
 
       string tileSortHelperDirectoryPath = @"C:\Users\t\Desktop";
@@ -65,24 +60,6 @@ namespace MapExtractor.source
       Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(tileImagesDirectoryPath));
 
       Console.WriteLine("END");
-
-      /*
-      Console.WriteLine("TEST1");
-      
-      for (int i = 0; i < 10; i++)
-      {
-        try
-        {
-
-        }
-        catch (FileLoadException)
-        {
-          Console.WriteLine("TEST3, waiting 1 second try again, attempt:");
-          System.Threading.Thread.Sleep(1000);
-        }
-      }
-      Console.WriteLine("TEST3");
-      */
     }
   }
 }
