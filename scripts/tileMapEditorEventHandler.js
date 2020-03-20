@@ -875,11 +875,11 @@ export function setupUIEventListeners(tileMapEditorData)
         let isDisplayTile = true;
         for (let filterText of filterTexts)
         {
-          let isFilterTextFound = currentListItemText.indexOf(filterText) > -1;
+          let isFilterTextFound = utilities.containsSubstring(currentListItemText, filterText);
           let isExcludeFilterText = filterText.charAt(0) === '!';
           if (isExcludeFilterText)
           {
-            isFilterTextFound = currentListItemText.indexOf(filterText.substring(1)) > -1;
+            isFilterTextFound = utilities.containsSubstring(currentListItemText, filterText.substring(1));
           }
 
           // Filter it out if you can't find the filter text (want to include filter text), or you found the filter text (but actually want to exclude it)

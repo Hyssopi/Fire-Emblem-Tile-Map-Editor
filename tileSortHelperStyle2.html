@@ -208,7 +208,7 @@
     /**
      * Setup event listeners.
      * 
-     * @param tileImagesReference Contains the tile images with the assumption that it is in the specified group, tile hash is the key
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
      */
     function setupEventListeners(tileImagesReference)
     {
@@ -224,13 +224,14 @@
       document.addEventListener('keydown',
         function(event)
         {
-          // Redraw/update the left and right displays when user presses 'u' or 'r'
           if (event.key === 'u' || event.key === 'r')
           {
+            // Redraw/update the left and right displays when user presses 'u' or 'r'
             updateAll(tileImagesReference);
           }
           if (event.key === 'c' || event.key === 'n' || event.key === '0')
           {
+            // Clear the bottom tile hashes list and output radio button selection when user presses 'c', 'n', or '0'
             bottomTileHashes.splice(0, bottomTileHashes.length);
 
             let outputRadioButtonInput = document.querySelector('input[name="' + TILE_GROUP_RADIO_BUTTON_NAME + '"]:checked');
@@ -293,32 +294,21 @@
       }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+    /**
+     * Add tile hashes from the map JSON file to the top tile hashes 2D list.
+     * 
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
+     * @param topTileHashes 2D list of tile hashes for the top display
+     * @param mapJson Input map json file
+     */
     function addMapJsonToTop(tileImagesReference, topTileHashes, mapJson)
     {
+      let groupFolderName = 'UNDEFINED';
       for (let y = 0; y < mapJson.length; y++)
       {
         let newTileRow = [];
         for (let x = 0; x < mapJson[y].length; x++)
         {
-          
-          let groupFolderName = 'UNDEFINED';
-
           let tileImageSource = BASE_OUTPUT_DIRECTORY_PATH + '/' + IMAGES_OUTPUT_FOLDER_NAME + '/' + groupFolderName + '/' + mapJson[y][x] + '.png';
 
           newTileRow.push(mapJson[y][x]);
@@ -329,7 +319,6 @@
 
             if (!tileImagesReference[mapJson[y][x]])
             {
-              // Only add to the reference and the right display if the tile image exists in the specified group folder
               tileImagesReference[mapJson[y][x]] = tileImage;
             }
 
@@ -358,30 +347,32 @@
       }
     }
 
-
-
-
-
-
-
-
-    
+    /**
+     * Move tile hash from top 2D list to bottom list.
+     * 
+     * @param x Horizontal position of the top tile hash 2D list, starting from 0
+     * @param y Vertical position of the top tile hash 2D list, starting from 0
+     */
     function moveTopToBottom(x, y)
     {
       doNotShowTileHashes.push(topTileHashes[y][x]);
       bottomTileHashes.push(topTileHashes[y][x]);
     }
 
+    /**
+     * Remove the tile hash at index from the bottom list.
+     * 
+     * @param index Index of the tile hash from the bottom list to remove
+     */
     function moveBottomToOut(index)
     {
       bottomTileHashes.splice(index, 1);
     }
     
-    
     /**
      * Update / redraw GUI.
      * 
-     * @param tileImagesReference Contains the tile images with the assumption that it is in the specified group, tile hash is the key
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
      */
     function updateAll(tileImagesReference)
     {
@@ -394,8 +385,8 @@
     /**
      * Redraw the tile display.
      * 
-     * @param tileImagesReference Contains the tile images with the assumption that it is in the specified group, tile hash is the key
-     * @param displayId Display ID, either left or right
+     * @param tileImagesReference Contains the tile images with the assumption that it is in the UNDEFINED group, tile hash is the key
+     * @param displayId Display ID, either top or bottom
      * @param tileHashes List of tile hashes to display
      */
     function redrawDisplay(tileImagesReference, displayId, tileHashes)
@@ -513,7 +504,6 @@
     function updateMoveScriptOutput()
     {
       let inputTileGroup = 'UNDEFINED';
-
       let outputTileGroup = inputTileGroup;
 
       let outputRadioButtonInput = document.querySelector('input[name="' + TILE_GROUP_RADIO_BUTTON_NAME + '"]:checked');
@@ -549,29 +539,6 @@
     }
 
     /**
-     * Create and return a radio button with text label.
-     *
-     * @param name Name of the group, should be the same for the set of radio buttons in the group
-     * @param value Value of the radio button
-     * @param text Text of the label
-     * @return Radio button with text label
-     */
-    function createRadioButtonWithTextLabel(name, value, text)
-    {
-      let label = document.createElement('label');
-      let radioButtonInput = document.createElement('input');
-
-      radioButtonInput.type = 'radio';
-      radioButtonInput.name = name;
-      radioButtonInput.value = value;
-
-      label.appendChild(radioButtonInput);
-      label.appendChild(document.createTextNode(text));
-
-      return label;
-    }
-
-    /**
      * TODO: From utilities.js
      * Copy text to clipboard.
      *
@@ -595,5 +562,30 @@
       selection.removeAllRanges();
       document.body.removeChild(textArea);
     }
+
+    /**
+     * TODO: From utilities.js
+     * Create and return a radio button with text label.
+     *
+     * @param name Name of the group, should be the same for the set of radio buttons in the group
+     * @param value Value of the radio button
+     * @param text Text of the label
+     * @return Radio button with text label
+     */
+    function createRadioButtonWithTextLabel(name, value, text)
+    {
+      let label = document.createElement('label');
+      let radioButtonInput = document.createElement('input');
+
+      radioButtonInput.type = 'radio';
+      radioButtonInput.name = name;
+      radioButtonInput.value = value;
+
+      label.appendChild(radioButtonInput);
+      label.appendChild(document.createTextNode(text));
+
+      return label;
+    }
+
   </script>
 </html>

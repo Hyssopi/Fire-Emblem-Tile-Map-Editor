@@ -11883,7 +11883,7 @@
       invalid: 'red'
     };
     
-    const DEFAULT_INPUT_GROUP_FOLDER_NAME = 'TEMP';
+    const DEFAULT_INPUT_GROUP_FOLDER_NAME = 'UNDEFINED';
     
     const TILE_GROUP_INPUT_OPTIONS =
     [
@@ -11962,7 +11962,7 @@
       "WATER"
     ];
 
-    // Contains the tile images with the assumption that it is in the specified group, tile hash is the key
+    // Contains the tile images with the assumption that it is in the user specified group, tile hash is the key
     let tileImagesReference = [];
 
     let leftTileHashes = [];
@@ -12116,9 +12116,9 @@
       document.addEventListener('keydown',
         function(event)
         {
-          // Redraw/update the left and right displays when user presses 'u' or 'r'
           if (event.key === 'u' || event.key === 'r')
           {
+            // Redraw/update the left and right displays when user presses 'u' or 'r'
             updateAll(tileImagesReference);
           }
         });
@@ -12231,7 +12231,7 @@
               moveToOther(displayId, i);
               
               // Note: Redrawing on every tile click is too laggy if there are too many tiles shown
-              // A solution is to move the tile on click in the data arrays in the code, but not redraw it until the user clicks the refresh/redraw button/key
+              // A solution is to move the tile on click in the data arrays in the code, but not redraw it until the user clicks the refresh/redraw button/key (achieved by not calling updateAll below)
               // This means the user should only click tiles "backwards" since the data is stored in arrays and clicking a tile removes it from the array but the GUI still shows the old indexes until it redraws
               updateAll(tileImagesReference);
             }

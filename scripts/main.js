@@ -3,7 +3,7 @@ import * as tileMapEditorEventHandler from '../scripts/tileMapEditorEventHandler
 import * as tileMapEditorUtilities from '../util/tileMapEditorUtilities.js';
 
 
-const SHOW_PRINT_LOG_BUTTON = true;
+const SHOW_PRINT_LOG_BUTTON = false;
 
 export const TILE_WIDTH = 16;
 export const TILE_HEIGHT = 16;
@@ -100,42 +100,6 @@ export const BackgroundColor =
   valid: 'whitesmoke',
   invalid: 'lightgray'
 };
-
-
-
-
-
-
-
-
-
-/* TODO:
-
-7) Move tile images to folders as TYPE
-images: 13,148 files
-
-8) Maybe improve this by not having to remake a new Image every redraw:
-let tileImage = new Image(TILE_WIDTH * 4, TILE_HEIGHT * 4);
-tileImage.src = tileImagesReference[tileHash].src;
-tileImage.addEventListener('click',
-
-9) Tile Sort Helper: After selecting from dropdown, not all images are redrawn, have to press update (u or r)
-
-
-
-known issue: with generate animation enabled, calibrate functions calls first but the processing is still going on (timer), so the ending cursor position is when the processing is done much later after
-known issue: sometimes with generate animation enabled, calibrate skips filling as it goes
-
-
-91) Higher chance for getFileTile if same TYPE/GROUP
-92) Add zoom boundaries
-93) Multi-select
-
-*/
-
-
-
-
 
 
 // Reading tile reference JSON file

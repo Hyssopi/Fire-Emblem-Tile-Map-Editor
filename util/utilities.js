@@ -517,3 +517,15 @@ export function createRadioButtonWithTextLabel(name, value, text)
 
   return label;
 }
+
+/**
+ * Checks to see if string contains substring.
+ *
+ * @param string String to check
+ * @param substring Substring to check
+ * @return True if string contains substring, false otherwise
+ */
+export function containsSubstring(string, substring)
+{
+  return string.indexOf(substring) > -1;
+}
