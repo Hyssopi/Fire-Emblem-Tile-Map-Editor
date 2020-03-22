@@ -351,7 +351,8 @@ public class Util
         successfullyDeletedDirectory = true;
         break;
       }
-      catch (Exception exception) when (exception is FileLoadException || exception is IOException)
+      //catch (Exception exception) when (exception is FileLoadException || exception is IOException)
+      catch (Exception exception)
       {
         System.Threading.Thread.Sleep(attemptMillisecondsTimeout);
         Console.WriteLine("Error attempting to delete directory: " + directoryPath + ", retry attempt: " + (i + 1));
