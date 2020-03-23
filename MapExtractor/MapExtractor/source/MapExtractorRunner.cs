@@ -4,26 +4,25 @@ using System.IO;
 
 namespace MapExtractor.source
 {
+  /// <summary>
+  /// Map Extractor runner.
+  /// </summary>
   public class MapExtractorRunner
   {
-    /*
-    // Used in Tile Map Editor
-    private const string BASE_OUTPUT_DIRECTORY_PATH = "C:/Users/t/Desktop/temp9/tiles";
-    private const string IMAGES_OUTPUT_FOLDER_NAME = "images";
-    private const string UNDEFINED_GROUP_OUTPUT_FOLDER_NAME = "UNDEFINED";
-    private const string TILE_REFERENCES_JSON_FILE_NAME = "tileReferences.json";
+    private const string BASE_DIRECTORY = @"C:\Users\t\Desktop";
 
-    // Used in Tile Sort Helper
-    private const string TILE_SORT_HELPER_OUTPUT_FILE_PATH = "C:/Users/t/Desktop/tileHashesSortedByColor.txt";
-    private const string TILE_HASHES_BY_MAP_SCRIPT_FILE_PATH = "C:/Users/t/Desktop/tileHashesByMapScript.txt";
-    */
-
+    /// <summary>
+    /// Main function.
+    /// </summary>
+    /// <param name="args">Args</param>
     public static void Main(string[] args)
     {
+      Console.WriteLine("START");
+
       SortedDictionary<string, TileData> allUniqueTileData = new SortedDictionary<string, TileData>(StringComparer.OrdinalIgnoreCase);
 
-      string map24BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (24-Bit Color Depth)";
-      string map15BitDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
+      string map24BitDirectoryPath = Path.Combine(BASE_DIRECTORY, @"temp9\References\Images (24-Bit Color Depth)");
+      string map15BitDirectoryPath = Path.Combine(BASE_DIRECTORY, @"temp9\References\Images (15-Bit Color Depth)");
       if (!Util.DeleteDirectory(map15BitDirectoryPath, true))
       {
         Console.WriteLine("Cannot delete directory: " + map15BitDirectoryPath + ". Retry again.");
@@ -32,16 +31,16 @@ namespace MapExtractor.source
 
       Util.Convert24BitTo15BitPngImages(map24BitDirectoryPath, map15BitDirectoryPath);
 
-      string mapImagesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Images (15-Bit Color Depth)";
-      string tileImagesDirectoryPath = @"C:\Users\t\Desktop\temp9\tiles\images";
+      string mapImagesDirectoryPath = Path.Combine(BASE_DIRECTORY, @"temp9\References\Images (15-Bit Color Depth)");
+      string tileImagesDirectoryPath = Path.Combine(BASE_DIRECTORY, @"temp9\tiles\images");
       MapExtractor.FillAllUniqueTileData(allUniqueTileData, mapImagesDirectoryPath, tileImagesDirectoryPath);
 
       MapExtractor.OutputTileImages(allUniqueTileData, tileImagesDirectoryPath);
 
-      string tileReferencesJsonDirectoryPath = @"C:\Users\t\Desktop\temp9\tiles";
+      string tileReferencesJsonDirectoryPath = Path.Combine(BASE_DIRECTORY, @"temp9\tiles");
       MapExtractor.OutputTileReferencesJson(allUniqueTileData, tileReferencesJsonDirectoryPath);
       
-      string mapJsonFilesDirectoryPath = @"C:\Users\t\Desktop\temp9\References\Fire Emblem Map JSON Files";
+      string mapJsonFilesDirectoryPath = Path.Combine(BASE_DIRECTORY, @"temp9\References\Fire Emblem Map JSON Files");
       if (!Util.DeleteDirectory(mapJsonFilesDirectoryPath, true))
       {
         Console.WriteLine("Cannot delete directory: " + mapJsonFilesDirectoryPath + ". Retry again.");
@@ -49,10 +48,10 @@ namespace MapExtractor.source
       }
       MapExtractor.GenerateSourceMapJsonFiles(mapImagesDirectoryPath, mapJsonFilesDirectoryPath);
 
-      string tileSortHelperDirectoryPath = @"C:\Users\t\Desktop";
+      string tileSortHelperDirectoryPath = BASE_DIRECTORY;
       MapExtractor.OutputTileSortHelper(allUniqueTileData, tileSortHelperDirectoryPath);
 
-      string batchMoveScriptHelperDirectoryPath = @"C:\Users\t\Desktop";
+      string batchMoveScriptHelperDirectoryPath = BASE_DIRECTORY;
       MapExtractor.OutputBatchMoveScriptHelper(
         mapImagesDirectoryPath,
         tileImagesDirectoryPath,

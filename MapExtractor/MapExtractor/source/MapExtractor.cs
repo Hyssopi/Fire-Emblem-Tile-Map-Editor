@@ -20,21 +20,9 @@ namespace MapExtractor.source
     private const string CURSOR_TILE_FILE_NAME = "Cursor.png";
     private const string EMPTY_TILE_FILE_NAME = "EmptyTile.png";
 
-    /*
-    // Used in Unity
-    private const string RESOURCE_DIRECTORY_PATH = "C:/Users/t/Desktop/temp9/Map Extractor/Assets/Resources";
-    private const string MAP_INPUT_FOLDER_NAME = "Images";
-    */
-
-    // Used in Tile Map Editor
-    //private const string BASE_OUTPUT_DIRECTORY_PATH = "C:/Users/t/Desktop/temp9/tiles";
-    //private const string IMAGES_OUTPUT_FOLDER_NAME = "images";
     private const string UNDEFINED_GROUP_NAME = "UNDEFINED";
     private const string TILE_REFERENCES_JSON_FILE_NAME = "tileReferences.json";
 
-    // Used in Tile Sort Helper
-    //private const string TILE_SORT_HELPER_OUTPUT_FILE_PATH = "C:/Users/t/Desktop/tileHashesSortedByColor.txt";
-    //private const string TILE_HASHES_BY_MAP_SCRIPT_FILE_PATH = "C:/Users/t/Desktop/tileHashesByMapScript.txt";
     private const string TILE_SORT_HELPER_FILE_NAME = "tileHashesSortedByColor.txt";
     private const string TILE_HASHES_BY_MAP_SCRIPT_FILE_NAME = "tileHashesByMapScript.txt";
 
@@ -46,7 +34,6 @@ namespace MapExtractor.source
       SOUTH,
       WEST
     };
-
 
 
     public static SortedDictionary<string, TileData> FillAllUniqueTileData(
@@ -346,6 +333,37 @@ namespace MapExtractor.source
       return true;
     }
 
+    /// <summary>
+    ///   Gets the list of unique tile hashes for the given input map image.
+    /// </summary>
+    /// <param name="mapImageFile">Map image file</param>
+    /// <returns>List of unique tile hashes for the given input map image</returns>
+    public static HashSet<string> GetTileHashesFromMapImage(FileInfo mapImageFile)
+    {
+      Bitmap mapImage = Util.ReadBitmap(mapImageFile);
+
+      if (mapImage.Width % TILE_WIDTH_PIXEL != 0 ||
+        mapImage.Height % TILE_HEIGHT_PIXEL != 0)
+      {
+        throw new InvalidDataException();
+      }
+
+      HashSet<string> uniqueTileHashes = new HashSet<string>();
+
+      // Go through each tile in the map and get a unique hashset of image tile hashes
+      for (int y = 0; y < mapImage.Height / TILE_HEIGHT_PIXEL; y++)
+      {
+        for (int x = 0; x < mapImage.Width / TILE_WIDTH_PIXEL; x++)
+        {
+          Bitmap tileImage = Util.GetSubBitmap(mapImage, x * TILE_WIDTH_PIXEL, y * TILE_HEIGHT_PIXEL, TILE_WIDTH_PIXEL, TILE_HEIGHT_PIXEL);
+          string tileImageHash = Util.GetBitmapHash(tileImage);
+          uniqueTileHashes.Add(tileImageHash);
+        }
+      }
+
+      return uniqueTileHashes;
+    }
+
 
 
 
@@ -383,37 +401,6 @@ namespace MapExtractor.source
 
       return modifiedY >= 0 && modifiedY < mapHeight
         && modifiedX >= 0 && modifiedX < mapWidth;
-    }
-
-    /// <summary>
-    ///   Gets the list of unique tile hashes for the given input map image.
-    /// </summary>
-    /// <param name="mapImageFile">Map image file</param>
-    /// <returns>List of unique tile hashes for the given input map image</returns>
-    public static HashSet<string> GetTileHashesFromMapImage(FileInfo mapImageFile)
-    {
-      Bitmap mapImage = Util.ReadBitmap(mapImageFile);
-
-      if (mapImage.Width % TILE_WIDTH_PIXEL != 0 ||
-        mapImage.Height % TILE_HEIGHT_PIXEL != 0)
-      {
-        throw new InvalidDataException();
-      }
-
-      HashSet<string> uniqueTileHashes = new HashSet<string>();
-
-      // Go through each tile in the map and get a unique hashset of image tile hashes
-      for (int y = 0; y < mapImage.Height / TILE_HEIGHT_PIXEL; y++)
-      {
-        for (int x = 0; x < mapImage.Width / TILE_WIDTH_PIXEL; x++)
-        {
-          Bitmap tileImage = Util.GetSubBitmap(mapImage, x * TILE_WIDTH_PIXEL, y * TILE_HEIGHT_PIXEL, TILE_WIDTH_PIXEL, TILE_HEIGHT_PIXEL);
-          string tileImageHash = Util.GetBitmapHash(tileImage);
-          uniqueTileHashes.Add(tileImageHash);
-        }
-      }
-
-      return uniqueTileHashes;
     }
   }
 }

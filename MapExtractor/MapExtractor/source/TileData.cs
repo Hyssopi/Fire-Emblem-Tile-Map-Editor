@@ -38,9 +38,9 @@ namespace MapExtractor.source
     }
 
     /// <summary>
-    /// Outputs JSON data of the tile.
+    ///   Outputs JSON data of the tile.
     /// </summary>
-    /// <returns>JSON data of the tile</returns>
+    /// <returns>JSON output of the tile</returns>
     public string ToJson()
     {
       StringBuilder jsonOutput = new StringBuilder();
