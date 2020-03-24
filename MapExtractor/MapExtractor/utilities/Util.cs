@@ -6,8 +6,16 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
+/// <summary>
+///   Utility functions.
+/// </summary>
 public class Util
 {
+  /// <summary>
+  ///   Read text file.
+  /// </summary>
+  /// <param name="filePath">Path of the text file to read</param>
+  /// <returns>Array of text read from the text file</returns>
   public static string[] ReadTextFile(string filePath)
   {
     string[] lines = File.ReadAllText(filePath).Split('\n');
@@ -18,6 +26,12 @@ public class Util
     return lines;
   }
 
+  /// <summary>
+  ///   Write text to file.
+  /// </summary>
+  /// <param name="filePath">Path to file to write text to</param>
+  /// <param name="line">Text to write</param>
+  /// <param name="append">True to append text, false to overwrite text</param>
   public static void WriteTextFile(string filePath, string line, bool append = false)
   {
     StreamWriter writer = new StreamWriter(filePath, append);
@@ -25,7 +39,12 @@ public class Util
     writer.Close();
   }
 
-  // Recursively get list of files
+  /// <summary>
+  ///   Recursively get list of files.
+  /// </summary>
+  /// <param name="path">Path to directory</param>
+  /// <param name="fileExtensionFilter">File extension filter, for example: "png"</param>
+  /// <returns>List of files in given directory (recursively)</returns>
   public static List<FileInfo> GetFileList(string path, string fileExtensionFilter = "*")
   {
     DirectoryInfo directoryInfo = new DirectoryInfo(path);
@@ -33,21 +52,40 @@ public class Util
     fileInfoList.AddRange(directoryInfo.GetFiles("*." + fileExtensionFilter));
     foreach (DirectoryInfo subDirectoryInfo in directoryInfo.GetDirectories())
     {
-      fileInfoList.AddRange(Util.GetFileList(path + Path.DirectorySeparatorChar + subDirectoryInfo.Name, fileExtensionFilter));
+      fileInfoList.AddRange(GetFileList(path + Path.DirectorySeparatorChar + subDirectoryInfo.Name, fileExtensionFilter));
     }
     return fileInfoList;
   }
 
+  /// <summary>
+  ///   Read Bitmap.
+  /// </summary>
+  /// <param name="filePath">Path to bitmap to read</param>
+  /// <returns>Bitmap</returns>
   public static Bitmap ReadBitmap(string filePath)
   {
     return new Bitmap(filePath);
   }
 
+  /// <summary>
+  ///   Read Bitmap.
+  /// </summary>
+  /// <param name="fileInfo">FileInfo of file to read</param>
+  /// <returns>Bitmap</returns>
   public static Bitmap ReadBitmap(FileInfo fileInfo)
   {
     return ReadBitmap(fileInfo.FullName);
   }
 
+  /// <summary>
+  ///   Get a portion of the bitmap.
+  /// </summary>
+  /// <param name="originalBitmap">Original bitmap</param>
+  /// <param name="x">Starting horizontal position to crop</param>
+  /// <param name="y">Starting vertical position to crop</param>
+  /// <param name="width">Width of the crop</param>
+  /// <param name="height">Height of the crop</param>
+  /// <returns>Portion of the bitmap</returns>
   public static Bitmap GetSubBitmap(Bitmap originalBitmap, int x, int y, int width, int height)
   {
     Rectangle cloneRectangle = new Rectangle(x, y, width, height);
@@ -55,7 +93,15 @@ public class Util
     return new Bitmap(originalBitmap.Clone(cloneRectangle, pixelFormat));
   }
 
-  public static Bitmap Get15BitTexture(Bitmap originalBitmap)
+  /// <summary>
+  ///   Convert to bitmap with 15-bit color space.
+  ///   RGB, each component uses 5-bits to represent its value. The three least significant bits are filled with 0.
+  ///   The conversion drops the three least significant bits for each R, G, and B components.
+  ///   For example, before: 1101 1110, after: 1101 1000
+  /// </summary>
+  /// <param name="originalBitmap">Original bitmap</param>
+  /// <returns>Bitmap converted to 15-bit color space</returns>
+  public static Bitmap Get15BitColorSpaceBitmap(Bitmap originalBitmap)
   {
     Bitmap modifiedBitmap = new Bitmap(originalBitmap);
 
@@ -79,7 +125,15 @@ public class Util
     return modifiedBitmap;
   }
 
-  public static Bitmap Get24BitTexture(Bitmap originalBitmap)
+  /// <summary>
+  ///   Convert to bitmap with 24-bit color space.
+  ///   RGB, each component uses 8-bits to represent its value.
+  ///   The conversion fills the three least significant bits for each R, G, and B components with the three most significant bit values.
+  ///   For example, before: 1101 1000, after: 1101 1110
+  /// </summary>
+  /// <param name="originalBitmap">Original bitmap</param>
+  /// <returns>Bitmap converted to 24-bit color space</returns>
+  public static Bitmap Get24BitColorSpaceBitmap(Bitmap originalBitmap)
   {
     Bitmap modifiedBitmap = new Bitmap(originalBitmap);
 
@@ -107,6 +161,12 @@ public class Util
     return modifiedBitmap;
   }
 
+  /// <summary>
+  ///   Convert 15-bit color space PNG images to 24-bit color space PNG images.
+  /// </summary>
+  /// <param name="inputDirectoryPath">Input directory path</param>
+  /// <param name="outputDirectoryPath">Output directory path</param>
+  /// <param name="checkInputIs15Bit">Check if the input images are in 15-bit color space while converting</param>
   public static void Convert15BitTo24BitPngImages(string inputDirectoryPath, string outputDirectoryPath, bool checkInputIs15Bit)
   {
     List<FileInfo> imageFileList = GetFileList(inputDirectoryPath, "png");
@@ -142,10 +202,15 @@ public class Util
       string outputFullPath = Path.Combine(outputDirectoryPath, subPath);
       Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
 
-      Get24BitTexture(image).Save(outputFullPath);
+      Get24BitColorSpaceBitmap(image).Save(outputFullPath);
     }
   }
 
+  /// <summary>
+  ///   Convert 24-bit color space PNG images to 15-bit color space PNG images.
+  /// </summary>
+  /// <param name="inputDirectoryPath">Input directory path</param>
+  /// <param name="outputDirectoryPath">Output directory path</param>
   public static void Convert24BitTo15BitPngImages(string inputDirectoryPath, string outputDirectoryPath)
   {
     List<FileInfo> imageFileList = GetFileList(inputDirectoryPath, "png");
@@ -158,10 +223,17 @@ public class Util
       string outputFullPath = Path.Combine(outputDirectoryPath, subPath);
       Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
 
-      Get15BitTexture(bitmap).Save(outputFullPath);
+      Get15BitColorSpaceBitmap(bitmap).Save(outputFullPath);
     }
   }
 
+  /// <summary>
+  ///   Check if the input PNG images are in 15-bit color space.
+  ///   The three least significant bits should be 0.
+  ///   For example, 1101 1000.
+  /// </summary>
+  /// <param name="directoryPath">Path to directory of PNG images to check</param>
+  /// <returns>True if all PNG images in given directory are in 15-bit color space, false otherwise</returns>
   public static bool CheckPngImagesAre15Bit(string directoryPath)
   {
     List<FileInfo> imageFileList = GetFileList(directoryPath, "png");
@@ -191,11 +263,23 @@ public class Util
     return true;
   }
 
+  /// <summary>
+  ///   Check if two colors have equal RGBA values.
+  /// </summary>
+  /// <param name="color1">Color 1</param>
+  /// <param name="color2">Color 2</param>
+  /// <returns>True if two colors are equal, false otherwise</returns>
   public static bool IsEqualColor(Color color1, Color color2)
   {
     return color1.R == color2.R && color1.G == color2.G && color1.B == color2.B && color1.A == color2.A;
   }
 
+  /// <summary>
+  ///   Check if two bitmaps are equal.
+  /// </summary>
+  /// <param name="bitmap1">Bitmap 1</param>
+  /// <param name="bitmap2">Bitmap 2</param>
+  /// <returns>True if two bitmaps are equal, false otherwise</returns>
   public static bool IsEqualBitmap(Bitmap bitmap1, Bitmap bitmap2)
   {
     if (bitmap1.Height != bitmap2.Height || bitmap1.Width != bitmap2.Width)
@@ -257,6 +341,11 @@ public class Util
     return 0;
   }
 
+  /// <summary>
+  ///   Convert bitmap to byte array.
+  /// </summary>
+  /// <param name="bitmap">Bitmap</param>
+  /// <returns>Byte array of bitmap</returns>
   public static byte[] BitmapToByteArray(Bitmap bitmap)
   {
     List<byte> bytes = new List<byte>();
@@ -276,6 +365,11 @@ public class Util
     return bytes.ToArray();
   }
 
+  /// <summary>
+  ///   Hash of bitmap.
+  /// </summary>
+  /// <param name="bitmap">Bitmap</param>
+  /// <returns>Hash of bitmap</returns>
   public static string GetBitmapHash(Bitmap bitmap)
   {
     byte[] data = BitmapToByteArray(bitmap);
@@ -293,6 +387,11 @@ public class Util
     return hexadecimalHashResult.ToString();
   }
 
+  /// <summary>
+  ///   Converts jagged list to JSON.
+  /// </summary>
+  /// <param name="jaggedList">Jagged list</param>
+  /// <returns>Jagged list to JSON</returns>
   public static string JaggedListToJson(List<List<string>> jaggedList)
   {
     StringBuilder jsonOutput = new StringBuilder();
@@ -335,8 +434,14 @@ public class Util
     Console.WriteLine(output);
   }
 
-
-
+  /// <summary>
+  ///   Delete directory.
+  /// </summary>
+  /// <param name="directoryPath">Path of directory to delete</param>
+  /// <param name="recursive">True to recursively delete all directories and files, false otherwise</param>
+  /// <param name="attempts">Number of attempts to retry deleting if failed</param>
+  /// <param name="attemptMillisecondsTimeout">Delay between attempts in milliseconds</param>
+  /// <returns>True if successfully deleted directories, false otherwise</returns>
   public static bool DeleteDirectory(string directoryPath, bool recursive, int attempts = 10, int attemptMillisecondsTimeout = 1000)
   {
     bool successfullyDeletedDirectory = false;
@@ -351,7 +456,6 @@ public class Util
         successfullyDeletedDirectory = true;
         break;
       }
-      //catch (Exception exception) when (exception is FileLoadException || exception is IOException)
       catch (Exception exception)
       {
         System.Threading.Thread.Sleep(attemptMillisecondsTimeout);

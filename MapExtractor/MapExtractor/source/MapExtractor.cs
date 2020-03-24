@@ -35,8 +35,14 @@ namespace MapExtractor.source
       WEST
     };
 
-
-    public static SortedDictionary<string, TileData> FillAllUniqueTileData(
+    /// <summary>
+    ///   Extract tile data and fill it out into the sorted dictionary.
+    /// </summary>
+    /// <param name="allUniqueTileData"></param>
+    /// <param name="inputMapDirectoryPath"></param>
+    /// <param name="inputTileImagesDirectoryPath"></param>
+    /// <returns>True if successful in filling out </returns>
+    public static bool FillAllUniqueTileData(
       SortedDictionary<string, TileData> allUniqueTileData,
       string inputMapDirectoryPath,
       string inputTileImagesDirectoryPath)
@@ -140,7 +146,7 @@ namespace MapExtractor.source
           //List<string> allUniqueTileDataKeys = allUniqueTileData.Keys.ToList();
           //List<TileData> allUniqueTileDataValues = allUniqueTileData.Values.ToList();
           Console.WriteLine(tileImageFilePath.FullName + " tile image exists in the tile image folder, but its tileHash does not exist in allUniqueTileData. The tileHash should have been read from the input maps but seems to have not.");
-          return null;
+          return false;
         }
 
         allUniqueTileData[tileHash].Group = groupName;
@@ -156,7 +162,7 @@ namespace MapExtractor.source
         }
       }
 
-      return allUniqueTileData;
+      return true;
     }
 
     public static void OutputTileImages(

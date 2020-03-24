@@ -5,19 +5,19 @@ using System.IO;
 namespace MapExtractor.source
 {
   /// <summary>
-  /// Map Extractor runner.
+  ///   Map Extractor runner.
   /// </summary>
   public class MapExtractorRunner
   {
     private const string BASE_DIRECTORY = @"C:\Users\t\Desktop";
 
     /// <summary>
-    /// Main function.
+    ///   Main function.
     /// </summary>
     /// <param name="args">Args</param>
     public static void Main(string[] args)
     {
-      Console.WriteLine("START");
+      Console.WriteLine("MapExtractorRunner START");
 
       SortedDictionary<string, TileData> allUniqueTileData = new SortedDictionary<string, TileData>(StringComparer.OrdinalIgnoreCase);
 
@@ -66,7 +66,7 @@ namespace MapExtractor.source
 
       Console.WriteLine("CheckPngImagesAre15Bit: " + Util.CheckPngImagesAre15Bit(tileImagesDirectoryPath));
 
-      Console.WriteLine("END");
+      Console.WriteLine("MapExtractorRunner END");
     }
   }
 }
