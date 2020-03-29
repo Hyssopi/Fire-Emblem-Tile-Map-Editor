@@ -41,7 +41,7 @@ namespace MapExtractor.source
     /// <param name="allUniqueTileData"></param>
     /// <param name="inputMapDirectoryPath"></param>
     /// <param name="inputTileImagesDirectoryPath"></param>
-    /// <returns>True if successful in filling out </returns>
+    /// <returns>True if successful in filling out</returns>
     public static bool FillAllUniqueTileData(
       SortedDictionary<string, TileData> allUniqueTileData,
       string inputMapDirectoryPath,

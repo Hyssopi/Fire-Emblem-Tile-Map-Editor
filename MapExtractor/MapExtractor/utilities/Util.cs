@@ -31,7 +31,7 @@ public class Util
   /// </summary>
   /// <param name="filePath">Path to file to write text to</param>
   /// <param name="line">Text to write</param>
-  /// <param name="append">True to append text, false to overwrite text</param>
+  /// <param name="append">True to append text to file, false to overwrite text file</param>
   public static void WriteTextFile(string filePath, string line, bool append = false)
   {
     StreamWriter writer = new StreamWriter(filePath, append);
@@ -96,7 +96,7 @@ public class Util
   /// <summary>
   ///   Convert to bitmap with 15-bit color space.
   ///   RGB, each component uses 5-bits to represent its value. The three least significant bits are filled with 0.
-  ///   The conversion drops the three least significant bits for each R, G, and B components.
+  ///   The conversion drops the three least significant bit values in each R, G, and B components.
   ///   For example, before: 1101 1110, after: 1101 1000
   /// </summary>
   /// <param name="originalBitmap">Original bitmap</param>
@@ -128,7 +128,7 @@ public class Util
   /// <summary>
   ///   Convert to bitmap with 24-bit color space.
   ///   RGB, each component uses 8-bits to represent its value.
-  ///   The conversion fills the three least significant bits for each R, G, and B components with the three most significant bit values.
+  ///   The conversion fills the three least significant bit values in each R, G, and B components with the three most significant bit values.
   ///   For example, before: 1101 1000, after: 1101 1110
   /// </summary>
   /// <param name="originalBitmap">Original bitmap</param>
@@ -183,13 +183,13 @@ public class Util
           {
             Color originalColor = image.GetPixel(x, y);
 
-            int redMostSignificantBits = originalColor.R & 0b0111;
-            int greenMostSignificantBits = originalColor.G & 0b0111;
-            int blueMostSignificantBits = originalColor.B & 0b0111;
+            int redLeastSignificantBits = originalColor.R & 0b0111;
+            int greenLeastSignificantBits = originalColor.G & 0b0111;
+            int blueLeastSignificantBits = originalColor.B & 0b0111;
 
-            if (redMostSignificantBits != 0
-              || greenMostSignificantBits != 0
-              || blueMostSignificantBits != 0)
+            if (redLeastSignificantBits != 0
+              || greenLeastSignificantBits != 0
+              || blueLeastSignificantBits != 0)
             {
               throw new InvalidDataException(imageFile.FullName);
             }
@@ -366,10 +366,10 @@ public class Util
   }
 
   /// <summary>
-  ///   Hash of bitmap.
+  ///   Hash of the bitmap.
   /// </summary>
   /// <param name="bitmap">Bitmap</param>
-  /// <returns>Hash of bitmap</returns>
+  /// <returns>Hash of the bitmap</returns>
   public static string GetBitmapHash(Bitmap bitmap)
   {
     byte[] data = BitmapToByteArray(bitmap);
