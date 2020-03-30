@@ -36,7 +36,7 @@ namespace MapExtractor.source
     };
 
     /// <summary>
-    ///   Extract tile data and fill it out into the sorted dictionary.
+    ///   Extract tile data and fill it into the sorted dictionary.
     /// </summary>
     /// <param name="allUniqueTileData"></param>
     /// <param name="inputMapDirectoryPath"></param>
