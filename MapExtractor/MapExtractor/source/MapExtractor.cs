@@ -38,28 +38,28 @@ namespace MapExtractor.source
     /// <summary>
     ///   Extract tile data and fill it into the sorted dictionary.
     /// </summary>
-    /// <param name="allUniqueTileData"></param>
-    /// <param name="inputMapDirectoryPath"></param>
-    /// <param name="inputTileImagesDirectoryPath"></param>
-    /// <returns>True if successful in filling out</returns>
+    /// <param name="allUniqueTileData">All unique tile data reference</param>
+    /// <param name="inputMapImagesDirectoryPath">Input directory path of the map images to extract tile images from</param>
+    /// <param name="tileImagesDirectoryPath">Directory path of the tile images</param>
+    /// <returns>True if successfully extracted tiles, false otherwise</returns>
     public static bool FillAllUniqueTileData(
       SortedDictionary<string, TileData> allUniqueTileData,
-      string inputMapDirectoryPath,
-      string inputTileImagesDirectoryPath)
+      string inputMapImagesDirectoryPath,
+      string tileImagesDirectoryPath)
     {
       // Read the input map images (for example, Fire Emblem maps) and extract the tile images and neighbor data
-      List<FileInfo> mapImageFileList = Util.GetFileList(inputMapDirectoryPath, "png");
+      List<FileInfo> mapImageFileList = Util.GetFileList(inputMapImagesDirectoryPath, "png");
       foreach (FileInfo mapImageFile in mapImageFileList)
       {
-        string subPath = mapImageFile.FullName.Replace(inputMapDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
+        string subPath = mapImageFile.FullName.Replace(inputMapImagesDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
 
         string originFilePath = Path.GetDirectoryName(subPath);
 
         // Read the chapter map image
         Bitmap mapImage = Util.ReadBitmap(mapImageFile);
 
-        if (mapImage.Width % TILE_WIDTH_PIXEL != 0 ||
-          mapImage.Height % TILE_HEIGHT_PIXEL != 0)
+        if (mapImage.Width % TILE_WIDTH_PIXEL != 0
+          || mapImage.Height % TILE_HEIGHT_PIXEL != 0)
         {
           throw new InvalidDataException();
         }
@@ -135,7 +135,7 @@ namespace MapExtractor.source
       }
 
       // Read the existing tile image folders to set the tile group
-      List<FileInfo> existingTileImageFilePaths = Util.GetFileList(inputTileImagesDirectoryPath, "png");
+      List<FileInfo> existingTileImageFilePaths = Util.GetFileList(tileImagesDirectoryPath, "png");
       foreach (FileInfo tileImageFilePath in existingTileImageFilePaths)
       {
         string tileHash = Path.GetFileNameWithoutExtension(tileImageFilePath.Name);
@@ -165,11 +165,16 @@ namespace MapExtractor.source
       return true;
     }
 
+    /// <summary>
+    ///   Output tile images to tile PNG image files.
+    /// </summary>
+    /// <param name="allUniqueTileData">All unique tile data reference</param>
+    /// <param name="outputTileImagesDirectoryPath">Output directory path of the tile images</param>
     public static void OutputTileImages(
       SortedDictionary<string, TileData> allUniqueTileData,
       string outputTileImagesDirectoryPath)
     {
-      // Create the UNDEFINED folder in the output images directory if it doesn't exist
+      // Create the UNDEFINED folder in the tile images directory if it doesn't exist
       Directory.CreateDirectory(Path.Combine(outputTileImagesDirectoryPath, UNDEFINED_GROUP_NAME));
 
       // Save the tile images out
@@ -180,11 +185,15 @@ namespace MapExtractor.source
       }
     }
 
+    /// <summary>
+    ///   Output all tile data to a JSON file.
+    /// </summary>
+    /// <param name="allUniqueTileData">All unique tile data reference</param>
+    /// <param name="outputTileReferencesJsonDirectoryPath">Output directory path of the tile references JSON file</param>
     public static void OutputTileReferencesJson(
       SortedDictionary<string, TileData> allUniqueTileData,
       string outputTileReferencesJsonDirectoryPath)
     {
-      // Output all tile data to JSON file
       StringBuilder outputJsonLines = new StringBuilder();
 
       outputJsonLines.AppendLine("[");
@@ -193,7 +202,6 @@ namespace MapExtractor.source
       foreach (KeyValuePair<string, TileData> tileDataEntry in allUniqueTileData)
       {
         outputJsonLines.AppendLine(tileDataEntry.Value.ToJson() + (tempIndex < (allUniqueTileData.Count - 1) ? "," : string.Empty));
-
         ++tempIndex;
       }
 
@@ -202,6 +210,11 @@ namespace MapExtractor.source
       Util.WriteTextFile(Path.Combine(outputTileReferencesJsonDirectoryPath, TILE_REFERENCES_JSON_FILE_NAME), outputJsonLines.ToString());
     }
 
+    /// <summary>
+    ///   Generate map JSON files from the map images.
+    /// </summary>
+    /// <param name="inputMapImagesDirectoryPath">Input directory path of the map images to read from</param>
+    /// <param name="outputMapJsonFilesDirectoryPath">Output directory path of the map JSON files</param>
     public static void GenerateSourceMapJsonFiles(string inputMapImagesDirectoryPath, string outputMapJsonFilesDirectoryPath)
     {
       List<FileInfo> imageFileList = Util.GetFileList(inputMapImagesDirectoryPath, "png");
@@ -230,6 +243,12 @@ namespace MapExtractor.source
       }
     }
 
+    /// <summary>
+    ///   Output Tile Sort Helper file.
+    ///   Used in tileSortHelperStyle1.html.
+    /// </summary>
+    /// <param name="allUniqueTileData">All unique tile data reference</param>
+    /// <param name="outputTileSortHelperDirectoryPath"></param>
     public static void OutputTileSortHelper(
       SortedDictionary<string, TileData> allUniqueTileData,
       string outputTileSortHelperDirectoryPath)
@@ -283,21 +302,27 @@ namespace MapExtractor.source
       {
         //tileHashesSortedByColorOutput.AppendLine(tileAveragedColorPair.Key + " " + tileAveragedColorPair.Value.r + " " + tileAveragedColorPair.Value.g + " " + tileAveragedColorPair.Value.b);
         tileHashesSortedByColorOutput.AppendLine("\"" + tileAveragedColorPair.Key + "\"" + (tempIndex < (sortedTileAveragedColors.Count - 1) ? "," : string.Empty));
-
         ++tempIndex;
       }
 
       Util.WriteTextFile(Path.Combine(outputTileSortHelperDirectoryPath, TILE_SORT_HELPER_FILE_NAME), tileHashesSortedByColorOutput.ToString());
     }
 
+    /// <summary>
+    ///   Outputs a batch move script helper.
+    ///   Used in tileSortHelperStyle1.html.
+    /// </summary>
+    /// <param name="inputMapImagesDirectoryPath">Input directory path of the map images</param>
+    /// <param name="tileImagesDirectoryPath">Directory path of the tile images</param>
+    /// <param name="outputBatchMoveScriptHelperDirectoryPath">Output directory path of the batch move script helper</param>
     public static void OutputBatchMoveScriptHelper(
-      string inputMapDirectoryPath,
+      string inputMapImagesDirectoryPath,
       string tileImagesDirectoryPath,
       string outputBatchMoveScriptHelperDirectoryPath)
     {
       // Get the unique tile hashes for input map images, then create a batch script (user has to run the script) to move it from UNDEFINED folder to TEMP folder to separate it and make it easier to determine where a tile is from and from which map image
       StringBuilder tileHashesByMapScriptOutput = new StringBuilder();
-      List<FileInfo> mapImageFileList = Util.GetFileList(inputMapDirectoryPath, "png");
+      List<FileInfo> mapImageFileList = Util.GetFileList(inputMapImagesDirectoryPath, "png");
       foreach (FileInfo mapImageFile in mapImageFileList)
       {
         HashSet<string> tileHashesFromMapImage = GetTileHashesFromMapImage(mapImageFile);
@@ -316,12 +341,22 @@ namespace MapExtractor.source
       Util.WriteTextFile(Path.Combine(outputBatchMoveScriptHelperDirectoryPath, TILE_HASHES_BY_MAP_SCRIPT_FILE_NAME), tileHashesByMapScriptOutput.ToString());
     }
 
+    /// <summary>
+    ///   Gets debug information.
+    /// </summary>
+    /// <param name="tileImagesDirectoryPath">Directory path of the tile images</param>
+    /// <returns>Debug information</returns>
     public static IEnumerable<string> GetDebugInformation(string tileImagesDirectoryPath)
     {
-      // Get list of Directories
+      // Get list of directories
       return Directory.GetDirectories(tileImagesDirectoryPath).Select(path => "\"" + Path.GetFileName(path) + "\",");
     }
 
+    /// <summary>
+    ///   Check if all the tile images match their tile hash in the file name.
+    /// </summary>
+    /// <param name="tileImagesDirectoryPath">Directory path of the tile images</param>
+    /// <returns>True if all the tile images match their tile hash in the file name</returns>
     public static bool CheckTileHashesMatchImages(string tileImagesDirectoryPath)
     {
       List<FileInfo> tileImageFileList = Util.GetFileList(tileImagesDirectoryPath, "png");
@@ -332,7 +367,7 @@ namespace MapExtractor.source
         string expectedTileHash = Util.GetBitmapHash(tileBitmap);
         if (actualTileHash != expectedTileHash)
         {
-          Console.WriteLine("Tile Hash mismatch on: " + tileImageFile.FullName);
+          Console.WriteLine("Tile hash mismatch on: " + tileImageFile.FullName);
           return false;
         }
       }
@@ -340,23 +375,23 @@ namespace MapExtractor.source
     }
 
     /// <summary>
-    ///   Gets the list of unique tile hashes for the given input map image.
+    ///   Gets the hash set of unique tile hashes for the given input map image.
     /// </summary>
-    /// <param name="mapImageFile">Map image file</param>
-    /// <returns>List of unique tile hashes for the given input map image</returns>
-    public static HashSet<string> GetTileHashesFromMapImage(FileInfo mapImageFile)
+    /// <param name="inputMapImageFile">Input map image file</param>
+    /// <returns>Hash set of unique tile hashes for the given input map image</returns>
+    public static HashSet<string> GetTileHashesFromMapImage(FileInfo inputMapImageFile)
     {
-      Bitmap mapImage = Util.ReadBitmap(mapImageFile);
+      Bitmap mapImage = Util.ReadBitmap(inputMapImageFile);
 
-      if (mapImage.Width % TILE_WIDTH_PIXEL != 0 ||
-        mapImage.Height % TILE_HEIGHT_PIXEL != 0)
+      if (mapImage.Width % TILE_WIDTH_PIXEL != 0
+        || mapImage.Height % TILE_HEIGHT_PIXEL != 0)
       {
         throw new InvalidDataException();
       }
 
       HashSet<string> uniqueTileHashes = new HashSet<string>();
 
-      // Go through each tile in the map and get a unique hashset of image tile hashes
+      // Go through each tile in the map, get the tile hash, then add it to the hash set of unique tile hashes
       for (int y = 0; y < mapImage.Height / TILE_HEIGHT_PIXEL; y++)
       {
         for (int x = 0; x < mapImage.Width / TILE_WIDTH_PIXEL; x++)
@@ -370,12 +405,9 @@ namespace MapExtractor.source
       return uniqueTileHashes;
     }
 
-
-
-
     /// <summary>
     ///   Checks to see if input coordinate is valid for the map size.
-    ///   From Tile Map Editor tileMapEditorUtilities.js
+    ///   From Tile Map Editor tileMapEditorUtilities.js.
     /// </summary>
     /// <param name="mapWidth">Tile width of the map</param>
     /// <param name="mapHeight">Tile height of the map</param>
