@@ -64,6 +64,7 @@ namespace MapExtractor.source
           throw new InvalidDataException();
         }
 
+        // The current 2D array of tile hashes for the map
         string[,] mapTileImageHashes = new string[mapImage.Height / TILE_HEIGHT_PIXEL, mapImage.Width / TILE_WIDTH_PIXEL];
 
         // Fill out the allUniqueTileData with initial TileData

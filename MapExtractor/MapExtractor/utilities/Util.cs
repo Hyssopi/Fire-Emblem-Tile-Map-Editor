@@ -174,26 +174,12 @@ public class Util
     {
       Bitmap image = ReadBitmap(imageFile);
 
-      // Confirm images are 15-Bit Color Depth
       if (checkInputIs15Bit)
       {
-        for (int y = 0; y < image.Height; y++)
+        // Confirm images are 15-Bit Color Depth
+        if (!CheckImageIs15Bit(image))
         {
-          for (int x = 0; x < image.Width; x++)
-          {
-            Color originalColor = image.GetPixel(x, y);
-
-            int redLeastSignificantBits = originalColor.R & 0b0111;
-            int greenLeastSignificantBits = originalColor.G & 0b0111;
-            int blueLeastSignificantBits = originalColor.B & 0b0111;
-
-            if (redLeastSignificantBits != 0
-              || greenLeastSignificantBits != 0
-              || blueLeastSignificantBits != 0)
-            {
-              throw new InvalidDataException(imageFile.FullName);
-            }
-          }
+          throw new InvalidDataException(imageFile.FullName);
         }
       }
 
@@ -228,7 +214,7 @@ public class Util
   }
 
   /// <summary>
-  ///   Check if the input PNG images are in 15-bit color depth.
+  ///   Check if the input PNG images of a directory are in 15-bit color depth.
   ///   The three least significant bits should be 0.
   ///   For example, 1101 1000.
   /// </summary>
@@ -241,22 +227,38 @@ public class Util
     {
       Bitmap bitmap = ReadBitmap(imageFile);
 
-      for (int y = 0; y < bitmap.Height; y++)
+      if (!CheckImageIs15Bit(bitmap))
       {
-        for (int x = 0; x < bitmap.Width; x++)
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// <summary>
+  ///   Check the input image to see if it is in 15-bit color depth.
+  ///   The three least significant bits should be 0.
+  ///   For example, 1101 1000.
+  /// </summary>
+  /// <param name="bitmap">Image to check</param>
+  /// <returns>True if image is in 15-bit color depth, false otherwise</returns>
+  public static bool CheckImageIs15Bit(Bitmap bitmap)
+  {
+    for (int y = 0; y < bitmap.Height; y++)
+    {
+      for (int x = 0; x < bitmap.Width; x++)
+      {
+        Color color = bitmap.GetPixel(x, y);
+
+        int redLeastSignificantBits = color.R & 0b0111;
+        int greenLeastSignificantBits = color.G & 0b0111;
+        int blueLeastSignificantBits = color.B & 0b0111;
+
+        if (redLeastSignificantBits != 0
+          || greenLeastSignificantBits != 0
+          || blueLeastSignificantBits != 0)
         {
-          Color color = bitmap.GetPixel(x, y);
-
-          int redLeastSignificantBits = color.R & 0b0111;
-          int greenLeastSignificantBits = color.G & 0b0111;
-          int blueLeastSignificantBits = color.B & 0b0111;
-
-          if (redLeastSignificantBits != 0
-            || greenLeastSignificantBits != 0
-            || blueLeastSignificantBits != 0)
-          {
-            return false;
-          }
+          return false;
         }
       }
     }
@@ -366,7 +368,7 @@ public class Util
   }
 
   /// <summary>
-  ///   Hash of the bitmap.
+  ///   Get hash of the bitmap.
   /// </summary>
   /// <param name="bitmap">Bitmap</param>
   /// <returns>Hash of the bitmap</returns>
@@ -464,21 +466,6 @@ public class Util
     }
     return successfullyDeletedDirectory;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

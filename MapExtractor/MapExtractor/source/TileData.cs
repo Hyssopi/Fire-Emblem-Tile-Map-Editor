@@ -21,7 +21,7 @@ namespace MapExtractor.source
     public HashSet<string> OriginFilePaths { get; private set; }
 
     /// <summary>
-    ///   TileData constructor.
+    ///   Constructor.
     /// </summary>
     /// <param name="tileHash">Hash of a tile</param>
     /// <param name="tileImage">Bitmap of a tile</param>
