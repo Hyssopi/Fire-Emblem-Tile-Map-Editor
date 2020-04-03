@@ -94,14 +94,14 @@ public class Util
   }
 
   /// <summary>
-  ///   Convert to bitmap with 15-bit color space.
+  ///   Convert to bitmap with 15-bit color depth.
   ///   RGB, each component uses 5-bits to represent its value. The three least significant bits are filled with 0.
   ///   The conversion drops the three least significant bit values in each R, G, and B components.
   ///   For example, before: 1101 1110, after: 1101 1000
   /// </summary>
   /// <param name="originalBitmap">Original bitmap</param>
-  /// <returns>Bitmap converted to 15-bit color space</returns>
-  public static Bitmap Get15BitColorSpaceBitmap(Bitmap originalBitmap)
+  /// <returns>Bitmap converted to 15-bit color depth</returns>
+  public static Bitmap Get15BitColorDepthBitmap(Bitmap originalBitmap)
   {
     Bitmap modifiedBitmap = new Bitmap(originalBitmap);
 
@@ -126,14 +126,14 @@ public class Util
   }
 
   /// <summary>
-  ///   Convert to bitmap with 24-bit color space.
+  ///   Convert to bitmap with 24-bit color depth.
   ///   RGB, each component uses 8-bits to represent its value.
   ///   The conversion fills the three least significant bit values in each R, G, and B components with the three most significant bit values.
   ///   For example, before: 1101 1000, after: 1101 1110
   /// </summary>
   /// <param name="originalBitmap">Original bitmap</param>
-  /// <returns>Bitmap converted to 24-bit color space</returns>
-  public static Bitmap Get24BitColorSpaceBitmap(Bitmap originalBitmap)
+  /// <returns>Bitmap converted to 24-bit color depth</returns>
+  public static Bitmap Get24BitColorDepthBitmap(Bitmap originalBitmap)
   {
     Bitmap modifiedBitmap = new Bitmap(originalBitmap);
 
@@ -162,11 +162,11 @@ public class Util
   }
 
   /// <summary>
-  ///   Convert 15-bit color space PNG images to 24-bit color space PNG images.
+  ///   Convert 15-bit color depth PNG images to 24-bit color depth PNG images.
   /// </summary>
   /// <param name="inputDirectoryPath">Input directory path</param>
   /// <param name="outputDirectoryPath">Output directory path</param>
-  /// <param name="checkInputIs15Bit">Check if the input images are in 15-bit color space while converting</param>
+  /// <param name="checkInputIs15Bit">Check if the input images are in 15-bit color depth while converting</param>
   public static void Convert15BitTo24BitPngImages(string inputDirectoryPath, string outputDirectoryPath, bool checkInputIs15Bit)
   {
     List<FileInfo> imageFileList = GetFileList(inputDirectoryPath, "png");
@@ -202,12 +202,12 @@ public class Util
       string outputFullPath = Path.Combine(outputDirectoryPath, subPath);
       Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
 
-      Get24BitColorSpaceBitmap(image).Save(outputFullPath);
+      Get24BitColorDepthBitmap(image).Save(outputFullPath);
     }
   }
 
   /// <summary>
-  ///   Convert 24-bit color space PNG images to 15-bit color space PNG images.
+  ///   Convert 24-bit color depth PNG images to 15-bit color depth PNG images and output it.
   /// </summary>
   /// <param name="inputDirectoryPath">Input directory path</param>
   /// <param name="outputDirectoryPath">Output directory path</param>
@@ -223,17 +223,17 @@ public class Util
       string outputFullPath = Path.Combine(outputDirectoryPath, subPath);
       Directory.CreateDirectory(Path.GetDirectoryName(outputFullPath));
 
-      Get15BitColorSpaceBitmap(bitmap).Save(outputFullPath);
+      Get15BitColorDepthBitmap(bitmap).Save(outputFullPath);
     }
   }
 
   /// <summary>
-  ///   Check if the input PNG images are in 15-bit color space.
+  ///   Check if the input PNG images are in 15-bit color depth.
   ///   The three least significant bits should be 0.
   ///   For example, 1101 1000.
   /// </summary>
   /// <param name="directoryPath">Path to directory of PNG images to check</param>
-  /// <returns>True if all PNG images in given directory are in 15-bit color space, false otherwise</returns>
+  /// <returns>True if all PNG images in given directory are in 15-bit color depth, false otherwise</returns>
   public static bool CheckPngImagesAre15Bit(string directoryPath)
   {
     List<FileInfo> imageFileList = GetFileList(directoryPath, "png");
