@@ -66,8 +66,13 @@ Getting map data from the game to the Tile Map Editor.
 10. Print debug information to the console
 11. Run various checks and output the results, should be `True`
 
+- Map Extractor Runner console output provides information
+  - Cursor Tile Hash
+  - Empty Tile Hash
+  - List of groups
+
 - Update `ALL_TILE_HASHES` in `tileSortHelperStyle1.html` with the output `tileHashesSortedByColor.txt`.
-- Update `TILE_GROUP_INPUT_OPTIONS` in both `tileSortHelperStyle1.html` and `tileSortHelperStyle2.html` with the list of groups from the Map Extractor Runner command prompt output.
+- Update `TILE_GROUP_INPUT_OPTIONS` in both `tileSortHelperStyle1.html` and `tileSortHelperStyle2.html` with the list of groups from the Map Extractor Runner console output.
 - The output `tileHashesByMapScript.txt` is not used.
 
 #### Tile Sort Helper
