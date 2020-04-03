@@ -6,10 +6,26 @@ Tile map editor for Fire Emblem GBA games.
 
 ![splash](help/images/main.png)
 
-Allows user to create, load, and modify Fire Emblem GBA maps.
+Allows users to create, modify, output and load Fire Emblem GBA maps. Features an auto-generate feature, but recommended that users manually fix it up after auto-generation.
+Tile data is extracted from chapter maps of the Fire Emblem GBA games. Each tile's neighboring tiles are remembered when extracting from the chapter maps. This allows the user to know which tile can fit with another tile, as well as allow the auto-generate feature.
 
-## Details
+## GitHub Pages
+https://hyssopi.github.io/temp9/
 
+## Prerequisites
+(None)
+
+## Build
+(None)
+
+## Run
+Open `index.html` in a web browser.
+
+## Test
+(None)
+
+## Miscellaneous Details
+Getting map data from the game to the Tile Map Editor.
 
 #### Emulator
 - Switch to only show `Background 3` in the emulator. This is the background layer that has the map image.
@@ -29,6 +45,8 @@ Allows user to create, load, and modify Fire Emblem GBA maps.
 #### Map Extractor
 - Inputs:
 - Outputs:
+  - tile/images
+  - tileReferences.json
 
 
 
@@ -38,26 +56,9 @@ Allows user to create, load, and modify Fire Emblem GBA maps.
   - For example, choosing `UNDEFINED` as the input will display all the UNDEFINED tile images in the UNDEFINED folder. Clicking on tiles on the right will move it to the left. Then choosing `FLOOR` as the output group will update the batch move script. Copy the batch script into a command prompt to move the tile images from `UNDEFINED` to `FLOOR`.
   - Not recommended to use this style. Better to use Style2.
 - Style2
-  - Is...
+  - Load map JSON file (for example, References\Fire Emblem Map JSON Files\Fire Emblem 6\Chapters\07\001.png.json). Display the tiles of the map on top. Clicking on tiles on the top will move it to the bottom. Tiles on the bottom and the output radio button group are used to generate a batch script to move the tile images to the new specified group. Any changes should automatically copy the batch move script output to clipboard. Execute it by pasting into the command prompt to move the tile images.
+  - Any tiles that are not in the UNDEFINED folder (meaning they have been sorted), will be replaced with an EMPTY tile.
+  - Use the Emulator with the game and chapter running as a reference when sorting.
 
 #### Map Extractor
-
-
-Outputs??
-tile/images
-tileReferences.json
-
-## GitHub Pages
-https://hyssopi.github.io/temp9/
-
-## Prerequisites
-(None)
-
-## Build
-(None)
-
-## Run
-Open `index.html` in a web browser.
-
-## Test
-(None)
+- Execute Map Extractor Runner again to update any sorting changes from the `Tile Sort Helper`.
