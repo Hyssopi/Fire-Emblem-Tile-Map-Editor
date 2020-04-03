@@ -45,9 +45,26 @@ Getting map data from the game to the Tile Map Editor.
 
 #### Map Extractor
 - Inputs:
+  - References\Images (24-Bit Color Depth)
+  - tile\images
 - Outputs:
-  - tile/images
-  - tileReferences.json
+  - References\Images (15-Bit Color Depth)
+  - References\Fire Emblem Map JSON Files
+  - tiles\tileReferences.json
+  - tile\images
+
+Map Extractor Runner
+1. Delete `References\Images (15-Bit Color Depth)`
+2. Convert 24-bit color depth map images from `References\Images (24-Bit Color Depth)` to 15-bit color depth map images and output/save the converted map images to `References\Images (15-Bit Color Depth)`
+3. Extract `TileData` from the map images in `References\Images (15-Bit Color Depth)` and any existing tile images in `tiles\images`, then store it in `SortedDictionary<string, TileData> allUniqueTileData`
+4. Output/save the tile images to `tiles\images`
+5. Use `allUniqueTileData` to output the `tileReferences.json` in `tiles`
+6. Delete `References\Fire Emblem Map JSON Files`
+7. Generate Map JSON files of `References\Images (15-Bit Color Depth)` in `References\Fire Emblem Map JSON Files`
+8. Output `tileHashesSortedByColor.txt` in the base directory (Desktop)
+9. Output `tileHashesByMapScript.txt` in the base directory (Desktop)
+10. Print debug information to the console
+11. Run various checks and output the results, should be `True`
 
 - Update `ALL_TILE_HASHES` in `tileSortHelperStyle1.html` with the output `tileHashesSortedByColor.txt`.
 - Update `TILE_GROUP_INPUT_OPTIONS` in both `tileSortHelperStyle1.html` and `tileSortHelperStyle2.html` with the list of groups from the Map Extractor Runner command prompt output.
