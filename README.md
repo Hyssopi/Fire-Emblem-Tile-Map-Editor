@@ -34,11 +34,13 @@ Allows user to create, load, and modify Fire Emblem GBA maps.
 
 #### Tile Sort Helper
 - Style1
-  - Is...
+  - Displays the tiles based on `group`. Clicking tiles on the right will move it to the left. Tiles on the left are used to generate a batch script to move the tile images to the new specified group.
+  - For example, choosing `UNDEFINED` as the input will display all the UNDEFINED tile images in the UNDEFINED folder. Clicking on tiles on the right will move it to the left. Then choosing `FLOOR` as the output group will update the batch move script. Copy the batch script into a command prompt to move the tile images from `UNDEFINED` to `FLOOR`.
+  - Not recommended to use this style. Better to use Style2.
 - Style2
   - Is...
 
-Map Extractor
+#### Map Extractor
 
 
 Outputs??
