@@ -7,6 +7,7 @@ Tile map editor for Fire Emblem GBA games.
 ![splash](help/images/main.png)
 
 Allows users to create, modify, output and load Fire Emblem GBA maps. Features an auto-generate feature, but recommended that users manually fix it up after auto-generation.
+
 Tile data is extracted from chapter maps of the Fire Emblem GBA games. Each tile's neighboring tiles are remembered when extracting from the chapter maps. This allows the user to know which tile can fit with another tile, as well as allow the auto-generate feature.
 
 ## GitHub Pages
@@ -48,7 +49,9 @@ Getting map data from the game to the Tile Map Editor.
   - tile/images
   - tileReferences.json
 
-
+- Update `ALL_TILE_HASHES` in `tileSortHelperStyle1.html` with the output `tileHashesSortedByColor.txt`.
+- Update `TILE_GROUP_INPUT_OPTIONS` in both `tileSortHelperStyle1.html` and `tileSortHelperStyle2.html` with the list of groups from the Map Extractor Runner command prompt output.
+- The output `tileHashesByMapScript.txt` is not used.
 
 #### Tile Sort Helper
 - Style1
@@ -56,7 +59,7 @@ Getting map data from the game to the Tile Map Editor.
   - For example, choosing `UNDEFINED` as the input will display all the UNDEFINED tile images in the UNDEFINED folder. Clicking on tiles on the right will move it to the left. Then choosing `FLOOR` as the output group will update the batch move script. Copy the batch script into a command prompt to move the tile images from `UNDEFINED` to `FLOOR`.
   - Not recommended to use this style. Better to use Style2.
 - Style2
-  - Load map JSON file (for example, References\Fire Emblem Map JSON Files\Fire Emblem 6\Chapters\07\001.png.json). Display the tiles of the map on top. Clicking on tiles on the top will move it to the bottom. Tiles on the bottom and the output radio button group are used to generate a batch script to move the tile images to the new specified group. Any changes should automatically copy the batch move script output to clipboard. Execute it by pasting into the command prompt to move the tile images.
+  - Load map JSON file (for example, `References\Fire Emblem Map JSON Files\Fire Emblem 6\Chapters\07\001.png.json`). Display the tiles of the map on top. Clicking on tiles on the top will move it to the bottom. Tiles on the bottom and the output radio button group are used to generate a batch script to move the tile images to the new specified group. Any changes should automatically copy the batch move script output to clipboard. Execute it by pasting into the command prompt to move the tile images.
   - Any tiles that are not in the UNDEFINED folder (meaning they have been sorted), will be replaced with an EMPTY tile.
   - Use the Emulator with the game and chapter running as a reference when sorting.
 
