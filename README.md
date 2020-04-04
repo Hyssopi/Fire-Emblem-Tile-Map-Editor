@@ -58,15 +58,15 @@ Getting map images from the game to the Fire Emblem Tile Map Editor.
 - Map Extractor Runner
 1. Delete `References\Images (15-Bit Color Depth)`
 2. Convert 24-bit color depth map images from `References\Images (24-Bit Color Depth)` to 15-bit color depth map images and output/save the converted map images to `References\Images (15-Bit Color Depth)`
-3. Extract `TileData` from the map images in `References\Images (15-Bit Color Depth)` and any existing tile images in `tiles\images`, then store it in `SortedDictionary<string, TileData> allUniqueTileData`
+3. Extract `TileData` data from the map images in `References\Images (15-Bit Color Depth)` and any existing tile images in `tiles\images`, then store it in `SortedDictionary<string, TileData> allUniqueTileData`
 4. Output/save the tile images to `tiles\images`
 5. Use `allUniqueTileData` to output the `tileReferences.json` in `tiles`
 6. Delete `References\Fire Emblem Map JSON Files`
-7. Generate Map JSON files of `References\Images (15-Bit Color Depth)` in `References\Fire Emblem Map JSON Files`
+7. Generate Map JSON files of `References\Images (15-Bit Color Depth)` into `References\Fire Emblem Map JSON Files`
 8. Output `tileHashesSortedByColor.txt` in the base directory (Desktop)
 9. Output `tileHashesByMapScript.txt` in the base directory (Desktop)
 10. Print debug information to the console
-11. Run various checks and output the results, should be `True`
+11. Run various checks and output the results, should be all `True`
 
 - Map Extractor Runner console output provides information
   - Cursor Tile Hash
@@ -80,11 +80,11 @@ Getting map images from the game to the Fire Emblem Tile Map Editor.
 #### Tile Sort Helper
 - Style1
   - Displays the tiles based on `group`. Clicking tiles on the right will move it to the left. Tiles on the left are used to generate a batch script to move the tile images to the new specified group.
-  - For example, choosing `UNDEFINED` as the input will display all the UNDEFINED tile images in the UNDEFINED folder. Clicking on tiles on the right will move it to the left. Then choosing `FLOOR` as the output group will update the batch move script. Copy the batch script into a command prompt to move the tile images from `UNDEFINED` to `FLOOR`.
+  - For example, choosing `UNDEFINED` as the input will display all the UNDEFINED tile images in the `tiles\images\UNDEFINED` folder. Clicking on tiles on the right will move it to the left. Then choosing `FLOOR` as the output group will update the batch move script. Copy the batch script into a command prompt to move the tile images from `UNDEFINED` to `FLOOR`.
   - Not recommended to use this style. Better to use Style2.
 - Style2
   - Load map JSON file (for example, `References\Fire Emblem Map JSON Files\Fire Emblem 6\Chapters\07\001.png.json`). Display the tiles of the map on top. Clicking on tiles on the top will move it to the bottom. Tiles on the bottom and the output radio button group are used to generate a batch script to move the tile images to the new specified group. Any changes should automatically copy the batch move script output to clipboard. Execute it by pasting into the command prompt to move the tile images.
-  - Any tiles that are not in the UNDEFINED folder (meaning they have been sorted), will be replaced with an EMPTY tile.
+  - Any tiles that are not in the UNDEFINED folder (meaning they have already been sorted), will be replaced with an EMPTY tile.
   - Use the Emulator with the game and chapter running as a reference when sorting.
 
 #### Map Extractor
