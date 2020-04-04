@@ -8,7 +8,7 @@ Tile map editor for Fire Emblem GBA games.
 
 Allows users to create, modify, output and load Fire Emblem GBA maps. Features an auto-generate feature, but recommended that users manually fix it up after auto-generation.
 
-Tile data is extracted from chapter maps of the Fire Emblem GBA games. Each tile's neighboring tiles are remembered when extracting from the chapter maps. This allows the user to know which tile can fit with another tile, as well as allow the auto-generate feature.
+Tile data is extracted from chapter maps of the Fire Emblem GBA games. Each tile's neighboring tiles are remembered when extracted from the chapter maps. This allows the user to know which tile can fit with another tile, as well as allow the auto-generate feature.
 
 ## GitHub Pages
 https://hyssopi.github.io/Fire-Emblem-Tile-Map-Editor/
@@ -26,7 +26,7 @@ Open `index.html` in a web browser.
 (None)
 
 ## Miscellaneous Details
-Getting map data from the game to the Tile Map Editor.
+Getting map images from the game to the Fire Emblem Tile Map Editor.
 
 #### Emulator
 - Switch to only show `Background 3` in the emulator. This is the background layer that has the map image.
@@ -41,7 +41,7 @@ Getting map data from the game to the Tile Map Editor.
 
 #### References/Images (24-Bit Color Depth)
 - Emulators such as mGBA use 24-bit color depth instead of the original GBA 15-bit color depth.
-- Place completed stitched maps to the `Images (24-Bit Color Depth)` folder.
+- Place completed stitched maps to the `References\Images (24-Bit Color Depth)` folder.
 
 #### Map Extractor
 - Inputs:
@@ -52,6 +52,8 @@ Getting map data from the game to the Tile Map Editor.
   - References\Fire Emblem Map JSON Files
   - tiles\tileReferences.json
   - tile\images
+  - tileHashesSortedByColor.txt
+  - tileHashesByMapScript.txt
 
 - Map Extractor Runner
 1. Delete `References\Images (15-Bit Color Depth)`
