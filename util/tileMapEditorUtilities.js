@@ -473,39 +473,6 @@ export function getOneTileHash(tileHashes)
     return EMPTY_TILE_HASH;
   }
   
-  /*
-  // TODO: Figure out getTileNeighborSum()
-  let returnTileHash = tileHashes[0];
-  for (let i = 1; i < tileHashes.length; i++)
-  {
-    if (getTileNeighborSum(tileHashes[i]) > getTileNeighborSum(returnTileHash))
-    {
-      returnTileHash = tileHashes[i];
-    }
-  }
-  return returnTileHash;
-  */
-  
-  /*
-  // TODO: Temporary test, random
-  let returnTileHash = tileHashes[0];
-  for (let i = 1; i < tileHashes.length; i++)
-  {
-    if (getTileNeighborSum(tileHashes[i]) > getTileNeighborSum(returnTileHash))
-    {
-      returnTileHash = tileHashes[i];
-    }
-  }
-  if (utilities.isRandomSuccess(10))
-  {
-    return returnTileHash;
-  }
-  else
-  {
-    return tileHashes[utilities.generateRandomInteger(0, tileHashes.length - 1)];
-  }
-  */
-  
   return tileHashes[utilities.generateRandomInteger(0, tileHashes.length - 1)];
 }
 
