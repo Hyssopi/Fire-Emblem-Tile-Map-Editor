@@ -89,3 +89,8 @@ Getting map images from the game to the Fire Emblem Tile Map Editor.
 
 #### Map Extractor
 - Execute Map Extractor Runner again to update any sorting changes from the `Tile Sort Helper`.
+
+#### Fire Emblem Tile Map Editor
+- Uses `tiles\images` for tile images, `tiles\tileReferences.json` for tile data
+- Uses `help` to open up the help page
+- Chapter maps are available to load in `References\Fire Emblem Map JSON Files`
