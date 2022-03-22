@@ -10,7 +10,10 @@ Allows users to create, modify, output and load Fire Emblem GBA maps. Features a
 
 Tile data is extracted from chapter maps of the Fire Emblem GBA games. Each tile's neighboring tiles are remembered when extracted from the chapter maps. This allows the user to know which tile can fit with another tile, as well as allow the auto-generate feature.
 
-## GitHub Pages
+## Working Demo
+https://www.youtube.com/watch?v=N78gV8VUhXg
+
+## Try It Out
 https://hyssopi.github.io/Fire-Emblem-Tile-Map-Editor/
 
 ## Prerequisites
